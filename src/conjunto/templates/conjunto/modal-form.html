@@ -1,0 +1,48 @@
+{% load i18n crispy_forms_tags %}
+{% if form %}
+  {# only render form tag if a form is present. #}
+  <form id="modal-form" hx-post="{{ request.path }}" class="modal-content">
+{% else %}
+  <div class="modal-content">
+{% endif %}
+
+{% block modal-header %}
+  <div class="modal-header">
+    {% block header %}
+      <h5 class="modal-title">{% block title %}{{ modal_title }}{% endblock %}</h5>
+      {% block action-buttons %}{% endblock %}
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
+    {% endblock %}
+  </div>
+{% endblock %}
+
+{% block modal-body %}
+  <div class="modal-body">
+    {% block body %}
+      {% if form %}
+        {% crispy form %}
+        {# If you want to render another, custom form somewhere else in the modal, give the #}
+        {# form another name as "form" #}
+      {% endif %}
+    {% endblock %}
+  </div>
+{% endblock %}
+
+{% block modal-footer %}
+  <div class="modal-footer">
+    {% block footer %}
+      <button type="button" class="btn me-auto" data-bs-dismiss="modal">{% translate 'Cancel' %}</button>
+      {% block submit-button %}
+        <button hx-post="{{ request.path }}" class="btn btn-primary" type="submit" title="{% translate 'Save' %}">
+          <i class="bi bi-check-lg"></i>
+          {% translate 'Save' %}
+        </button>
+      {% endblock %}
+    {% endblock %}
+  </div>
+{% endblock %}
+{% if form %}
+  </form>
+{% else %}
+  </div>
+{% endif %}
