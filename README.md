@@ -4,7 +4,7 @@
 Conjunto is a Django application framework using [HTMX](https://htmx.org), [tabler.io](https://tabler.io), [crispy-forms](https://github.com/django-crispy-forms/django-crispy-forms) and more.
 
 ## Installation
-You can install the package by using pip:
+You can install the package by using pip (best using a virtualenv):
 
 ```bash
 pip install conjunto
@@ -25,4 +25,4 @@ pip install .[dev]
 Pull requests and general ideas are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
-The Conjunto project is open-source and licensed under the MIT License.
+The Conjunto project is open-source and licensed under the MIT License. Please keep in mind that Conjunto uses many other libraries, which may be under different licenses.
