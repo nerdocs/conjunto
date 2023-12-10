@@ -1,0 +1,41 @@
+from django.db.models import TextChoices
+from django.utils.translation import gettext as _
+
+
+class Colors(TextChoices):
+    BLUE = "blue", _("Blue")
+    AZURE = "azure", _("Azure")
+    INDIGO = "indigo", _("Indigo")
+    PURPLE = "purple", _("Purple")
+    PINK = "pink", _("Pink")
+    RED = "red", _("Red")
+    ORANGE = "orange", _("Orange")
+    YELLOW = "yellow", _("Yellow")
+    LIME = "lime", _("Lime")
+    GREEN = "green", _("Green")
+    TEAL = "teal", _("Teal")
+    CYAN = "cyan", _("Cyan")
+
+    BLUE_LT = "blue-lt", _("Blue Light")
+    AZURE_LT = "azure-lt", _("Azure Light")
+    INDIGO_LT = "indigo-lt", _("Indigo Light")
+    PURPLE_LT = "purple-lt", _("Purple Light")
+    PINK_LT = "pink-lt", _("Pink Light")
+    RED_LT = "red-lt", _("Red Light")
+    ORANGE_LT = "orange-lt", _("Orange Light")
+    YELLOW_LT = "yellow-lt", _("Yellow Light")
+    LIME_LT = "lime-lt", _("Lime Light")
+    GREEN_LT = "green-lt", _("Green Light")
+    TEAL_LT = "teal-lt", _("Teal Light")
+    CYAN_LT = "cyan-lt", _("Cyan Light")
+
+    GRAY_50 = "gray-50", _("Gray 50")
+    GRAY_100 = "gray-100", _("Gray 100")
+    GRAY_200 = "gray-200", _("Gray 200")
+    GRAY_300 = "gray-300", _("Gray 300")
+    GRAY_400 = "gray-400", _("Gray 400")
+    GRAY_500 = "gray-500", _("Gray 500")
+    GRAY_600 = "gray-600", _("Gray 600")
+    GRAY_700 = "gray-700", _("Gray 700")
+    GRAY_800 = "gray-800", _("Gray 800")
+    GRAY_900 = "gray-900", _("Gray 900")
