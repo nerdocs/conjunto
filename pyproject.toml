@@ -8,7 +8,7 @@ dynamic = ["version", "description"]
 authors = [
     { name = "Christian González", email = "christian.gonzalez@nerdocs.at" }
 ]
-license = {file = "LICENSE.md"}
+license = {file = "LICENSE"}
 readme = "README.md"
 keywords = ["python", "django", "htmx", "framework"]
 classifiers = [
