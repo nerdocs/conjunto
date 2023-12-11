@@ -35,7 +35,7 @@ def conjunto_js_scripts() -> str:
     result = ""
     for js_file in js:
         result += (
-            "<script type='text/javascript' "
+            "<script type='application/javascript' "
             f"src='{static(js_file)}' defer></script>\n"
         )
     return mark_safe(result)
