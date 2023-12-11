@@ -12,7 +12,7 @@
       <form action="." method="post">
         {% csrf_token %}
         <div class="card-body">
-          <h2 class="h2 text-center mb-4">{% translate 'Login to your account' %}</h2>
+          <h2 class="h2 text-center mb-4">{% translate 'Login' %}</h2>
           <form action="{% url 'login' %}" method="post" novalidate>
             <div class="mb-3 {%if field.errors %}has-error{%endif%}">
               <label class="form-label">{% translate 'User name' %}</label>
@@ -22,18 +22,18 @@
             <div class="mb-2" x-data="{ hide: true }">
               <label class="form-label">
                 {% translate 'Password' %}
-                <span class="form-label-description">
-                    <a href="{% url 'password_reset' %}">{% translate 'I forgot my password' %}</a>
-                  </span>
               </label>
               <div class="input-group input-group-flat">
                 <input :type="hide ? 'password' : 'text'" class="form-control" placeholder="{% translate 'Your password' %}" autocomplete="off" name="password">
                 <span class="input-group-text">
-                <a href="#" class="link-secondary" aria-label="{% translate 'Show password' %}" @click="hide = !hide">
-                  <i class="ti" :class="hide? 'ti-eye' : 'ti-eye-off'"></i>
-                </a>
-              </span>
+                  <a href="#" class="link-secondary" aria-label="{% translate 'Show password' %}" @click="hide = !hide">
+                    <i class="ti" :class="hide? 'ti-eye' : 'ti-eye-off'"></i>
+                  </a>
+                </span>
               </div>
+              <span class="form-label-description">
+                <a href="{% url 'password_reset' %}">{% translate 'I forgot my password' %}</a>
+              </span>
             </div>
 
             {% if False %}

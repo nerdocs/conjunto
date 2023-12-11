@@ -4,7 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
-from django.views.generic import DeleteView, FormView, DetailView
+from django.views.generic import DeleteView, FormView, DetailView, TemplateView
 
 from conjunto.models import PrivacyPage, LicensePage
 from conjunto.tools import camel_case2snake
@@ -265,3 +265,7 @@ class GenericLicenseView(LatestVersionMixin, DetailView):
     """Generic privacy page view that displays the newest LicensePage."""
 
     model = LicensePage
+
+
+class MaintenanceView(TemplateView):
+    template_name = "maintenance.html"

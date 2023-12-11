@@ -1,11 +1,17 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from versionfield import VersionField
+from django.utils.translation import gettext as _
 
 
 # thanks to https://stackoverflow.com/questions/49735906/how-to-implement-singleton-in-django/49736970#49736970
 class SingletonModel(models.Model):
-    """Singleton Django Model"""
+    """Singleton Django Model.
+
+    It allows only one instance of the model to be created.
+
+    To get the instance of the model, use `<YourModel>.get_instance()`.
+    """
 
     class Meta:
         abstract = True
@@ -18,7 +24,8 @@ class SingletonModel(models.Model):
         If 'aggressive' Meta attribute is set, remove all other entries if there are any.
 
         Raises:
-            ValidationError if
+            ValidationError if saving a new object, and there is already another
+            instance in the database.
         """
 
         # if self._aggressive:
@@ -30,7 +37,7 @@ class SingletonModel(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def load(cls):
+    def get_instance(cls):
         """Load object from the database.
 
         Failing that, create a new empty (default) instance of the object and return it
@@ -90,3 +97,34 @@ class LicensePage(VersionedPage):
 
 class PrivacyPage(VersionedPage):
     """A page that holds the privacy information for this software."""
+
+
+class AbstractSettings(SingletonModel):
+    """Represents the settings of the application.
+
+    This model is meant to be subclassed by your application.
+    Please add application specific settings as needed to this model.
+    """
+
+    class Meta:
+        abstract = True
+        verbose_name = _("Settings")
+        verbose_name_plural = _("Settings")
+
+    site_name = models.CharField(max_length=100, default="", blank=True)
+    site_title = models.CharField(max_length=100, default="", blank=True)
+    site_description = models.TextField(
+        default="",
+        blank=True,
+        help_text=_("Text to display as site description. Supports Markdown."),
+    )
+    maintenance_mode = models.BooleanField(default=False)
+    maintenance_title = models.CharField(max_length=100, default="", blank=True)
+    maintenance_text = models.TextField(
+        default="",
+        blank=True,
+        help_text=_("Text to display on the maintenance page. Supports Markdown."),
+    )
+
+    def __str__(self):
+        return _("Settings")
