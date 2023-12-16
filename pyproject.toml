@@ -10,7 +10,7 @@ authors = [
 ]
 license = {file = "LICENSE"}
 readme = "README.md"
-keywords = ["python", "django", "htmx", "framework"]
+keywords = ["python", "django", "htmx", "framework", "i18n"]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
   "Programming Language :: Python"
@@ -26,6 +26,7 @@ dependencies = [
     "django-versionfield",
     "django-markdownify",
     "django-web-components",
+    "django-statici18n",
 ]
 
 [project.urls]

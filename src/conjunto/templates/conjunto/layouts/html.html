@@ -1,0 +1,94 @@
+{% load static i18n statici18n conjunto %}
+<!DOCTYPE html>
+{#This is a generic html file for your application. You can extend it, or copy it and sort out the good parts ;-)#}
+
+<html lang="de"> {# TODO: make it internationalizable #}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ globals.project_title }}{% endblock %}</title>
+  <link rel="manifest" href="/manifest.json">
+
+  {% conjunto_css_scripts %}
+
+  {% block styles %}{% endblock styles %}
+
+  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" >
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+{% block body %}
+
+  {% csrf_token %}
+
+  <div class="page">
+    {% block header %}{% endblock %}
+    {% block main-menu %}{% endblock %}
+    <!-- Page header -->
+    <div class="page-wrapper">
+      {% block page %}{% endblock %}
+
+      <footer class="footer footer-transparent d-print-none">
+        <div class="container-xl">
+          {% block footer %}
+            <div class="row text-center align-items-center flex-row-reverse">
+              <div class="col-lg-auto ms-lg-auto">
+                <ul class="list-inline list-inline-dots mb-0">
+                  <li class="list-inline-item"><a href="{% url "medspeak:privacy" %}" class="link-secondary" rel="noopener">{% translate 'Privacy' %}</a></li>
+                  <li class="list-inline-item"><a href="{% url 'medspeak:license' %}" class="link-secondary">{% translate 'License' %}</a></li>
+
+                  <li class="list-inline-item"><a href="https://gitlab.com/nerdocs/medspeak/medspeak" target="_blank" class="link-secondary" rel="noopener">Source code</a></li>
+
+                  {#            <li class="list-inline-item">#}
+                  {#              <a href="" target="_blank" class="link-secondary" rel="noopener">#}
+                  {#                <i class="ti ti-heart text-red"></i>#}
+                  {#                Sponsor#}
+                  {#              </a>#}
+                  {#            </li>#}
+                </ul>
+              </div>
+              <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                <ul class="list-inline list-inline-dots mb-0">
+                  <li class="list-inline-item">
+                    Copyright © {%  now "Y" %}
+                    <a href="https://nerdocs.at" target="_blank" class="link-secondary">nerdocs</a>.
+                    {% translate 'All rights reserved.' %}
+                  </li>
+                  {#            <li class="list-inline-item">#}
+                  {#              <a href="./changelog.html" class="link-secondary" rel="noopener">#}
+                  {#                v1.0.0-beta20#}
+                  {#              </a>#}
+                  {#            </li>#}
+                </ul>
+              </div>
+            </div>
+          {% endblock %}
+        </div>
+      </footer>
+    </div>
+  </div>
+{% endblock %}
+
+{% get_current_language as LANGUAGE_CODE %}
+<script>
+    const globals = {
+        LANGUAGE_CODE: "{{ LANGUAGE_CODE }}",
+    };
+</script>
+<script src="{% statici18n LANGUAGE_CODE %}"></script>
+<script src="{% get_static_prefix %}jsi18n/{{ LANGUAGE_CODE }}/djangojs.js"></script>
+
+{% conjunto_js_scripts %}
+
+
+{# NEVER, EVER use htmx directly in the script tag. #}
+{# Only load external js files using <script defer src="..."></script> #}
+{# because HTMX itelf is loaded with defer, and will get executed AFTER scripts in the page #}
+{% block scripts %}{% endblock scripts %}
+
+{% block modal %}{% endblock modal %}
+{% block toasts %}{% endblock toasts %}
+<script src="{% static 'conjunto/js/toasts.js' %}"></script>
+</body>
+</html>
