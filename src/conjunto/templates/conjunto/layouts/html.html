@@ -87,8 +87,28 @@
 {# because HTMX itelf is loaded with defer, and will get executed AFTER scripts in the page #}
 {% block scripts %}{% endblock scripts %}
 
-{% block modal %}{% endblock modal %}
-{% block toasts %}{% endblock toasts %}
-<script src="{% static 'conjunto/js/toasts.js' %}"></script>
+{% block modal %}
+  {# modal HTMX target. Override if needed #}
+  <div id="modal" class="modal">
+    <div id="dialog" class="modal-dialog modal-dialog-centered" role="document" hx-target="this">
+      <!-- modal content will be inserted here -->
+    </div>
+  </div>
+{% endblock modal %}
+
+{% block toasts %}
+  {# toasts HTMX target. Override if needed #}
+  <div {# hx-ext="ws" ws-connect="/ws/messages" #}>
+    <div id="toasts" data-toast-container class="toast-container position-fixed bottom-0 end-0 p-3 pb-5">
+      {# include one hidden toast as template for Js cloning #}
+      {% include 'conjunto/toast.html' %}
+
+      {% for message in messages %}
+        {# render toasts for pending Django messages, show them immediately #}
+        {% include 'conjunto/toast.html' with message=message %}
+      {% endfor %}
+    </div>
+  </div>
+{% endblock toasts %}
 </body>
 </html>
