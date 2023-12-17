@@ -1,4 +1,5 @@
-import uuid
+import enum
+import logging
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
@@ -143,14 +144,11 @@ class ModalFormViewMixin(HtmxFormMixin):
     form_layout: list = []
     """The crispy forms layout for the form"""
 
-    autofocus_field = ""  # TODO fix autofocus field
-    """The field that gets the autofocus when the modal is shown."""
+    autofocus_field = ""  # FIXME: fix autofocus field
+    """The field that gets the autofocus when the modal is shown"""
 
     def get_modal_title(self) -> str:
-        """
-        Returns:
-            A string that is used as title of the modal.
-        """
+        """Returns a string that is used as title of the modal."""
         return self.modal_title
 
     def get_context_data(self, **kwargs):
