@@ -87,14 +87,28 @@ class HtmxFormMixin(HtmxResponseMixin):
 
 
 class HtmxDeleteView(HtmxFormMixin, DeleteView):
+    """Enhanced DeleteView that per default returns an empty HttpResponse.
+
+    # TODO either use success_url, OR success_event.
+
+    Attributes:
+        success_url: the URL to redirect to. Defaults to None, in this case no
+            redirection is made. If an URL is given, the client is redirected to that
+            URL after successful deletion by using the HX-Redirect HTMX directive.
+
+    """
+
     response_status = 204
 
     def form_valid(self, form):
-        # don't call DeleteView's form_valid(), as this needs a redirect_url
-        # just delete object...
+        # don't call DeleteView's form_valid(), as this needs a success_url
         self.object.delete()
         # ... and create an empty response
-        return HttpResponse(status=self.response_status)
+        response = HttpResponse(status=self.response_status)
+        if self.success_url:
+            # but if success_url is give, tell HTMX to redirect client to that URL.
+            response["HX-Redirect"] = self.success_url
+        return response
 
 
 class ModalFormViewMixin(HtmxFormMixin):
