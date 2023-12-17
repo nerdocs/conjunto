@@ -1,0 +1,25 @@
+{% load markdownify %}
+<div class="card mb-2">
+  {% if slots.title or slots.actions %}
+    <div class="card-header">
+      {% if slots.title %}
+        <h3 class="card-title">
+          {% render_slot slots.title %}
+        </h3>
+      {% endif %}
+      {% if slots.actions %}
+        <div class="card-actions">
+          {% render_slot slots.actions %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+  <div class="card-body">
+    {% render_slot slots.inner_block %}
+  </div>
+  {% if slots.footer %}
+    <div class="card-footer">
+      {% render_slot slots.footer %}
+    </div>
+  {% endif %}
+</div>

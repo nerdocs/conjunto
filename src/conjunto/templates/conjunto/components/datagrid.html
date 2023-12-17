@@ -1,0 +1,9 @@
+
+<div class="datagrid">
+{% for field in fields %}
+    <div class="datagrid-item mb-2">
+      <div class="datagrid-title">{{ field.title }}</div>
+      <div class="datagrid-content">{{ field.content }}</div>
+    </div>
+{% endfor %}
+</div>
