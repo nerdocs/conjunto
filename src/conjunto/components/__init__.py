@@ -47,7 +47,7 @@ class DataGrid(component.Component):
 
     Example usage:
     ```django
-    {% datagrid object=request.user fields="first_name,last_name,email" %}
+    {% #datagrid object=request.user fields="first_name,last_name,email" %}
     ```
     """
 
@@ -81,3 +81,36 @@ class List(component.Component):
 
     def get_context_data(self, items: list, hoverable: bool = False):
         return {"items": "items", "hoverable": hoverable}
+
+
+@component.register("updateable")
+class Updateable(component.Component):
+    """
+    div element that updates itself using HTMX when a certain
+    Javascript event is triggerd anywhere in the body.
+
+    Attributes:
+        id: the id attribute of th div.
+        trigger: the Js event that should trigger the update
+        url: the URL to call a get request to update the component
+
+    Example:
+        ```django
+        {% updateable id="my-card" trigger="person:changed" url=request.path %}
+        ```
+    """
+
+    template_name = "conjunto/components/updateable.html"
+
+    def get_context_data(self, **kwargs) -> dict:
+        # TODO: allow multiple triggers
+        for attr in ["url", "trigger", "id"]:
+            if attr not in self.attributes:
+                raise AttributeError(
+                    f"{self.__class__.__name__} has no '{attr}' attribute."
+                )
+        return {
+            "id": self.attributes["id"],
+            "url": self.attributes["url"],
+            "trigger": self.attributes["trigger"],
+        }

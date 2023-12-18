@@ -1,0 +1,12 @@
+{% load markdownify %}
+<div
+    id="card-updateable-{{ id }}"
+    hx-get="{{ url }}"
+    hx-target="find *" {# find any child element #}
+    hx-select="#card-updateable-{{ id }}"
+    hx-trigger="{{ trigger }} from:body"
+    hx-swap="outerHTML"
+    hx-disinherit="*"
+>
+    {% render_slot slots.inner_block %}
+</div>
