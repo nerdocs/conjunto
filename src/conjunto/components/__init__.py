@@ -5,8 +5,6 @@ from django.utils.translation import gettext_lazy as _
 
 from conjunto.tools import snake_case2spaces
 
-from .list import List
-
 
 class SlippersFormatter:
     def format_block_start_tag(self, name):
@@ -73,3 +71,13 @@ class DataGrid(component.Component):
             fields.append(field)
 
         return {"fields": fields}
+
+
+@component.register("list")
+class List(component.Component):
+    """A flexible component to display a Tabler.io list."""
+
+    template_name = "conjunto/components/list.html"
+
+    def get_context_data(self, items: list, hoverable: bool = False):
+        return {"items": "items", "hoverable": hoverable}
