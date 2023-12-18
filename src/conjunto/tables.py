@@ -15,7 +15,7 @@ class UpdateTableMixin:
     """A table mixin that that updates itself using HTMX when a javascript event is
     triggered.
 
-    Arguments:
+    Arguments in Meta class:
         id: The id of the table that should be used as HTML id attribute.
         listen_events: A list of events that the table will listen to.
         update_url: the url to call to update the table.
