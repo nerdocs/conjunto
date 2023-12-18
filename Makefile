@@ -1,7 +1,7 @@
 .PHONY: test build dev publish
-LANGUAGES:=`find medux/locale/ -mindepth 1 -maxdepth 1 -type d -printf "--locale %f "`
+LANGUAGES:=`find conjunto/locale/ -mindepth 1 -maxdepth 1 -type d -printf "--locale %f "`
 PYTHON = $(VENV)/bin/python3
-MANAGE = cd src && python ./manage.py
+MANAGE = cd src && django-admin
 
 
 dev:
@@ -22,15 +22,15 @@ setup:
 localegen:
     # don't --keep-pot
 	$(MANAGE) makemessages --ignore "static/*" --ignore "medux/static/*" --ignore "build/*" $(LANGUAGES)
-	$(MANAGE) makemessages -d djangojs --ignore "static/*" --ignore "medux/static/*" --ignore "build/*" $(LANGUAGES)
+	$(MANAGE)  makemessages -d djangojs --ignore "static/*" --ignore "medux/static/*" --ignore "build/*" $(LANGUAGES)
 
 staticfiles: jsi18n
 	$(MANAGE) collectstatic --noinput
 
-jsi18n:
+jsi18n: # TODO
 	$(MANAGE) compilejsi18n
 
-locale: jsi18n localegen localecompile
+locale: localegen localecompile
 
 
 test:
