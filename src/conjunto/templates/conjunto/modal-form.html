@@ -9,7 +9,9 @@
 {% block modal-header %}
   <div class="modal-header">
     {% block header %}
-      <h5 class="modal-title">{% block title %}{{ modal_title }}{% endblock %}</h5>
+      <h5 class="modal-title">
+        {% block title %}{{ modal_title }}{% endblock %}
+      </h5>
       {% block action-buttons %}{% endblock %}
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"></button>
     {% endblock %}
@@ -19,6 +21,7 @@
 {% block modal-body %}
   <div class="modal-body">
     {% block body %}
+      {% block content %}{% endblock %}
       {% if form %}
         {% crispy form %}
         {# If you want to render another, custom form somewhere else in the modal, give the #}
@@ -33,9 +36,9 @@
     {% block footer %}
       <button type="button" class="btn me-auto" data-bs-dismiss="modal">{% translate 'Cancel' %}</button>
       {% block submit-button %}
-        <button hx-post="{{ request.path }}" class="btn btn-primary" type="submit" title="{% translate 'Save' %}">
+        <button hx-post="{{ request.path }}" class="btn btn-{{ css_class }}" type="submit" title="">
           <i class="bi bi-check-lg"></i>
-          {% translate 'Save' %}
+          {{ button_content }}
         </button>
       {% endblock %}
     {% endblock %}

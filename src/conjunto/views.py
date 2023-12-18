@@ -3,12 +3,21 @@ import logging
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
-from django.views.generic import DeleteView, FormView, DetailView, TemplateView
+from django.views.generic import (
+    DeleteView,
+    FormView,
+    DetailView,
+    TemplateView,
+    UpdateView,
+    CreateView,
+)
 
 from conjunto.models import PrivacyPage, LicensePage
 from conjunto.tools import camel_case2snake
+from django.utils.translation import gettext_lazy as _
 
 
 class HtmxResponseMixin:
@@ -112,6 +121,24 @@ class HtmxDeleteView(HtmxFormMixin, DeleteView):
         return response
 
 
+class DialogType(enum.Enum):
+    """Enumeration of possible dialog levels.
+
+    Levels are used from Python's logging module
+    """
+
+    CRITICAL = logging.CRITICAL
+    ERROR = logging.ERROR
+    WARNING = logging.WARNING
+    INFO = logging.INFO
+    DEBUG = logging.DEBUG
+    NOTSET = logging.NOTSET
+
+    CREATE = NOTSET
+    UPDATE = NOTSET
+    DELETE = WARNING
+
+
 class ModalFormViewMixin(HtmxFormMixin):
     """Mixin for FormViews that should live in a modal.
 
@@ -128,6 +155,9 @@ class ModalFormViewMixin(HtmxFormMixin):
 
     When the modal pops up, the focus is set to the first visible input
     element.
+
+    You can customize the content of the "Save" button by changing the `button_content`
+    attribute to another string.
 
     If the form is saved successfully, it returns an empty HttpResponse(204)
     and emits the event specified in ``success_event`` on the client,
@@ -147,13 +177,37 @@ class ModalFormViewMixin(HtmxFormMixin):
     autofocus_field = ""  # FIXME: fix autofocus field
     """The field that gets the autofocus when the modal is shown"""
 
+    button_content = _("Save")
+    """The content of the 'Save' button"""
+
+    dialog_type: DialogType = DialogType.NOTSET
+    """The type of the dialog: INFO, """
+
     def get_modal_title(self) -> str:
         """Returns a string that is used as title of the modal."""
         return self.modal_title
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update({"modal_title": self.get_modal_title()})
+        icon = ""
+        klass = ""
+        match self.dialog_type:
+            case DialogType.DELETE:
+                icon = "trash"
+                klass = "danger danger"
+            case DialogType.INFO:
+                icon = "info-circle"
+                klass = "info info"
+        context.update(
+            {
+                "modal_title": self.get_modal_title(),
+                "button_content": self.button_content,
+                "dialog_type": self.dialog_type,
+                "DialogType": DialogType,
+                "icon": icon,
+                "css_class": klass,
+            }
+        )
         return context
 
     def get_form(self, form_class=None):
@@ -281,3 +335,71 @@ class GenericLicenseView(LatestVersionMixin, DetailView):
 
 class MaintenanceView(TemplateView):
     template_name = "maintenance.html"
+
+
+class AutoPermissionsViewMixin(PermissionRequiredMixin):
+    """Automatically uses view/create/change/delete permissions for the given model.
+
+    It automatically generates the "<verb>_<model>" permission
+    of the given model as necessary permission for this view.
+
+    Attributes:
+        __permissions_verb: the verb to create the permissions: 'create' or 'change'
+        default: "view"
+    """
+
+    __permissions_verb = "view"  # change, create, delete
+
+    def get_permission_required(self):
+        if self.permission_required is None:
+            obj = self.get_object()
+            return (
+                f"{obj._meta.app_label}.{self.__permissions_verb}_{obj._meta.model_name}",
+            )
+        if isinstance(self.permission_required, str):
+            perms = (self.permission_required,)
+        else:
+            perms = self.permission_required
+        return perms
+
+
+class _ModalModelViewMixin(AutoPermissionsViewMixin, ModalFormViewMixin):
+    """Mixin vor Create/UpdateViews (with permissions) that lives in a Modal.
+
+    It automatically generates the Modal title and sets the "<verb>_<model>" permission
+    of the given model as necessary permission. Override as needed.
+
+    Attributes:
+        _modal_title_template: the title of the modal dialog
+    """
+
+    _modal_title_template = None  # "Edit/Create '{instance}'"
+
+    def get_modal_title(self) -> str:
+        if self.modal_title:
+            return self.modal_title
+        if self._modal_title_template:
+            return self._modal_title_template.format(instance=self.get_object())
+        return ""
+
+
+class ModalUpdateView(_ModalModelViewMixin, UpdateView):
+    """Convenience UpdateView (with permissions) that lives in a Modal.
+
+    It automatically generates the Modal title and sets the "change_<model>" permission
+    of the given model as necessary permission. Override as needed.
+    """
+
+    __permissions_verb = "change"
+    _modal_title_template = "Edit '{instance}'"
+
+
+class ModalCreateView(PermissionRequiredMixin, ModalFormViewMixin, CreateView):
+    """Convenience CreateView (with permissions) that lives in a Modal.
+
+    It automatically generates the Modal title and sets the "create_<model>" permission
+    of the given model as necessary permission. Override as needed.
+    """
+
+    __verb = "create"
+    __title = "Create '{instance}'"

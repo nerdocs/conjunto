@@ -1,4 +1,9 @@
+from django.core.exceptions import FieldDoesNotExist
+from django.utils.text import capfirst
 from django_web_components import component
+from django.utils.translation import gettext_lazy as _
+
+from conjunto.tools import snake_case2spaces
 
 
 class SlippersFormatter:
@@ -23,6 +28,19 @@ class DataGrid(component.Component):
     The `DataGrid` class is a component that generates a data grid for displaying data
      in a tabular format.
 
+    It automatically determines all regular model fields and shows their translated
+    title. You can also use a model property as datagrid-item, the component tries to
+    find out a proper name as title here by creating a capitalized version of the
+    property name and translating it into the locale language. You have to provide
+    a proper translation string for your property name in your .po file manually.
+    E.g. when your property is named "display_name", the generated title will be named
+    "Display name", so you have to provide a proper translation:
+
+    ```
+    msgid "Display name"
+    msgstr "Anzeigename"
+    ```
+
     Attributes:
     - object: the Django model object to display
     - fields: a comma separated list of field names to display
@@ -43,8 +61,13 @@ class DataGrid(component.Component):
         for field_name in field_name_list.split(","):
             field_name = field_name.strip()
             field = {}
-            field["title"] = object._meta.get_field(field_name).verbose_name
-            field["content"] = getattr(object, field_name)
+            try:
+                field["title"] = object._meta.get_field(field_name).verbose_name
+            except FieldDoesNotExist:
+                # You have to add a translation string manually to your project
+                # for this to work. @property display_name() -> "Display name"
+                field["title"] = _(capfirst(snake_case2spaces(field_name)))
+            field["content"] = getattr(object, field_name) or "-"
             fields.append(field)
 
         return {"fields": fields}
