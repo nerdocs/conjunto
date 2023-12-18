@@ -3,7 +3,7 @@ from django.shortcuts import reverse, redirect
 from django.conf import settings
 
 
-class ConjuntoMiddleware:
+class MaintenanceMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
