@@ -1,0 +1,262 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-19 00:42+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: conjunto/forms/__init__.py:262
+msgid "This field is required."
+msgstr ""
+
+#: conjunto/models.py:111 conjunto/models.py:112 conjunto/models.py:130
+msgid "Settings"
+msgstr ""
+
+#: conjunto/models.py:119
+msgid "Text to display as site description. Supports Markdown."
+msgstr ""
+
+#: conjunto/models.py:126
+msgid "Text to display on the maintenance page. Supports Markdown."
+msgstr ""
+
+#: conjunto/tabler.py:6
+msgid "Blue"
+msgstr ""
+
+#: conjunto/tabler.py:7
+msgid "Azure"
+msgstr ""
+
+#: conjunto/tabler.py:8
+msgid "Indigo"
+msgstr ""
+
+#: conjunto/tabler.py:9
+msgid "Purple"
+msgstr ""
+
+#: conjunto/tabler.py:10
+msgid "Pink"
+msgstr ""
+
+#: conjunto/tabler.py:11
+msgid "Red"
+msgstr ""
+
+#: conjunto/tabler.py:12
+msgid "Orange"
+msgstr ""
+
+#: conjunto/tabler.py:13
+msgid "Yellow"
+msgstr ""
+
+#: conjunto/tabler.py:14
+msgid "Lime"
+msgstr ""
+
+#: conjunto/tabler.py:15
+msgid "Green"
+msgstr ""
+
+#: conjunto/tabler.py:16
+msgid "Teal"
+msgstr ""
+
+#: conjunto/tabler.py:17
+msgid "Cyan"
+msgstr ""
+
+#: conjunto/tabler.py:19
+msgid "Blue Light"
+msgstr ""
+
+#: conjunto/tabler.py:20
+msgid "Azure Light"
+msgstr ""
+
+#: conjunto/tabler.py:21
+msgid "Indigo Light"
+msgstr ""
+
+#: conjunto/tabler.py:22
+msgid "Purple Light"
+msgstr ""
+
+#: conjunto/tabler.py:23
+msgid "Pink Light"
+msgstr ""
+
+#: conjunto/tabler.py:24
+msgid "Red Light"
+msgstr ""
+
+#: conjunto/tabler.py:25
+msgid "Orange Light"
+msgstr ""
+
+#: conjunto/tabler.py:26
+msgid "Yellow Light"
+msgstr ""
+
+#: conjunto/tabler.py:27
+msgid "Lime Light"
+msgstr ""
+
+#: conjunto/tabler.py:28
+msgid "Green Light"
+msgstr ""
+
+#: conjunto/tabler.py:29
+msgid "Teal Light"
+msgstr ""
+
+#: conjunto/tabler.py:30
+msgid "Cyan Light"
+msgstr ""
+
+#: conjunto/tabler.py:32
+msgid "Gray 50"
+msgstr ""
+
+#: conjunto/tabler.py:33
+msgid "Gray 100"
+msgstr ""
+
+#: conjunto/tabler.py:34
+msgid "Gray 200"
+msgstr ""
+
+#: conjunto/tabler.py:35
+msgid "Gray 300"
+msgstr ""
+
+#: conjunto/tabler.py:36
+msgid "Gray 400"
+msgstr ""
+
+#: conjunto/tabler.py:37
+msgid "Gray 500"
+msgstr ""
+
+#: conjunto/tabler.py:38
+msgid "Gray 600"
+msgstr ""
+
+#: conjunto/tabler.py:39
+msgid "Gray 700"
+msgstr ""
+
+#: conjunto/tabler.py:40
+msgid "Gray 800"
+msgstr ""
+
+#: conjunto/tabler.py:41
+msgid "Gray 900"
+msgstr ""
+
+#: conjunto/tables.py:55
+msgid "Actions"
+msgstr ""
+
+#: conjunto/tables.py:188
+#, python-brace-format
+msgid "Edit {object}"
+msgstr ""
+
+#: conjunto/tables.py:201
+#, python-brace-format
+msgid "Delete {object}"
+msgstr ""
+
+#: conjunto/tables.py:214
+#, python-brace-format
+msgid "Delete {object} without confirmation"
+msgstr ""
+
+#: conjunto/templates/conjunto/layouts/html.html:38
+msgid "Privacy"
+msgstr ""
+
+#: conjunto/templates/conjunto/layouts/html.html:39
+msgid "License"
+msgstr ""
+
+#: conjunto/templates/conjunto/layouts/html.html:56
+msgid "All rights reserved."
+msgstr ""
+
+#: conjunto/templates/conjunto/login.html:16
+msgid "Login"
+msgstr ""
+
+#: conjunto/templates/conjunto/login.html:28
+msgid "User name"
+msgstr ""
+
+#: conjunto/templates/conjunto/login.html:29
+msgid "Your username"
+msgstr ""
+
+#: conjunto/templates/conjunto/login.html:37
+msgid "Password"
+msgstr ""
+
+#: conjunto/templates/conjunto/login.html:40
+msgid "Your password"
+msgstr ""
+
+#: conjunto/templates/conjunto/login.html:51
+msgid "I forgot my password"
+msgstr ""
+
+#: conjunto/templates/conjunto/login.html:59
+msgid "Remember me on this device"
+msgstr ""
+
+#: conjunto/templates/conjunto/login.html:65
+msgid "Sign in"
+msgstr ""
+
+#: conjunto/templates/conjunto/login.html:71
+msgid "or"
+msgstr ""
+
+#: conjunto/templates/conjunto/login.html:90
+msgid "Don't have an account yet?"
+msgstr "Noch keine Konto?"
+
+#: conjunto/templates/conjunto/login.html:91
+msgid "Sign up"
+msgstr "Registrieren"
+
+#: conjunto/templates/conjunto/modal-form.html:37
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: conjunto/templates/conjunto/toast.html:11
+msgid "Close"
+msgstr "Schließen"
+
+#: conjunto/views.py:183
+msgid "Save"
+msgstr "Sichern"
+
+#, python-brace-format
+#~ msgid "Edit '{instance}'"
+#~ msgstr "'{instance}' bearbeiten"
