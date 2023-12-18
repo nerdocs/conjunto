@@ -3,9 +3,12 @@ import logging
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
+from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.urls import reverse
 from django.views.generic import (
     DeleteView,
     FormView,
@@ -403,3 +406,14 @@ class ModalCreateView(PermissionRequiredMixin, ModalFormViewMixin, CreateView):
 
     __verb = "create"
     __title = "Create '{instance}'"
+
+
+class AnonymousRequiredMixin(PermissionRequiredMixin):
+    """View mixin that only allows access for anonymous users."""
+
+    def has_permission(self):
+        # TODO: instead of a 403, redirect to LOGIN_REDIRECT_URL
+
+        if not self.request.user.is_anonymous:
+            redirect(reverse(settings.LOGIN_REDIRECT_URL))
+        return True

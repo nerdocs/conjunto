@@ -16,7 +16,7 @@ class MyApplicationSettings(AbstractSettings):
 
 ### Middleware & Context processor
 
-For the settings to be applied, you have to add conjunto's middleware and context processors:
+For the settings to be applied, you have to add conjunto's middlewares and context processors:
 
 ```python
 
@@ -31,7 +31,7 @@ TEMPLATES = [
         "OPTIONS": {
             "context_processors": [
                 # ...
-                "conjunto.context_processors.settings",
+                "conjunto.context_processors.globals",
             ]
         }
     }

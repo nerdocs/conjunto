@@ -5,6 +5,8 @@ from django.utils.translation import gettext_lazy as _
 
 from conjunto.tools import snake_case2spaces
 
+from .list import List
+
 
 class SlippersFormatter:
     def format_block_start_tag(self, name):
@@ -29,17 +31,17 @@ class DataGrid(component.Component):
      in a tabular format.
 
     It automatically determines all regular model fields and shows their translated
-    title. You can also use a model property as datagrid-item, the component tries to
+    title. It also detects properties/getters instead of fields, the component tries to
     find out a proper name as title here by creating a capitalized version of the
-    property name and translating it into the locale language. You have to provide
+    property name and translating it into the locale language. However you have to provide
     a proper translation string for your property name in your .po file manually.
-    E.g. when your property is named "display_name", the generated title will be named
-    "Display name", so you have to provide a proper translation:
 
-    ```
-    msgid "Display name"
-    msgstr "Anzeigename"
-    ```
+    > **Note**
+    > To keep Django's makemessaes from commenting out these "unused" translations,
+    > just add an unused `_("...")` string anywhere into your method.
+    > E.g. when your property is named "display_name()", just add a `_("Display name")`
+    > anywhere into this method block. This keeps Django from garbage collecting this
+    > translation.
 
     Attributes:
     - object: the Django model object to display

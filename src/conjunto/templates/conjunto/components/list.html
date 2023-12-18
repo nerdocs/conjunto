@@ -1,0 +1,39 @@
+<div class="list-group{% if hoverable %} list-group-hoverable{% endif %}">
+  {% for item in list_items %}
+    <div class="list-group-item{% if item.active %} active{% endif %}">
+      <div class="row align-items-center">
+
+        {% if item.item.badge_color %}
+          <div class="col-auto"><span class="badge bg-{{ item.badge_color }}"></span></div>
+        {% endif %}
+
+        {% if item.picture %}
+          <div class="col-auto">
+            {% if item.url %}<a href="{{ item.url }}">{% endif %}
+            <span class="avatar" style="background-image: url({{ item.picture }})"></span>
+            {% if item.url %}</a>{% endif %}
+          </div>
+        {% endif %}
+
+        <div class="col text-truncate">
+          {% if item.url %}<a href="{{ item.url }}" class="text-reset d-block">
+          {% else %}<div class="text-reset d-block">{% endif %}
+          {{ item.title }}
+          {% if not item.url %}</div>{% else %}</a>{% endif %}
+
+          {% if item.subtitle %}
+            <div class="d-block text-muted text-truncate mt-n1">{{ item.subtitle }}</div>
+          {% endif %}
+        </div>
+
+        <div class="col-auto">
+          {% for action in item.actions %}
+            <a href="{{ action.url }}" class="list-group-item-actions">
+              {{ action.title }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
