@@ -239,7 +239,7 @@ msgstr ""
 
 #: conjunto/templates/conjunto/login.html:90
 msgid "Don't have an account yet?"
-msgstr "Noch keine Konto?"
+msgstr "Noch kein Konto?"
 
 #: conjunto/templates/conjunto/login.html:91
 msgid "Sign up"
