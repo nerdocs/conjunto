@@ -22,7 +22,7 @@ For the settings to be applied, you have to add conjunto's middlewares and conte
 
 MIDDLEWARE = [
     # ...
-    "conjunto.middleware.SettingsMiddleware",
+    "conjunto.middleware.ConjuntoMiddleware",
 ]
 
 TEMPLATES = [
