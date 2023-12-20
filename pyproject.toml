@@ -27,7 +27,7 @@ dependencies = [
     "django-markdownify",
     "django-web-components",
     "django-statici18n",
-    "gdaps",
+    "gdaps>=0.8.4",
 ]
 
 [project.urls]
