@@ -2,7 +2,12 @@ import locale
 import subprocess
 
 from django.conf import settings
+from django.db.models import Model
 from django.utils.translation import gettext_lazy as _
+
+import logging
+
+logger = logging.getLogger(__file__)
 
 
 def str_to_bool(bool_str: str) -> bool:
@@ -85,3 +90,58 @@ def get_system_locales(strip_c: bool = True) -> list[str]:
             line for line in locales if not line.startswith("C") and not line == "POSIX"
         ]
     return locales
+
+
+def create_groups_permissions(
+    groups_permissions: dict[str, dict[Model | str, list[str]]]
+):
+    """Creates groups and their permissions defined in given `groups_permissions`
+    automatically.
+
+    Attributes:
+         groups_permissions: a dict, see also [PluginAppConfig.groups_permissions]
+
+
+    """
+    # Based upon the work here: https://newbedev.com/programmatically-create-a-django-group-with-permissions
+    from django.apps import apps
+    from django.contrib.auth.models import Group, Permission
+    from django.contrib.contenttypes.models import ContentType
+
+    for group_name in groups_permissions:
+        # Get or create group (even if there are no permissions
+        # to save in the dict)
+        group, created = Group.objects.get_or_create(name=group_name)
+        if created:
+            group.save()
+
+        # Loop models in group
+        for model in groups_permissions[group_name]:
+            # if model_class is written as dotted str, convert it to class
+            if isinstance(model, str):
+                model_class = apps.get_model(model)
+            else:
+                model_class = model
+
+            # Loop permissions in group/model
+
+            for perm_name in groups_permissions[group_name][model]:
+                # Generate permission name as Django would generate it
+                codename = f"{perm_name}_{model_class._meta.model_name}"
+
+                try:
+                    # Find permission object and add to group
+                    content_type = ContentType.objects.get(
+                        app_label=model_class._meta.app_label,
+                        model=model_class._meta.model_name.lower(),
+                    )
+                    perm = Permission.objects.get(
+                        content_type=content_type,
+                        codename=codename,
+                    )
+                    group.permissions.add(perm)
+                    logger.info(
+                        f"  Adding permission '{codename}' to group '{group.name}'"
+                    )
+                except Permission.DoesNotExist:
+                    logger.critical(f"  ERROR: Permission '{codename}' not found.")
