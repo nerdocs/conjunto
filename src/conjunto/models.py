@@ -1,5 +1,5 @@
-from django.core.exceptions import ValidationError
-from django.db import models
+from django.core.exceptions import ValidationError, MultipleObjectsReturned
+from django.db import models, IntegrityError
 from versionfield import VersionField
 from django.utils.translation import gettext as _
 
@@ -8,8 +8,7 @@ from django.utils.translation import gettext as _
 class SingletonModel(models.Model):
     """Singleton Django Model.
 
-    It allows only one instance of the model to be created.
-
+    Allow only one instance of the model to be created.
     To get the instance of the model, use `<YourModel>.get_instance()`.
     """
 
@@ -21,17 +20,15 @@ class SingletonModel(models.Model):
     def save(self, *args, **kwargs):
         """Save object to the database.
 
-        If 'aggressive' Meta attribute is set, remove all other entries if there are any.
-
         Raises:
-            ValidationError if saving a new object, and there is already another
-            instance in the database.
+            IntegrityError: if there is already another instance in the database.
         """
 
+        # If '_aggressive' attribute is set, remove all other entries if there are any.
         # if self._aggressive:
         #     self.__class__.objects.exclude(id=self.id).delete()
         if not self.pk and self.__class__.objects.exists():
-            raise ValidationError(
+            raise IntegrityError(
                 f"There can be only one {self.__class__.__name__} instance."
             )
         super().save(*args, **kwargs)
@@ -41,15 +38,20 @@ class SingletonModel(models.Model):
         """Load object from the database.
 
         Failing that, create a new empty (default) instance of the object and return it
-        (without saving it to the database).
+        (without saving it - you have to do that yourself).
+
         Raises:
-            MultipleObjectsReturned if there are more objects saved in the databases.
+            IntegrityError: if there are more than one objects saved in the databases.
         """
 
         try:
             return cls.objects.get()
         except cls.DoesNotExist:
             return cls()
+        except MultipleObjectsReturned as e:
+            raise IntegrityError(
+                f"There are more than one instances of {cls.__name__} saved in the database"
+            )
 
 
 class Page(models.Model):
