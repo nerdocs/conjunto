@@ -28,6 +28,7 @@ dependencies = [
     "django-web-components",
     "django-statici18n",
     "gdaps>=0.8.4",
+    "django-extensions>=3.2",
 ]
 
 [project.urls]
