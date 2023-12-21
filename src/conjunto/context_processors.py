@@ -1,6 +1,8 @@
 from django.conf import settings as django_settings
 from conjunto.menu import Menu
 
+__all__ = ["globals", "settings"]
+
 
 def globals(request):
     return {
@@ -9,5 +11,10 @@ def globals(request):
             # "version": __version__,
         },
         "menus": Menu(request),
+    }
+
+
+def settings(request):
+    return {
         "settings": request.settings,
     }

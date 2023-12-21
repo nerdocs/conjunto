@@ -42,6 +42,8 @@ dev = [
     "twine",
     "pytest",
     "pre-commit",
-    "black"
+    "black",
+    "mkdocs",
+    "mkdocstrings[python]"
 ]
 

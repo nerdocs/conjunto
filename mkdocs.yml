@@ -1,0 +1,54 @@
+site_name: Conjunto documentation
+repo_url: https://github.com/nerdocs/conjunto
+edit_uri: blob/main/docs/
+site_description: "Conjunto - Django application framework using HTMX, Tabler.io, tables2, crispy, etc."
+site_dir: public
+
+nav:
+  - Overview: index.md
+  - Usage:
+      - Installation: usage/installation.md
+      - URLs: usage/urls.md
+      - Settings: usage/settings.md
+      - Maintenance Mode: usage/maintenance_mode.md
+  - Development:
+      - General advices: development.md
+      - API: api.md
+  - FAQ: faq.md
+
+
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [ src ]
+          options:
+            show_source: false
+            show_submodules: true
+      default_handler: python
+  - search
+  - autorefs
+
+theme:
+  name: readthedocs
+  features:
+      - navigation.instant
+      - navigation.tabs
+hooks:
+  - docs/hooks.py
+watch:
+  - src/conjunto
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - admonition
+  - meta
+  - toc:
+      permalink: True
+  # - pymdownx.superfences:
+  #     custom_fences:
+  #       - name: mermaid
+  #         class: mermaid
+  #         format: !!python/name:pymdownx.superfences.fence_code_format

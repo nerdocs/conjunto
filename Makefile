@@ -42,8 +42,12 @@ coverage:
 #check:
 #	ruff check .
 #
-#doc:
-#	mkdocs build -d build/doc/
+doc:
+	mkdocs build -d build/doc/
+
+doc-serve:
+	mkdocs serve
+
 
 build:
 	flit build
