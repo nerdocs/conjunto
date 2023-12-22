@@ -31,11 +31,11 @@ class DataGrid(component.Component):
     It automatically determines all regular model fields and shows their translated
     title. It also detects properties/getters instead of fields, the component tries to
     find out a proper name as title here by creating a capitalized version of the
-    property name and translating it into the locale language. However you have to provide
+    property name and translating it into the locale language. However, you have to provide
     a proper translation string for your property name in your .po file manually.
 
     > **Note**
-    > To keep Django's makemessaes from commenting out these "unused" translations,
+    > To keep Django's `makemessaes` from commenting out these "unused" translations,
     > just add an unused `_("...")` string anywhere into your method.
     > E.g. when your property is named "display_name()", just add a `_("Display name")`
     > anywhere into this method block. This keeps Django from garbage collecting this

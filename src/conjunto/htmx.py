@@ -1,6 +1,8 @@
+from django.http import HttpRequest
 from django.urls import reverse, URLPattern, path
 from gdaps.api import InterfaceRegistry
 
+from conjunto.menu import IActionButton
 from conjunto.tools import camel_case2snake
 from conjunto.views import HtmxResponseMixin
 
@@ -122,7 +124,9 @@ class HxActionButton(HxButton):
         action_button: the IActionButton class
     """
 
-    def __init__(self, request, action_button, *args, **kwargs):
+    def __init__(
+        self, request: HttpRequest, action_button: IActionButton, *args, **kwargs
+    ):
         css_class = kwargs.pop("css_class", "")
         css_class += " btn-action"
         # initialize the button with the IActionButton's values

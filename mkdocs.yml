@@ -13,10 +13,8 @@ nav:
       - Maintenance Mode: usage/maintenance_mode.md
   - Development:
       - General advices: development.md
-      - API: api.md
+      - API: reference/
   - FAQ: faq.md
-
-
 
 plugins:
   - mkdocstrings:
@@ -26,9 +24,16 @@ plugins:
           options:
             show_source: false
             show_submodules: true
+            show_root_heading: true
       default_handler: python
   - search
   - autorefs
+  - gen-files:
+      scripts:
+      - scripts/gen_ref_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - section-index
 
 theme:
   name: readthedocs

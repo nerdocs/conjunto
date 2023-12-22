@@ -72,9 +72,9 @@ class ActionButtonType(IntegerChoices):
 class ActionButtonsTable(UpdateTableMixin, tables.Table):
     """A table mixin that provides an "actions" column for row actions.
 
-    # The table will update itself if a given event is triggered.
-    Per default, the `actions` column is positioned at the end via Meta.sequence.
-    However, if you use your own Meta.sequence, don't forget to add the "actions"
+    The table will update itself if a given event is triggered. Per default,
+    the `actions` column is positioned at the end via Meta.sequence. However,
+        if you use your own Meta.sequence, don't forget to add the "actions"
     column at the end.
 
     Arguments:
@@ -90,15 +90,18 @@ class ActionButtonsTable(UpdateTableMixin, tables.Table):
     actions = ActionButtonsColumn()
 
     class Meta:
-        record_view_name = ""
-        standard_buttons = [ActionButtonType.EDIT, ActionButtonType.DELETE]
+        record_view_name: str = ""
+        standard_buttons: list[ActionButtonType] = [
+            ActionButtonType.EDIT,
+            ActionButtonType.DELETE,
+        ]
         action_buttons_menu = []
 
     def __init__(
         self,
-        record_view_name=None,
-        action_buttons_menu=None,
-        standard_buttons=None,
+        record_view_name: str = None,
+        action_buttons_menu: list = None,
+        standard_buttons: list[ActionButtonType] = None,
         listen_events=None,
         **kwargs,
     ):

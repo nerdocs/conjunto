@@ -96,7 +96,7 @@ class MyDynamicFormMixin:
 
     Attributes:
         context (dict[str, Any]): The context passed to the form from the view. This
-        variable can be accessed within the form via `self.context`.
+            variable can be accessed within the form via `self.context`.
 
     Meta Attributes:
         excluded_fields_method (ExcludeMethod): The method to use to if a field is
@@ -147,14 +147,14 @@ class DynamicHtmxFormMixin(DynamicFormMixin):
 
     Attributes:
         context (dict[str, Any]): The context passed to the form from the view. This
-        variable can be accessed within the form via `self.context`.
+                variable can be accessed within the form via `self.context`.
         form_id (str): The id of the form. This is used to generate the id of the
-            form, which is needed as HTMX target
+                form, which is needed as HTMX target
 
         Meta.trigger_fields: A dict with field names as keys that will trigger a
-        dynamic update on a list of fields (the dict values) on a "change" event.
+                dynamic update on a list of fields (the dict values) on a "change" event.
         Meta.update_url: The URL to send the dynamic update request to.
-            Defaults to current URL if not provided.
+                Defaults to current URL if not provided.
 
     Raises:
         AttributeError: If the `trigger_fields` attribute is not defined in `Meta`.
