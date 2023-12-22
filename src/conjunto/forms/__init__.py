@@ -97,11 +97,10 @@ class MyDynamicFormMixin:
     Attributes:
         context (dict[str, Any]): The context passed to the form from the view. This
             variable can be accessed within the form via `self.context`.
-
-    Meta Attributes:
-        excluded_fields_method (ExcludeMethod): The method to use to if a field is
+        Meta.excluded_fields_method (ExcludeMethod): The method to use to if a field is
             excluded. The default is to hide the field (HIDE). DELETE removes the
             excluded field entirely from the form, and DISABLE disables the field.
+
     """
 
     class Meta:
@@ -155,6 +154,7 @@ class DynamicHtmxFormMixin(DynamicFormMixin):
                 dynamic update on a list of fields (the dict values) on a "change" event.
         Meta.update_url: The URL to send the dynamic update request to.
                 Defaults to current URL if not provided.
+        Meta.trigger: the event that triggers the update. Defaults to "change".
 
     Raises:
         AttributeError: If the `trigger_fields` attribute is not defined in `Meta`.
@@ -163,7 +163,7 @@ class DynamicHtmxFormMixin(DynamicFormMixin):
     class Meta:
         trigger_fields: list[str] = []
         update_url: str = "."
-        trigger = "change"
+        trigger: str = "change"
 
     def __init__(self, form_id, *args, **kwargs):
         super().__init__(*args, **kwargs)

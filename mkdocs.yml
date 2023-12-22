@@ -25,6 +25,7 @@ plugins:
             show_source: false
             show_submodules: true
             show_root_heading: true
+            show_root_members_full_path: true
       default_handler: python
   - search
   - autorefs

@@ -42,8 +42,8 @@ class DataGrid(component.Component):
     > translation.
 
     Attributes:
-    - object: the Django model object to display
-    - fields: a comma separated list of field names to display
+        object: the Django model object to display
+        fields: a comma separated list of field names to display
 
     Example usage:
     ```django

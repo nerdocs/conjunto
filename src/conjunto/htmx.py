@@ -11,10 +11,10 @@ class HxLink:
     """Render a hyperlink using HTMX.
 
     Attributes:
-        url: the url
-        text: the text to display
-        icon: the (optional) icon to display before the text
-        dialog: whether to open a modal dialog
+        url: the URL.
+        text: the text to display.
+        icon: the (optional) icon to display before the text.
+        dialog: whether to open a modal dialog. Defaults to `False`.
     """
 
     def __init__(
@@ -64,6 +64,11 @@ class HxButton:
         view_name: the name of the view to call on click, if no url is provided.
             if provided, the render method must be called with url params if they are
             needed to create the url using reverse(view_name, kwargs)
+
+    Example:
+        ```django
+        {% hx_button url="person:add" method="post" icon="plus" dialog=True css_class="btn"
+        ```
     """
 
     def __init__(

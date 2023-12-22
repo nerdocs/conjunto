@@ -7,6 +7,8 @@ from gdaps.api import Interface
 
 class MenuItemInterfaceMixin:
     """
+    A mixin that provides common functionality for menu items or action buttons etc.
+
     Attributes:
         title: the (translatable) title that should be displayed
             in the menu.
@@ -96,9 +98,11 @@ class MenuItemInterfaceMixin:
         return found
 
     def has_parent(self) -> bool:
+        """Returns `True` if this menu item has a parent, `False` otherwise."""
         return "__" in self.slug
 
     def children(self) -> Iterable:
+        """Returns an iterable of all children of this menu item."""
         if self.has_children():
             for item in self._children:
                 yield item
@@ -158,13 +162,12 @@ class IMenuItem(MenuItemInterfaceMixin):
     CALLABLE_ATTRIBUTES = ["title", "url", "badge", "icon", "check"]
     url: str = ""
     separator: bool = False
-    badge = None
-    exact_url = False
+    badge: str = None
+    exact_url: bool = False
     collapsed: bool = True
     _attrs: dict = {}
 
     def __init__(self, request):
-        """initializes a menu item during one request."""
         super(IMenuItem, self).__init__(request)
 
         if self.view_name and self.url:
@@ -174,7 +177,7 @@ class IMenuItem(MenuItemInterfaceMixin):
             return
 
     def selected(self) -> bool:
-        """check current url against this item"""
+        """Check current URL against this item."""
         is_current = False
         if self.exact_url:  # FIXME: exact_url does not work
             if re.match(f"{self.url}$", self.request.path):
@@ -264,7 +267,7 @@ class Menu:
         """walk through"""
 
     def __getitem__(self, item):
-        """returns filtered out menu items with the given '.menu' name."""
+        """Returns filtered out menu items with the given '.menu' name."""
         for menu_item in self._cache:
             # TODO: handle submenus
             if (
