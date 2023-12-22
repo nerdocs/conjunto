@@ -35,7 +35,7 @@ class DataGrid(component.Component):
     a proper translation string for your property name in your .po file manually.
 
     > **Note**
-    > To keep Django's `makemessaes` from commenting out these "unused" translations,
+    > To keep Django's `makemessages` from commenting out these "unused" translations,
     > just add an unused `_("...")` string anywhere into your method.
     > E.g. when your property is named "display_name()", just add a `_("Display name")`
     > anywhere into this method block. This keeps Django from garbage collecting this
