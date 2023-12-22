@@ -1,5 +1,5 @@
 {% load markdownify %}
-<div
+<{{ elt }}
     id="card-updateable-{{ id }}"
     hx-get="{{ url }}"
     hx-target="find *" {# find any child element #}
@@ -9,4 +9,4 @@
     hx-disinherit="*"
 >
     {% render_slot slots.inner_block %}
-</div>
+</{{ elt }}>

@@ -92,17 +92,21 @@ class List(component.Component):
 @component.register("updateable")
 class Updateable(component.Component):
     """
-    div element that updates itself using HTMX when a certain
+    HTML element that updates itself using HTMX when a certain
     Javascript event is triggerd anywhere in the body.
 
     Attributes:
         id: the id attribute of th div.
+        elt: the HTML element that should be rendered. Default: div
         trigger: the Js event that should trigger the update
         url: the URL to call a get request to update the component
 
     Example:
         ```django
         {% updateable id="my-card" trigger="person:changed" url=request.path %}
+
+        {% url 'person:update' as person_update_url %}
+        {% updateable elt="ul" id="people-list" trigger="person:changed" url=person_update_url %}
         ```
     """
 
@@ -117,6 +121,7 @@ class Updateable(component.Component):
                 )
         return {
             "id": self.attributes["id"],
+            "elt": self.attributes.get("elt", "div"),
             "url": self.attributes["url"],
             "trigger": self.attributes["trigger"],
         }
