@@ -75,11 +75,17 @@ class DataGrid(component.Component):
 
 @component.register("list")
 class List(component.Component):
-    """A flexible component to display a Tabler.io list."""
+    """A flexible component to display a Tabler.io list.
+
+    Attributes:
+        items: the list of objects to display. Should be a queryset.
+        hoverable: whether the list items are hoverable or not.
+    """
 
     template_name = "conjunto/components/list.html"
 
     def get_context_data(self, items: list, hoverable: bool = False):
+        # TODO: should "items" be renamed into "queryset"
         return {"items": "items", "hoverable": hoverable}
 
 
