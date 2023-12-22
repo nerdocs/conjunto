@@ -44,10 +44,11 @@ dev = [
     "pytest",
     "pre-commit",
     "black",
+]
+doc = [
     "mkdocs",
     "mkdocstrings[python]",
     "mkdocs-gen-files",
     "mkdocs-literate-nav",
     "mkdocs-section-index",
 ]
-
