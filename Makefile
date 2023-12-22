@@ -7,9 +7,6 @@ MANAGE = cd src && django-admin
 dev:
 	python -m pip install --editable ".[dev]"
 
-publish: build
-	flit publish
-
 all: init locale staticfiles
 production: localecompile staticfiles
 
@@ -52,5 +49,5 @@ doc-serve:
 build:
 	flit build
 
-publish:
+publish: build
 	flit publish
