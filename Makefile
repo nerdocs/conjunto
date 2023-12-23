@@ -42,7 +42,7 @@ coverage:
 doc:
 	mkdocs build -d build/doc/
 
-doc-serve:
+livedocs:
 	mkdocs serve
 
 
