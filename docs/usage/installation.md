@@ -1,7 +1,8 @@
 # Installation
 
+### Module install
 
-Install Conjunto using pip
+Install Conjunto in your Django application using pip:
 
 ```bash
 python -m pip install conjunto
@@ -49,4 +50,33 @@ TEMPLATES = [
 ]
 ```
 
+
+### .env file
+You have to  provide an `.env` file in your project directory to configure your conjunto application correctly. Use this as example:
+
+```ini
+SECRET_KEY="..."
+
+# postgresql, mysql, sqlite3, oracle:
+DATABASE_ENGINE=django.db.backends.sqlite3
+DATABASE_NAME=/home/<user>/.../medspeak_site/db.sqlite3
+DATABASE_USER=
+DATABASE_PASS=
+
+# your hostname / FQDN
+ALLOWED_HOSTS=127.0.0.1,localhost
+STATIC_ROOT=/home/<user>/.../medspeak_site/static
+MEDIA_ROOT=/home/<user>/.../medspeak_site/media
+
+# remove this on production sites:
+DEBUG=True
+
+# shows a red bar at the top to warn you that you are on a testing site
+;TESTING=True  
+```
+
+To generate a SECRET_KEY, run
+```bash
+python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+```
 
