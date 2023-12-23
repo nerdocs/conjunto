@@ -7,10 +7,13 @@ site_dir: public
 nav:
   - Overview: index.md
   - Usage:
-      - Installation: usage/installation.md
-      - URLs: usage/urls.md
-      - Settings: usage/settings.md
-      - Maintenance Mode: usage/maintenance_mode.md
+    - Installation: usage/installation.md
+    - URLs: usage/urls.md
+    - Components: usage/components.md
+    - Settings: usage/settings.md
+    - Maintenance Mode: usage/maintenance_mode.md
+  - Management:
+    - Commands: mgmt_cmds.md
   - Development:
       - General advices: development.md
       - API: reference/

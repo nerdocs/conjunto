@@ -7,7 +7,18 @@ Install Conjunto using pip
 python -m pip install conjunto
 ```
 
-There are a few things to set in your settings.py.
+Add it to your `INSTALLED_APPS`, **before** django_extensions, because it overrides its management command
+`update_permissions`.
+
+```python
+INSTALLED_APPS =  [
+    ...
+    "conjunto",
+    "django_extensions",
+    ...
+]
+```
+
 
 ### Middleware & Context processor
 
