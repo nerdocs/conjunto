@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError, MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned
 from django.db import models, IntegrityError
 from versionfield import VersionField
 from django.utils.translation import gettext as _
@@ -83,22 +83,6 @@ class VersionedPage(Page):
 
     def __str__(self):
         return f"{self.title} (v{self.version})"
-
-
-class StaticPage(Page):
-    pass
-
-
-class StaticVersionedPage(VersionedPage):
-    pass
-
-
-class LicensePage(VersionedPage):
-    """A page that holds the license information for this software."""
-
-
-class PrivacyPage(VersionedPage):
-    """A page that holds the privacy information for this software."""
 
 
 class AbstractSettings(SingletonModel):

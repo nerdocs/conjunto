@@ -18,7 +18,7 @@ from django.views.generic import (
     CreateView,
 )
 
-from conjunto.models import PrivacyPage, LicensePage
+from conjunto.cms.models import LicensePage, PrivacyPage
 from conjunto.tools import camel_case2snake
 from django.utils.translation import gettext_lazy as _
 
