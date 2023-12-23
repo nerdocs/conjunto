@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.5]
 - update translations
+- move CMS functionality in own subapp `conjunto.cms`
 
 ## [0.0.4]
 ### Fixed
