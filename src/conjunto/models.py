@@ -122,10 +122,13 @@ class AbstractSettings(SingletonModel):
     )
     maintenance_mode = models.BooleanField(default=False)
     maintenance_title = models.CharField(max_length=100, default="", blank=True)
-    maintenance_text = models.TextField(
+    maintenance_content = models.TextField(
         default="",
         blank=True,
         help_text=_("Text to display on the maintenance page. Supports Markdown."),
+    )
+    maintenance_mode_image = models.ImageField(
+        blank=True, null=True, upload_to="site-images"
     )
 
     def __str__(self):

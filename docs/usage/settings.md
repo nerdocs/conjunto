@@ -26,7 +26,7 @@ Conjunto provides a few fields in `AbstractSettings`:
 * site_description: A short description, which e.g. could be displayed on your starter page in a hero.
 * maintenance_mode: boolean. Self-explanatory.
 * maintenance_title: The title to display on your maintenance page
-* maintenance_text: The content to display on your maintenance page
+* maintenance_content: The content to display on your maintenance page
 
 
 

@@ -29,6 +29,7 @@ dependencies = [
     "django-statici18n",
     "gdaps>=0.8.4",
     "django-extensions>=3.2",
+    "Pillow",
 ]
 
 [project.urls]

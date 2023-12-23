@@ -7,7 +7,7 @@ Then you can set the maintenance mode in your admin panel.
 If the maintenance mode is switched on, every request of a user that is not **staff** (meaning `user.is_staff`) will be redirected to `/maintenance/` which is a simple TemplateView.
 You must provide a `maintenance.html` file for this to work properly.
 
-You can access `settings.maintenance_title` and `settings.maintenance_text` in that template.
+You can access `settings.maintenance_title` and `settings.maintenance_content` in that template.
 
 
 In each view, you can also use the maintenance mode:

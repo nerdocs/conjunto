@@ -17,12 +17,19 @@ class MaintenanceMiddleware:
 
         settings_model_name = settings.SETTINGS_MODEL
         request.settings = apps.get_model(settings_model_name).get_instance()
+
+        # if user is logged in and is not staff, redirect to maintenance page
+        # check also if requested URL is not one of the following:
+        # - login page
+        # - maintenance page
+        # - media files
         if not request.user.is_staff:
-            maintenance_mode = request.settings.maintenance_mode
-            if maintenance_mode and (
-                path not in [reverse("login"), reverse("maintenance")]
+            if (
+                request.settings.maintenance_mode
+                and (path not in [reverse("login"), reverse("maintenance")])
+                and not path.startswith(settings.MEDIA_URL)
             ):
-                return redirect(reverse("maintenance"))
+                return redirect(reverse("maintenance") + f"?next={request.path}")
 
         response = self.get_response(request)
 
