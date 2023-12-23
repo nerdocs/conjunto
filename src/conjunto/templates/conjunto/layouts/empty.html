@@ -1,8 +1,10 @@
 {% extends 'conjunto/layouts/html.html' %}
 
-
-
 {% block page %}
-  {% block content %}
-  {% endblock %}
+  <div class="container-xl d-flex flex-column justify-content-center">
+    <div class="empty">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
 {% endblock %}
