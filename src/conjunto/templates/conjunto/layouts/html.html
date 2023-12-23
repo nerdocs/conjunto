@@ -22,6 +22,10 @@
 
   {% csrf_token %}
 
+  {% if not PRODUCTION %}
+  	<div class="bg-red" style="height:7px" title="{% translate 'Warning! This is a testing site.' %}"></div>
+  {% endif %}
+
   <div class="page">
     {% block header %}{% endblock %}
     {% block main-menu %}{% endblock %}

@@ -80,3 +80,25 @@ To generate a SECRET_KEY, run
 python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
 ```
 
+
+### Testing site hint
+
+It could lead to really nasty problems if you change content/settings on a production site while assuming you are on a testing server. Conjunto prevents this by looking for a `PRODUCTION` setting (defaults to `False`). If this is not actively set to `True`, it will render a red bar at the top of the `<body>`tag to indicate that you are on a testing site.
+
+So add this to your settings:
+
+```python
+PRODUCTION = env("PRODUCTION", default=False)
+```
+
+And set it to `True` **only** in your production environment's `.env` file:
+```ini
+PRODUCTION=True
+```
+
+You can also access this setting via `PRODUCTION` anywhere in your templates:
+```django
+{% if not PRODUCTION %}
+  <div>TESTING SITE!</div>
+{% endif %}
+```

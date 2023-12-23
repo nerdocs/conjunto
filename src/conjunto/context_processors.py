@@ -17,4 +17,5 @@ def globals(request):
 def settings(request):
     return {
         "settings": request.settings,
+        "TESTING": getattr(django_settings, "TESTING", False),
     }
