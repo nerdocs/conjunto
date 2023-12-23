@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-19 00:42+0100\n"
+"POT-Creation-Date: 2023-12-23 13:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,15 +22,15 @@ msgstr ""
 msgid "This field is required."
 msgstr ""
 
-#: conjunto/models.py:111 conjunto/models.py:112 conjunto/models.py:130
+#: conjunto/models.py:113 conjunto/models.py:114 conjunto/models.py:135
 msgid "Settings"
 msgstr ""
 
-#: conjunto/models.py:119
+#: conjunto/models.py:121
 msgid "Text to display as site description. Supports Markdown."
 msgstr ""
 
-#: conjunto/models.py:126
+#: conjunto/models.py:128
 msgid "Text to display on the maintenance page. Supports Markdown."
 msgstr ""
 
@@ -172,70 +172,70 @@ msgstr ""
 
 #: conjunto/tables.py:55
 msgid "Actions"
-msgstr ""
+msgstr "Aktionen"
 
-#: conjunto/tables.py:188
+#: conjunto/tables.py:191
 #, python-brace-format
 msgid "Edit {object}"
-msgstr ""
+msgstr "{object} bearbeiten"
 
-#: conjunto/tables.py:201
+#: conjunto/tables.py:204
 #, python-brace-format
 msgid "Delete {object}"
-msgstr ""
+msgstr "{object} löschen"
 
-#: conjunto/tables.py:214
+#: conjunto/tables.py:217
 #, python-brace-format
 msgid "Delete {object} without confirmation"
-msgstr ""
+msgstr "{object} ohne Bestätigung löschen"
 
 #: conjunto/templates/conjunto/layouts/html.html:38
 msgid "Privacy"
-msgstr ""
+msgstr "Privatsphäre"
 
 #: conjunto/templates/conjunto/layouts/html.html:39
 msgid "License"
-msgstr ""
+msgstr "Lizenz"
 
-#: conjunto/templates/conjunto/layouts/html.html:56
+#: conjunto/templates/conjunto/layouts/html.html:57
 msgid "All rights reserved."
-msgstr ""
+msgstr "Alle Rechte vorbehalten"
 
 #: conjunto/templates/conjunto/login.html:16
 msgid "Login"
-msgstr ""
+msgstr "Anmelden"
 
 #: conjunto/templates/conjunto/login.html:28
 msgid "User name"
-msgstr ""
+msgstr "Benutzername"
 
 #: conjunto/templates/conjunto/login.html:29
 msgid "Your username"
-msgstr ""
+msgstr "Ihr Benutzername"
 
 #: conjunto/templates/conjunto/login.html:37
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: conjunto/templates/conjunto/login.html:40
 msgid "Your password"
-msgstr ""
+msgstr "Ihr Passwort"
 
 #: conjunto/templates/conjunto/login.html:51
 msgid "I forgot my password"
-msgstr ""
+msgstr "Passwort vergessen"
 
 #: conjunto/templates/conjunto/login.html:59
 msgid "Remember me on this device"
-msgstr ""
+msgstr "Auf diesem Gerät angemeldet bleiben"
 
 #: conjunto/templates/conjunto/login.html:65
 msgid "Sign in"
-msgstr ""
+msgstr "Anmelden"
 
 #: conjunto/templates/conjunto/login.html:71
 msgid "or"
-msgstr ""
+msgstr "oder"
 
 #: conjunto/templates/conjunto/login.html:90
 msgid "Don't have an account yet?"
