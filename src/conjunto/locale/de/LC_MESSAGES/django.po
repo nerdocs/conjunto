@@ -199,7 +199,7 @@ msgstr "Lizenz"
 
 #: conjunto/templates/conjunto/layouts/html.html:57
 msgid "All rights reserved."
-msgstr "Alle Rechte vorbehalten"
+msgstr "Alle Rechte vorbehalten."
 
 #: conjunto/templates/conjunto/login.html:16
 msgid "Login"
