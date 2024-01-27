@@ -4,14 +4,13 @@ import logging
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import (
     DeleteView,
-    FormView,
     DetailView,
     TemplateView,
     UpdateView,
@@ -27,32 +26,7 @@ from conjunto.cms.models import LicensePage, PrivacyPage
 from conjunto.tools import camel_case2snake
 from django.utils.translation import gettext_lazy as _
 
-
-class HtmxResponseMixin:
-    """View Mixin to add HTMX functionality.
-
-    optionally checks if request originates from an HTMX request.
-
-    Attributes:
-        enforce_htmx: if True, all requests that do not come from a HTMX
-            component are blocked
-        success_event: a Javascript event that is triggered on the client after
-            the request is completed.
-
-    Raises:
-        PermissionDenied: if enforce_htmx==True and request origins from a
-            non-HTMX caller.
-    """
-
-    enforce_htmx: bool = True
-
-    def dispatch(self, request, *args, **kwargs):
-        if self.enforce_htmx and not self.request.htmx:
-            raise PermissionDenied(
-                f"Permission denied: View {self.__class__.__name__} can only be "
-                "called by a HTMX request."
-            )
-        return super().dispatch(request, *args, **kwargs)
+User = get_user_model()
 
 
 class HtmxTemplateMixin:
@@ -437,7 +411,7 @@ class SettingsView(PermissionRequiredMixin, UseElementMixin, DetailView):
     template_name = "conjunto/settings.html"
     elements = [ISettingsSection]
     query_variable = "section"
-    # default_component_name = "account"
+    default_element_name = "account"
 
     def has_permission(self):
         return self.request.user.is_authenticated

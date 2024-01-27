@@ -1,0 +1,65 @@
+{% extends "base.html" %} {# Your project should provide a base.html #}
+{% load i18n gdaps %}
+
+{% block page %}
+  <div class="page-wrapper">
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <h2 class="page-title">
+              {% translate 'Settings' %}
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="container-xl">
+        <div class="card" >
+          <div class="row g-0">
+            <div class="col-12 col-md-3 border-end">
+              <div class="card-body">
+
+                {% for element in elements.ISettingsSection %}
+
+                  {% ifchanged element.group %}
+                    {% if not forloop.first %}
+                      </div>  <!-- Close the div tag if it's not the first iteration -->
+                    {% endif %}
+                    <h4 class="subheader">{{ element.group }}</h4>
+                    <div id="settings-menu" class="list-group list-group-transparent">
+                  {% endifchanged %}
+                  <button
+                     class="list-group-item list-group-item-action d-flex align-items-center{% if element.name == active_component %} active{% endif %}"
+                     id="settings-menu-button-{{ element.name }}"
+                     hx-get="{% url element.get_url_name user.id %}"
+                     hx-trigger="{% if element.name == active_component %}load, {% endif %}click"
+                     hx-push-url="?{{ view.query_variable }}={{ element.name }}"
+                     hx-target="#settings-content"
+                     onclick="updateActive(this);"
+                  >
+                    <i class="bi bi-{{ element.icon }} me-2"></i>
+                    {{ element.title }}
+                  </button>
+                {% endfor %}
+                  </div>
+
+            </div>
+          </div>
+          <div id="settings-content" class="col-12 col-md-9 d-flex flex-column"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+      function updateActive(selected) {
+          document.querySelectorAll("#settings-menu>.list-group-item").forEach((elt)=>{
+              //remove all active classes
+              elt.classList.remove("active")
+          });
+          selected.classList.add('active');
+      }
+  </script>
+{% endblock %}

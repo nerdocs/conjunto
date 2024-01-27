@@ -1,0 +1,35 @@
+{% load i18n gdaps crispy_forms_tags conjunto %}
+
+{% if form %}
+  <form
+      hx-post="{% url 'elements:'|add:view.name user.id %}"
+      id="user-settings-form-{{ view.name }}"
+      hx-select="#user-profile-form-{{ view.name }}"
+      hx-target="#user-profile-form-{{ view.name }}"
+      hx-swap="outerHtml"
+      enctype="multipart/form-data">
+    <div class="card-body">
+      {% block content %}
+        {% crispy form %}
+        <div class="buttonHolder">
+          <button type="submit"  class="btn btn-primary" id="submit-id-submit">
+            {% translate 'Save' %}
+          </button>
+        </div>
+      {% endblock %}
+    </div>
+  </form>
+{% elif elements %}
+
+
+  {% for element in elements.ISettingsSubSection %}
+    {# FIXME: this should better be filtered in the view/block, not in the template #}
+    {% if element.parent == view.name %}
+      {% render_element element %}
+    {% endif %}
+{##}
+  {% endfor %}
+
+{% else %}
+  <!-- No content. -->
+{% endif %}

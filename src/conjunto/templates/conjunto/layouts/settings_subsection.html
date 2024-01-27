@@ -1,22 +1,30 @@
 {% load i18n gdaps crispy_forms_tags %}
 
-{% block title %}
-  {% if title %}
+{#      <div#}
+{#          class="card-body" id="user-settings-{{ element.parent }}-{{ element.name }}"#}
+{#          hx-get="{% url 'elements:'|add:element.name user.id %}"#}
+{#          hx-swap="outerHTML"#}
+{#          hx-trigger="load"#}
+{#      ></div>#}
+
+<div class="card-body" id="user-settings-{{ element.parent }}-{{ element.name }}" hx-swap="outerHTML">
+  {% if element.title %}
     <h3 class="card-title">
-      {{ title }}
+      {% block title %}
+        {{ element.title }}
+      {% endblock %}
     </h3>
   {% endif %}
-{% endblock %}
 
-{% block content %}
-  {% if form %}
-    <form
-        hx-post="{% url 'elements:'|add:name user.id %}"
-        {#      hx-select="#user-profile-form-{{ view.name }}"#}
-        hx-target="#user-settings-{{ element.parent }}-{{ view.name }}"
-        hx-swap="outerHtml"
-        enctype="multipart/form-data">
-      {% crispy form %}
-    </form>
-  {% endif %}
-{% endblock %}
+  {% block content %}
+    {% if form %}
+      <form
+          hx-post="{% url 'elements:'|add:element.name user.id %}"
+          {#      hx-select="#user-profile-form-{{ view.name }}"#}
+          hx-target="#user-settings-{{ element.parent }}-{{ element.name }}"
+          enctype="multipart/form-data">
+        {% crispy form %}
+      </form>
+    {% endif %}
+  {% endblock %}
+</div>
