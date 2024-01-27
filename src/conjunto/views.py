@@ -18,6 +18,11 @@ from django.views.generic import (
     CreateView,
 )
 
+from conjunto.api.interfaces import (
+    ISettingsSection,
+    HtmxResponseMixin,
+    UseElementMixin,
+)
 from conjunto.cms.models import LicensePage, PrivacyPage
 from conjunto.tools import camel_case2snake
 from django.utils.translation import gettext_lazy as _
@@ -417,3 +422,25 @@ class AnonymousRequiredMixin(PermissionRequiredMixin):
         if not self.request.user.is_anonymous:
             redirect(reverse(settings.LOGIN_REDIRECT_URL))
         return True
+
+
+class SettingsView(PermissionRequiredMixin, UseElementMixin, DetailView):
+    """A generic view for application settings.
+
+    This view doesn't update data itself.
+    The actual forms processing and user data updating is done in component plugins.
+
+    You can create `ISettingsSection` plugins to add your own sections.
+    """
+
+    model = User
+    template_name = "conjunto/settings.html"
+    elements = [ISettingsSection]
+    query_variable = "section"
+    # default_component_name = "account"
+
+    def has_permission(self):
+        return self.request.user.is_authenticated
+
+    def get_object(self, queryset=None):
+        return self.request.user

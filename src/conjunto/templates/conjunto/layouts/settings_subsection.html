@@ -1,0 +1,22 @@
+{% load i18n gdaps crispy_forms_tags %}
+
+{% block title %}
+  {% if title %}
+    <h3 class="card-title">
+      {{ title }}
+    </h3>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% if form %}
+    <form
+        hx-post="{% url 'elements:'|add:name user.id %}"
+        {#      hx-select="#user-profile-form-{{ view.name }}"#}
+        hx-target="#user-settings-{{ element.parent }}-{{ view.name }}"
+        hx-swap="outerHtml"
+        enctype="multipart/form-data">
+      {% crispy form %}
+    </form>
+  {% endif %}
+{% endblock %}
