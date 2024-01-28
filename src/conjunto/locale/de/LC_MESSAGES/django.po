@@ -20,11 +20,11 @@ msgstr ""
 
 #: conjunto/forms/__init__.py:262
 msgid "This field is required."
-msgstr ""
+msgstr "Dieses Feld ist erforderlich."
 
 #: conjunto/models.py:113 conjunto/models.py:114 conjunto/models.py:135
 msgid "Settings"
-msgstr ""
+msgstr "Einstellungen"
 
 #: conjunto/models.py:121
 msgid "Text to display as site description. Supports Markdown."
@@ -245,7 +245,7 @@ msgstr "Noch kein Konto?"
 msgid "Sign up"
 msgstr "Registrieren"
 
-#: conjunto/templates/conjunto/modal-form.html:37
+#: conjunto/templates/conjunto/modal_form.html:37
 msgid "Cancel"
 msgstr "Abbrechen"
 
