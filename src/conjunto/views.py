@@ -336,7 +336,7 @@ class AutoPermissionsViewMixin(PermissionRequiredMixin):
         if self.permission_required is None:
             obj = self.get_object()
             return (
-                f"{obj._meta.app_label}.{self.__permissions_verb}_{obj._meta.model_name}",
+                f"{obj._meta.app_label}.{self._permissions_verb}_{obj._meta.model_name}",
             )
         if isinstance(self.permission_required, str):
             perms = (self.permission_required,)
@@ -385,7 +385,7 @@ class ModalCreateView(_ModalModelViewMixin, CreateView):
     of the given model as necessary permission. Override as needed.
     """
 
-    __permissions_verb = "create"
+    _permissions_verb = "create"
     _modal_title_template = "Create '{instance}'"
 
 
