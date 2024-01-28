@@ -221,6 +221,7 @@ class IBaseSettingsSectionMixin(IHtmxElementMixin):
 
     # always return to the current element after successful save
     success_url = "."
+    reload_triggers: list[str] = []
 
     def has_permission(self) -> bool:
         """
@@ -249,7 +250,16 @@ class IBaseSettingsSectionMixin(IHtmxElementMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update({"element": self})
+        if isinstance(self.reload_triggers, str):
+            self.reload_triggers = [self.reload_triggers]
+        context.update(
+            {
+                "element": self,
+                "reload_trigger": ", ".join(
+                    [f"{t} from:body" for t in self.reload_triggers]
+                ),
+            }
+        )
         return context
 
 
