@@ -1,5 +1,5 @@
 {% extends "base.html" %} {# Your project should provide a base.html #}
-{% load i18n gdaps %}
+{% load i18n gdaps conjunto %}
 
 {% block page %}
   <div class="page-wrapper">
@@ -31,7 +31,7 @@
                     <div id="settings-menu" class="list-group list-group-transparent">
                   {% endifchanged %}
                   <button
-                     class="list-group-item list-group-item-action d-flex align-items-center{% if element.name == active_component %} active{% endif %}"
+                     class="list-group-item list-group-item-action d-flex align-items-center{% if element.name == active_element %} active{% endif %}"
                      id="settings-menu-button-{{ element.name }}"
                      hx-get="{% url element.get_url_name user.id %}"
                      hx-trigger="{% if element.name == active_component %}load, {% endif %}click"
@@ -47,7 +47,15 @@
 
             </div>
           </div>
-          <div id="settings-content" class="col-12 col-md-9 d-flex flex-column"></div>
+
+          <div id="settings-content" class="col-12 col-md-9 d-flex flex-column">
+            {% for element in elements.ISettingsSection %}
+            	{% if element.name == active_element %}
+                {% render_element element %}
+            	{% endif %}
+            {% endfor %}
+          </div>
+
         </div>
       </div>
     </div>
@@ -55,11 +63,10 @@
 
   <script>
       function updateActive(selected) {
-          document.querySelectorAll("#settings-menu>.list-group-item").forEach((elt)=>{
-              //remove all active classes
-              elt.classList.remove("active")
-          });
-          selected.classList.add('active');
+          htmx.findAll("#settings-menu>.list-group-item").forEach((elt)=>{
+              htmx.removeClass(elt, "active");
+          }, "active");
+          htmx.addClass(selected, "active");
       }
   </script>
 {% endblock %}
