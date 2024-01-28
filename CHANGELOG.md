@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.6]
 - mark testing sites with read header bar
 - rename GDAPS based "component" to "element" to avoid name clashes with django-web-components
+- massively improve element rendering
+- begin adding some tabler components: list, (action)buttons, etc.
 
 ## [0.0.5] 2023-12-23
 - update translations
