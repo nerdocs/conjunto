@@ -78,15 +78,59 @@ class List(component.Component):
     """A flexible component to display a Tabler.io list.
 
     Attributes:
-        items: the list of objects to display. Should be a queryset.
         hoverable: whether the list items are hoverable or not.
+
+    Example:
+        ```django
+        {% list  hoverable=True %}
+          {% for item in items %}
+            {% #listitem title=item.title %}
+          {% endfor %}
+        {% endlist %}
+        ```
     """
 
     template_name = "conjunto/components/list.html"
 
-    def get_context_data(self, items: list, hoverable: bool = False):
+    def get_context_data(self, **kwargs):
         # TODO: should "items" be renamed into "queryset"
-        return {"items": "items", "hoverable": hoverable}
+        hoverable = self.attributes.pop("hoverable", False)
+        return {"hoverable": hoverable}
+
+
+@component.register("listitem")
+class ListItem(component.Component):
+    """A flexible component to display a Tabler.io list item.
+
+    Attributes:
+            title (str): The title of the list item.
+            subtitle (str): The subtitle of the list item. Optional.
+            picture: The picture of the list item. Optional.
+            badge_color (str): The color of a badge left of the list item. Optional.
+            active (bool): whether the list item is active or not. Defaults to False
+            url (str): The URL the title links to. Optional.
+
+    Example:
+        ```django
+        {% #list-item
+            title=item.title
+            active=False
+            badge_color="red"
+        %}
+        ```
+    """
+
+    template_name = "conjunto/components/list_item.html"
+
+    def get_context_data(self, **kwargs):
+        return {
+            "title": self.attributes.pop("title"),
+            "subtitle": self.attributes.pop("subtitle", None),
+            "picture": self.attributes.pop("picture", None),
+            "badge_color": self.attributes.pop("badge_color", None),
+            "active": self.attributes.pop("active", False),
+            "url": self.attributes.pop("url", ""),
+        }
 
 
 @component.register("updateable")
@@ -125,3 +169,49 @@ class Updateable(component.Component):
             "url": self.attributes["url"],
             "trigger": self.attributes["trigger"],
         }
+
+
+@component.register("button")
+class Button(component.Component):
+    template_name = "conjunto/components/button.html"
+    tag = "button"
+
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        htmx = self.attributes.pop("htmx", False)
+        url = self.attributes.pop("url", None)
+        context.update(
+            {
+                "icon": self.attributes.pop("icon", None),
+                "url": url,
+                "htmx": htmx,
+                "target": self.attributes.pop("target", None),
+                "tag": self.tag,
+            }
+        )
+        return context
+
+
+@component.register("listgroupaction")
+class ListGroupAction(Button):
+    template_name = "conjunto/components/list_group_action.html"
+    tag = "a"
+
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        if "url" not in context:
+            raise AttributeError(f"{self.__class__.__name__} has no 'url' attribute.")
+        return context
+
+
+@component.register("actionbutton")
+class ActionButton(Button):
+    template_name = "conjunto/components/button.html"
+    tag = "button"
+
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        if "class" not in self.attributes:
+            self.attributes["class"] = ""
+        self.attributes["class"] += " btn-action"
+        return context

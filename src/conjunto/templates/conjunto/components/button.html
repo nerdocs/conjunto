@@ -1,0 +1,6 @@
+<{{ tag }} {% merge_attrs attributes class="btn" %}>
+  {% if icon %}
+    <i class="ti ti-{{ icon }} me-2"></i>
+  {% endif %}
+  {% render_slot slots.inner_block %}
+</{{ tag }}>

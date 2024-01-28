@@ -1,0 +1,34 @@
+<div class="list-group-item{% if active %} active{% endif %}">
+  <div class="row align-items-center">
+
+    {% if badge_color %}
+      <div class="col-auto"><span class="badge bg-{{ badge_color }}"></span></div>
+    {% endif %}
+
+    {% if picture %}
+      <div class="col-auto">
+        {% if url %}<a href="{{ url }}">{% endif %}
+        <span class="avatar" {# style="..." #} }></span>
+        {% if url %}</a>{% endif %}
+      </div>
+    {% endif %}
+
+    <div class="col text-truncate">
+      {% if url %}<a href="{{ url }}" class="text-reset d-block">
+      {% else %}<div class="text-reset d-block">{% endif %}
+      {{ title }}
+      {% if not url %}</div>{% else %}</a>{% endif %}
+
+      {% if subtitle %}
+        <div class="d-block text-muted text-truncate mt-n1">{{ subtitle }}</div>
+      {% endif %}
+    </div>
+
+    {% if slots.actions %}
+      <div class="col-auto">
+        {% render_slot slots.actions %}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
