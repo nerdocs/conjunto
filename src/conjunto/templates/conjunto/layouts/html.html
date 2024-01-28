@@ -16,7 +16,7 @@
   <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" >
 </head>
 
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'{% if request.GET.fluid_layout %} class="layout-fluid"{% endif %}>
 {% block body %}
 
   {% csrf_token %}
