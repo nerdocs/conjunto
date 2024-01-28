@@ -176,10 +176,14 @@ class Button(component.Component):
     """
     HTMX enabled base button.
 
+    This could be a <button> (default), a <div> or a <a> tag, resulting in a visual
+    button.
+
     Attributes:
         dialog: whether the button should open a dialog or not.
         htmx: whether the button should open a HTMX request or not. If dialog is
-            True, HTMX is used obligatory.
+            True, HTMX is used obligatory. Defaults to False. If only set without value,
+            defaults to "get". If set to "post", a post request is used.
         target: the HTMX target element of the button, if HTMX/dialog is used.
         url: the URL to call a get/post request when using HTMX.
         icon: the icon of the button. Optional.
@@ -187,6 +191,7 @@ class Button(component.Component):
 
     template_name = "conjunto/components/button.html"
     tag = "button"
+    default_class = "btn"
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
@@ -205,31 +210,24 @@ class Button(component.Component):
                 "target": self.attributes.pop("target", None),
                 "dialog": dialog,
                 "tag": self.tag,
+                "default_class": self.default_class,
             }
         )
         return context
 
 
+@component.register("actionbutton")
+class ActionButton(Button):
+    default_class = "btn-action"
+
+
 @component.register("listgroupaction")
 class ListGroupAction(Button):
-    template_name = "conjunto/components/list_group_action.html"
     tag = "a"
+    default_class = "list-group-item-actions"
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         if "url" not in context:
             raise AttributeError(f"{self.__class__.__name__} has no 'url' attribute.")
-        return context
-
-
-@component.register("actionbutton")
-class ActionButton(Button):
-    template_name = "conjunto/components/button.html"
-    tag = "button"
-
-    def get_context_data(self, **kwargs) -> dict:
-        context = super().get_context_data(**kwargs)
-        if "class" not in self.attributes:
-            self.attributes["class"] = ""
-        self.attributes["class"] += " btn-action"
         return context

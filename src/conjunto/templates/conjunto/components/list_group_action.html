@@ -1,12 +1,13 @@
-<{{ tag }}{% if htmx %}
-    hx-{{ htmx|default:"get" }}="{{ url }}"{% if target %} hx-target="{{ target }}"{% endif %}{% if select %} hx-select="{{ select }}"{% endif %}
-  {% else %}
-    href="{{ url }}"
-  {% endif %}
-  class="list-group-item-actions"
->
-  {% if icon %}
-    <i class="icon text-secondary ti ti-{{ icon }} me-2 fs-2"></i>
-  {% endif %}
-{{ foo }}
-</{{ tag }}>
+{#BEGIN#}
+{#<{{ tag }}{% if htmx %}#}
+{#    hx-{{ htmx|default:"get" }}="{{ url }}"{% if target %} hx-target="{{ target }}"{% endif %}{% if select %} hx-select="{{ select }}"{% endif %}#}
+{#  {% else %}#}
+{#    href="{{ url }}"#}
+{#  {% endif %}#}
+{#  class="list-group-item-actions"#}
+{#>#}
+{#  {% if icon %}#}
+{#    <i class="icon text-secondary ti ti-{{ icon }} me-2 fs-2"></i>#}
+{#  {% endif %}#}
+{#</{{ tag }}>#}
+{#END#}

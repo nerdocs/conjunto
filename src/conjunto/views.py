@@ -55,12 +55,12 @@ class HtmxFormMixin(HtmxResponseMixin):
     success_event = ""
 
     def get_success_url(self):
-        """Return an empty URL."""
-        return ""
+        """Return even an empty URL."""
+        return str(self.success_url)
 
     def get_success_event(self):
         """Override this to return (e.g. generated) success event."""
-        return self.success_event
+        return str(self.success_event)
 
     def form_valid(self, form):
         """Trigger a Javascript event on the client."""
@@ -83,23 +83,27 @@ class HtmxDeleteView(HtmxFormMixin, DeleteView):
 
     # TODO either use success_url, OR success_event.
 
-    Attributes:
-        success_url: the URL to redirect to. Defaults to None, in this case no
-            redirection is made. If an URL is given, the client is redirected to that
-            URL after successful deletion by using the HX-Redirect HTMX directive.
-
+    Uses the `success_url` attribute of the view to get the URL to redirect
+    to. Defaults to None, in this case no redirection is made. If an URL is given,
+    the client is redirected to that URL after successful deletion by using the
+    HX-Redirect HTMX directive.
     """
 
     response_status = 204
+
+    # most of the time, you will use POST, or a modal dialog for deleting,
+    # so use this as default template, override as needed.
+    template_name = "conjunto/modal_confirm_delete.html"
 
     def form_valid(self, form):
         # don't call DeleteView's form_valid(), as this needs a success_url
         self.object.delete()
         # ... and create an empty response
         response = HttpResponse(status=self.response_status)
-        if self.success_url:
-            # but if success_url is give, tell HTMX to redirect client to that URL.
-            response["HX-Redirect"] = self.success_url
+        success_url = self.get_success_url()
+        if success_url:
+            # but if success_url is given, tell HTMX to redirect client to that URL.
+            response["HX-Redirect"] = success_url
         return response
 
 
@@ -129,7 +133,7 @@ class ModalFormViewMixin(HtmxFormMixin):
 
     In many cases, you need no template, as this mixin provides a generic one with
     a customizable title. The form is generated using crispy-forms.
-    If you want to customize if further, then, extend "conjunto/modal-form.html".
+    If you want to customize if further, then, extend "conjunto/modal_form.html".
     This template uses a ``header`` with a ``title`` block, a ``body``,
     and a ``footer`` block to override, for your modal dialog. In the
     footer, there is always a "Cancel" button, and as default, a "Save"
@@ -146,7 +150,7 @@ class ModalFormViewMixin(HtmxFormMixin):
     so that it can reload changed content.
     """
 
-    template_name = "conjunto/modal-form.html"
+    template_name = "conjunto/modal_form.html"
     """The default template name for the modal form. This template provides
     a simple modal form. You can extend it in your own templates too."""
 
@@ -194,6 +198,8 @@ class ModalFormViewMixin(HtmxFormMixin):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
+        # make sure that Crispy Forms doesn't create its own form tag
+        # as this would destroy the modal window.
         # create a default form helper in case of none is created and remove form tag
         if not hasattr(form, "helper"):
             form.helper = FormHelper()
@@ -320,17 +326,19 @@ class MaintenanceView(TemplateView):
 
 
 class AutoPermissionsViewMixin(PermissionRequiredMixin):
-    """Automatically uses view/create/change/delete permissions for the given model.
+    """
+    Automatically uses view/create/change/delete permissions for the given model.
+    To be used with a CRUD view.
 
     It automatically generates the "<verb>_<model>" permission
     of the given model as necessary permission for this view.
 
     Attributes:
-        __permissions_verb: the verb to create the permissions: 'create' or 'change'
-        default: "view"
+        _permissions_verb: the verb to create the permissions:
+            'view', 'create', 'change', 'delete'. Defaults to "view".
     """
 
-    __permissions_verb = "view"  # change, create, delete
+    _permissions_verb = "view"  # create, change, delete
 
     def get_permission_required(self):
         if self.permission_required is None:
@@ -346,10 +354,12 @@ class AutoPermissionsViewMixin(PermissionRequiredMixin):
 
 
 class _ModalModelViewMixin(AutoPermissionsViewMixin, ModalFormViewMixin):
-    """Mixin vor Create/UpdateViews (with permissions) that lives in a Modal.
+    """Internal mixin vor Create/Update/DeleteViews (with permissions) that lives in a
+    Modal.
 
-    It automatically generates the Modal title and sets the "<verb>_<model>" permission
-    of the given model as necessary permission. Override as needed.
+    You shouldn't have to use this directly.
+
+    It automatically generates the Modal title. Override as needed.
 
     Attributes:
         _modal_title_template: the title of the modal dialog
@@ -367,17 +377,6 @@ class _ModalModelViewMixin(AutoPermissionsViewMixin, ModalFormViewMixin):
         return ""
 
 
-class ModalUpdateView(_ModalModelViewMixin, UpdateView):
-    """Convenience UpdateView (with permissions) that lives in a Modal.
-
-    It automatically generates the Modal title and sets the "change_<model>" permission
-    of the given model as necessary permission. Override as needed.
-    """
-
-    __permissions_verb = "change"
-    _modal_title_template = "Edit '{instance}'"
-
-
 class ModalCreateView(_ModalModelViewMixin, CreateView):
     """Convenience CreateView (with permissions) that lives in a Modal.
 
@@ -387,6 +386,33 @@ class ModalCreateView(_ModalModelViewMixin, CreateView):
 
     _permissions_verb = "create"
     _modal_title_template = "Create '{instance}'"
+
+
+class ModalUpdateView(_ModalModelViewMixin, UpdateView):
+    """Convenience UpdateView (with permissions) that lives in a Modal.
+
+    It automatically generates the Modal title and sets the "change_<model>" permission
+    of the given model as necessary permission. Override as needed.
+    """
+
+    button_content = _("Save")
+    dialog_type = DialogType.UPDATE
+    _permissions_verb = "change"
+    _modal_title_template = "Edit '{instance}'"
+
+
+class ModalDeleteView(_ModalModelViewMixin, DeleteView):
+    """Convenience UpdateView (with permissions) that lives in a Modal.
+
+    It automatically generates the Modal title and sets the "change_<model>" permission
+    of the given model as necessary permission. Override as needed.
+    """
+
+    button_content = _("Delete")
+    template_name = "conjunto/modal_confirm_delete.html"
+    dialog_type = DialogType.DELETE
+    _permissions_verb = "delete"
+    _modal_title_template = "Delete '{instance}'"
 
 
 class AnonymousRequiredMixin(PermissionRequiredMixin):
@@ -406,7 +432,7 @@ class SettingsView(PermissionRequiredMixin, UseElementMixin, DetailView):
     This view doesn't update data itself.
     The actual forms processing and user data updating is done in component plugins.
 
-    You can create `ISettingsSection` plugins to add your own sections.
+    You can create `ISettingsSection` element plugins to add your own sections.
     """
 
     model = User

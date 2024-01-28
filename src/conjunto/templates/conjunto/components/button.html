@@ -1,10 +1,11 @@
-<button {% merge_attrs attributes class="btn" %}
-    {% if htmx %}
-    hx-{{ htmx }}="{{ url }}"{% if dialog %} hx-target="#dialog"{% elif target %} hx-target="{{ target }}"{% endif %}{% if select %} hx-select="{{ select }}"{% endif %}
+<{{ tag }} {% merge_attrs attributes class=default_class %}
+  {% if htmx %}
+    hx-{{ htmx|lower }}="{{ url }}"{% if dialog %} hx-target="#dialog"{% elif target %} hx-target="{{ target }}"{% endif %}{% if select %} hx-select="{{ select }}"{% endif %}
+    hx-swap="innerHTML"
   {% endif %}
 >
   {% if icon %}
     <i class="ti ti-{{ icon }} me-2 fs-2"></i>
   {% endif %}
   {% render_slot slots.inner_block %}
-</button>
+</{{ tag }}>
