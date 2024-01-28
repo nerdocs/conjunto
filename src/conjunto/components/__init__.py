@@ -140,7 +140,7 @@ class Updateable(component.Component):
     Javascript event is triggerd anywhere in the body.
 
     Attributes:
-        id: the id attribute of th div.
+        id: the id attribute of the div.
         elt: the HTML element that should be rendered. Default: div
         trigger: the Js event that should trigger the update
         url: the URL to call a get request to update the component
