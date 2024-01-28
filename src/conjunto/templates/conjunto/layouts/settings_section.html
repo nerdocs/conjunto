@@ -1,25 +1,7 @@
 {% load i18n gdaps crispy_forms_tags conjunto %}
+{# Renders a settings section with elements provided by plugins using the ISettingsSubSection interface #}
 
-{% if form %}
-  <form
-      hx-post="{% url 'elements:'|add:view.name user.id %}"
-      id="user-settings-form-{{ view.name }}"
-      hx-select="#user-profile-form-{{ view.name }}"
-      hx-target="#user-profile-form-{{ view.name }}"
-      hx-swap="outerHtml"
-      enctype="multipart/form-data">
-    <div class="card-body">
-      {% block content %}
-        {% crispy form %}
-        <div class="buttonHolder">
-          <button type="submit"  class="btn btn-primary" id="submit-id-submit">
-            {% translate 'Save' %}
-          </button>
-        </div>
-      {% endblock %}
-    </div>
-  </form>
-{% elif elements %}
+{% if elements %}
 
 
   {% for element in elements.ISettingsSubSection %}
@@ -33,10 +15,3 @@
 {% else %}
   <!-- No content. -->
 {% endif %}
-
-{#<div id="settings-menu-button-{{ view.name }}" hx-swap-oob="true">#}
-{#  <button class="list-group-item list-group-item-action d-flex align-items-center" id="settings-menu-button-matrix_server_settings" hx-get="/__elements__/matrix_server_access_section/1/matrix_server_settings/" hx-trigger="click" hx-push-url="?section=matrix_server_settings" hx-target="#settings-content" onclick="updateActive(this);">#}
-{#                    <i class="bi bi- me-2"></i>#}
-{#                    Matrix server settings#}
-{#                  </button>#}
-{#</div>#}
