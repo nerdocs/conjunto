@@ -342,9 +342,9 @@ class AutoPermissionsViewMixin(PermissionRequiredMixin):
 
     def get_permission_required(self):
         if self.permission_required is None:
-            obj = self.get_object()
+            model = self.model
             return (
-                f"{obj._meta.app_label}.{self._permissions_verb}_{obj._meta.model_name}",
+                f"{model._meta.app_label}.{self._permissions_verb}_{model._meta.model_name}",
             )
         if isinstance(self.permission_required, str):
             perms = (self.permission_required,)
