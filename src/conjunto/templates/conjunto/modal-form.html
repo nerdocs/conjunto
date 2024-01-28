@@ -36,7 +36,7 @@
     {% block footer %}
       <button type="button" class="btn me-auto" data-bs-dismiss="modal">{% translate 'Cancel' %}</button>
       {% block submit-button %}
-        <button hx-post="{{ request.path }}" class="btn btn-{{ css_class }}" type="submit" title="">
+        <button hx-post="{{ request.path }}" class="btn btn-{{ submit_button_css_class }}" type="submit" title="">
           <i class="bi bi-check-lg"></i>
           {{ button_content }}
         </button>

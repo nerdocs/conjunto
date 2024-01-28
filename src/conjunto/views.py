@@ -172,14 +172,14 @@ class ModalFormViewMixin(HtmxFormMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         icon = ""
-        klass = ""
+        submit_btn_css_class = ""
         match self.dialog_type:
             case DialogType.DELETE:
                 icon = "trash"
-                klass = "danger danger"
+                submit_btn_css_class = "danger danger"
             case DialogType.INFO:
                 icon = "info-circle"
-                klass = "info info"
+                submit_btn_css_class = "info info"
         context.update(
             {
                 "modal_title": self.get_modal_title(),
@@ -187,7 +187,7 @@ class ModalFormViewMixin(HtmxFormMixin):
                 "dialog_type": self.dialog_type,
                 "DialogType": DialogType,
                 "icon": icon,
-                "css_class": klass,
+                "submit_button_css_class": submit_btn_css_class or "primary",
             }
         )
         return context
@@ -361,7 +361,9 @@ class _ModalModelViewMixin(AutoPermissionsViewMixin, ModalFormViewMixin):
         if self.modal_title:
             return self.modal_title
         if self._modal_title_template:
-            return self._modal_title_template.format(instance=self.get_object())
+            return self._modal_title_template.format(
+                instance=self.model._meta.verbose_name
+            )
         return ""
 
 
@@ -376,15 +378,15 @@ class ModalUpdateView(_ModalModelViewMixin, UpdateView):
     _modal_title_template = "Edit '{instance}'"
 
 
-class ModalCreateView(PermissionRequiredMixin, ModalFormViewMixin, CreateView):
+class ModalCreateView(_ModalModelViewMixin, CreateView):
     """Convenience CreateView (with permissions) that lives in a Modal.
 
     It automatically generates the Modal title and sets the "create_<model>" permission
     of the given model as necessary permission. Override as needed.
     """
 
-    __verb = "create"
-    __title = "Create '{instance}'"
+    __permissions_verb = "create"
+    _modal_title_template = "Create '{instance}'"
 
 
 class AnonymousRequiredMixin(PermissionRequiredMixin):
