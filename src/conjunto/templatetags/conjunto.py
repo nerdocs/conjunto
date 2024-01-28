@@ -1,8 +1,4 @@
 from django import template
-from django.http import HttpRequest
-from django.middleware.cache import UpdateCacheMiddleware
-from django.template import loader, RequestContext
-from django.template.loader import render_to_string
 from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 from django_htmx.jinja import django_htmx_script
@@ -49,8 +45,18 @@ def conjunto_js_scripts() -> str:
 
 @register.simple_tag(takes_context=True)
 def render_element(context, element, **kwargs):
+    """
+    Renders a plugin element.
+
+    Examples:
+        ```django
+        {% render_element my_element %}
+        ```
+        You can override (existing) attributes from within the template:
+        ```django
+        {% render_element my_element title="Settings" %}
+        ```
+    """
     return mark_safe(
-        element.__class__.as_view()(context.request).render().content.decode()
+        element.__class__.as_view(**kwargs)(context.request).render().content.decode()
     )
-    # ctx["form"] = element.get_form()
-    # return render_to_string(element.template_name, ctx)

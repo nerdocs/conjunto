@@ -3,13 +3,11 @@
 
 {% if elements %}
 
-
-  {% for element in elements.ISettingsSubSection %}
-    {# FIXME: this should better be filtered in the view/block, not in the template #}
-    {% if element.parent == view.name %}
-      {% render_element element %}
-    {% endif %}
-{##}
+  {# this only works because SubSections only have one element in the "elements" interfaces list. #}
+  {% for _interface_name,plugin_elements in elements.items %}
+    {% for plugin_element in plugin_elements %}
+      {% render_element plugin_element %}
+    {% endfor %}
   {% endfor %}
 
 {% else %}

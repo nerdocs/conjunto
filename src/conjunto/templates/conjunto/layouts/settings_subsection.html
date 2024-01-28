@@ -7,7 +7,7 @@
 {#          hx-trigger="load"#}
 {#      ></div>#}
 
-<div class="card-body" id="user-settings-{{ element.parent }}-{{ element.name }}" hx-swap="outerHTML">
+<div class="card-body" id="user-settings-{{ element.name }}" hx-swap="outerHTML">
   {% if element.title %}
     <h3 class="card-title">
       {% block title %}
@@ -21,9 +21,9 @@
   {% block content %}
     {% if form %}
       <form
-          hx-post="{% url 'elements:'|add:element.name user.id %}"
+          hx-post="{% url 'elements:'|add:element.name %}"
           {# hx-select="#user-settings-{{ element.parent }}-{{ element.name }}"#}
-          hx-target="#user-settings-{{ element.parent }}-{{ element.name }}"
+          hx-target="#user-settings-{{ element.name }}"
           enctype="multipart/form-data">
         {% crispy form %}
       </form>
