@@ -16,11 +16,13 @@
     </h3>
   {% endif %}
 
+  {% block header %}{% endblock %}
+
   {% block content %}
     {% if form %}
       <form
           hx-post="{% url 'elements:'|add:element.name user.id %}"
-          {#      hx-select="#user-profile-form-{{ view.name }}"#}
+          {# hx-select="#user-settings-{{ element.parent }}-{{ element.name }}"#}
           hx-target="#user-settings-{{ element.parent }}-{{ element.name }}"
           enctype="multipart/form-data">
         {% crispy form %}
