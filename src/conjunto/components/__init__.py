@@ -173,12 +173,29 @@ class Updateable(component.Component):
 
 @component.register("button")
 class Button(component.Component):
+    """
+    HTMX enabled base button.
+
+    Attributes:
+        dialog: whether the button should open a dialog or not.
+        htmx: whether the button should open a HTMX request or not. If dialog is
+            True, HTMX is used obligatory.
+        target: the HTMX target element of the button, if HTMX/dialog is used.
+        url: the URL to call a get/post request when using HTMX.
+        icon: the icon of the button. Optional.
+    """
+
     template_name = "conjunto/components/button.html"
     tag = "button"
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
+        dialog = self.attributes.pop("dialog", False)
         htmx = self.attributes.pop("htmx", False)
+        if dialog and not htmx:
+            htmx = True
+        if htmx is True:
+            htmx = "get"
         url = self.attributes.pop("url", None)
         context.update(
             {
@@ -186,6 +203,7 @@ class Button(component.Component):
                 "url": url,
                 "htmx": htmx,
                 "target": self.attributes.pop("target", None),
+                "dialog": dialog,
                 "tag": self.tag,
             }
         )

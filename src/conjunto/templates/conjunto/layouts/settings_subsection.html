@@ -6,8 +6,7 @@
 {#          hx-swap="outerHTML"#}
 {#          hx-trigger="load"#}
 {#      ></div>#}
-
-<div class="card-body" id="user-settings-{{ element.name }}" hx-swap="outerHTML">
+<div class="card-header">
   {% if element.title %}
     <h3 class="card-title">
       {% block title %}
@@ -15,9 +14,13 @@
       {% endblock %}
     </h3>
   {% endif %}
-
+  <div class="card-actions btn-actions">
+    {% block actions %}{% endblock %}
+  </div>
   {% block header %}{% endblock %}
-
+</div>
+<div class="card-body" id="user-settings-{{ element.name }}" hx-swap="outerHTML">
+  {% block pre-content %}{% endblock %}
   {% block content %}
     {% if form %}
       <form
