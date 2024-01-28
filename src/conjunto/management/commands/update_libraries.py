@@ -21,61 +21,69 @@ class Command(BaseCommand):
 
     """
 
+    tabler_medux_path = "https://raw.githubusercontent.com/nerdoc/tabler/medux/dist"
+    unpkg_path = "https://unpkg.com"
+    # tabler-icons:
+    ti_path = "https://raw.githubusercontent.com/tabler/tabler-icons"
+    ti_version = "v2.46.0"
+
     libraries: dict[list[tuple[str, str, str]]] = {
         "htmx": [
             ("js/htmx/htmx.js", "https://unpkg.com/htmx.org@latest/dist/htmx.js", "w"),
             (
                 "js/htmx/htmx.min.js",
-                "https://unpkg.com/htmx.org@latest/dist/htmx.min.js",
+                f"{unpkg_path}/htmx.org@latest/dist/htmx.min.js",
                 "w",
             ),
             (
                 "js/htmx/ext/ws.js",
-                "https://unpkg.com/htmx.org@latest/dist/ext/ws.js",
+                f"{unpkg_path}/htmx.org@latest/dist/ext/ws.js",
                 "w",
             ),
             (
                 "js/htmx/ext/debug.js",
-                "https://unpkg.com/htmx.org@latest/dist/ext/debug.js",
+                f"{unpkg_path}/htmx.org@latest/dist/ext/debug.js",
                 "w",
             ),
         ],
         # "bootstrap": [
         #     (
         #         "js/bootstrap.bundle.min.js",
-        #         "https://unpkg.com/bootstrap@latest/dist/js/bootstrap.bundle.min.js",
+        #         f"{unpkg_path}/bootstrap@latest/dist/js/bootstrap.bundle.min.js",
         #         "w",
         #     ),
         #     (
         #         "js/bootstrap.bundle.min.js.map",
-        #         "https://unpkg.com/bootstrap@latest/dist/js/bootstrap.bundle.min.js.map",
+        #         f"{unpkg_path}/bootstrap@latest/dist/js/bootstrap.bundle.min
+        #         .js.map",
         #         "w",
         #     ),
         #     (
         #         "css/bootstrap.min.css",
-        #         "https://unpkg.com/bootstrap@latest/dist/css/bootstrap.min.css",
+        #         f"{unpkg_path}/bootstrap@latest/dist/css/bootstrap.min.css",
         #         "w",
         #     ),
         #     (
         #         "css/bootstrap.min.css.map",
-        #         "https://unpkg.com/bootstrap@latest/dist/css/bootstrap.min.css.map",
+        #         f"{unpkg_path}/bootstrap@latest/dist/css/bootstrap.min.css.map",
         #         "w",
         #     ),
         # ],
         "bootstrap-icons": [
             (
                 "css/bootstrap-icons.css",
-                "https://unpkg.com/bootstrap-icons@latest/font/bootstrap-icons.css",
+                f"{unpkg_path}/bootstrap-icons@latest/font/bootstrap-icons.css",
                 "w",
             ),
             (
                 "css/fonts/bootstrap-icons.woff",
-                "https://unpkg.com/bootstrap-icons@latest/font/fonts/bootstrap-icons.woff",
+                f"{unpkg_path}/bootstrap-icons@latest/font/fonts/bootstrap-icons"
+                f".woff",
                 "wb",
             ),
             (
                 "css/fonts/bootstrap-icons.woff2",
-                "https://unpkg.com/bootstrap-icons@latest/font/fonts/bootstrap-icons.woff2",
+                f"{unpkg_path}/bootstrap-icons@latest/font/fonts/bootstrap-icons.woff2",
                 "wb",
             ),
         ],
@@ -84,36 +92,57 @@ class Command(BaseCommand):
                 "js/Sortable.min.js",
                 "https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js",
                 "w",
-            )
+            ),
+            (
+                "js/Sortable.js",
+                "https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.js",
+                "w",
+            ),
         ],
         "tabler": [
             (
                 "css/tabler.css",
-                "https://raw.githubusercontent.com/nerdoc/tabler/medux/dist/css/tabler.css",
+                f"{tabler_medux_path}/css/tabler.css",
                 "w",
             ),
             (
-                "js/tabler.js",
-                "https://raw.githubusercontent.com/nerdoc/tabler/medux/dist/js/tabler.js",
+                "js/tabler.min.js",
+                f"{tabler_medux_path}/js/tabler.min.js",
                 "w",
+            ),
+            (
+                "js/tabler.min.js",
+                f"{tabler_medux_path}/js/tabler.min.js",
+                "w",
+            ),
+            (
+                "css/fonts/tabler-icons.woff",
+                f"{ti_path}/{ti_version}/packages/icons-webfont/fonts/tabler-icons"
+                f".woff",
+                "wb",
+            ),
+            (
+                "css/fonts/tabler-icons.woff2",
+                f"{ti_path}/{ti_version}/packages/icons-webfont/fonts/tabler-icons.woff2",
+                "wb",
             ),
         ],
         "litepicker": [
             (
                 "js/litepicker.js",
-                "https://cdn.jsdelivr.net/npm/litepicker/dist/litepicker.js",
+                f"{unpkg_path}/litepicker/dist/litepicker.js",
                 "w",
             )
         ],
         "alpine": [
             (
                 "js/alpine.js",
-                "https://unpkg.com/alpinejs@latest/dist/cdn.js",
+                f"{unpkg_path}/alpinejs/dist/cdn.js",
                 "w",
             ),
             (
                 "js/alpine.min.js",
-                "https://unpkg.com/alpinejs@latest/dist/cdn.min.js",
+                f"{unpkg_path}/alpinejs/dist/cdn.min.js",
                 "w",
             ),
         ],
