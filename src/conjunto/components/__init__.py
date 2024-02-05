@@ -20,6 +20,12 @@ class SlippersFormatter:
 @component.register("card")
 class Card(component.Component):
     template_name = "conjunto/components/card.html"
+    tag = "div"
+
+    def get_context_data(self, **kwargs) -> dict:
+        if self.attributes.pop("form", False):
+            self.tag = "form"
+        return {"tag": self.tag}
 
 
 @component.register("datagrid")
