@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+{#  {% card form %}#}
+{#    {% slot header %}Header{% endslot %}#}
+
+      <form action="." hx-post=".">
+        {% crispy form %}
+        <div class="button-holder">
+          <button class="btn btn-primary" type="submit">{% translate 'Submit' %}</button>
+        </div>
+      </form>
+    {% slot footer %}
+
+    {% endslot %}
+
+{#  {% endcard %}#}
+{% endblock %}

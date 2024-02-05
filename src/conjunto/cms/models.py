@@ -11,12 +11,12 @@ class StaticPage(Page):
         verbose_name_plural = _("Static pages")
 
 
-class LicensePage(VersionedPage):
+class TermsConditionsPage(VersionedPage):
     """A page that holds the license information for this software."""
 
     class Meta:
-        verbose_name = _("License page")
-        verbose_name_plural = _("License pages")
+        verbose_name = _("Terms and conditions page")
+        verbose_name_plural = _("Terms and conditions pages")
 
 
 class PrivacyPage(VersionedPage):

@@ -70,15 +70,29 @@ class Page(models.Model):
         return self.title
 
 
+class VersionedPageManager(models.Manager):
+    """Model manager that provides a method for getting the latest version of a page."""
+
+    def get_latest_version(self):
+        """Get the latest version of a page.
+
+        Returns:
+            The latest version of a page.
+        """
+        return self.get_queryset().order_by("-version").first()
+
+
 class VersionedPage(Page):
     """Represents a generic page with versioning.
 
-    This class is an abstract base class that provides common fields and methods for all page subclasses.
+    This class is an abstract base class that provides common fields and methods for
+    all page subclasses.
     """
 
     class Meta:
         abstract = True
 
+    objects = VersionedPageManager()
     version = VersionField(default="1.0.0")
 
     def __str__(self):

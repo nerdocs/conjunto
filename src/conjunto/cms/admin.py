@@ -2,8 +2,7 @@ from django.contrib import admin
 
 from conjunto.cms.models import (
     StaticPage,
-    StaticVersionedPage,
-    LicensePage,
+    TermsConditionsPage,
     PrivacyPage,
 )
 
@@ -19,7 +18,7 @@ class StaticPageAdmin(admin.ModelAdmin):
 #     pass
 
 
-@admin.register(LicensePage)
+@admin.register(TermsConditionsPage)
 class LicensePageAdmin(admin.ModelAdmin):
     pass
 

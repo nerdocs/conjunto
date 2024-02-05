@@ -22,7 +22,7 @@ from conjunto.api.interfaces import (
     HtmxResponseMixin,
     UseElementMixin,
 )
-from conjunto.cms.models import LicensePage, PrivacyPage
+from conjunto.cms.models import TermsConditionsPage, PrivacyPage
 from conjunto.tools import camel_case2snake
 from django.utils.translation import gettext_lazy as _
 
@@ -125,7 +125,32 @@ class DialogType(enum.Enum):
     DELETE = WARNING
 
 
-class ModalFormViewMixin(HtmxFormMixin):
+class CrispyFormHelperMixin:
+    """
+    A mixin that helps with Crispy Forms.
+
+    It creates a form helper instance attribute (if it doesn't exist yet) and sets
+    form_tag to false. It also provides a form_layout attribute, which is a list of
+    Crispy fields which will then be used as layout in the form.
+    """
+
+    form_layout: list = []
+    """The crispy forms layout for the form"""
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # make sure that Crispy Forms doesn't create its own form tag
+        # as this would destroy the modal window.
+        # create a default form helper in case of none is created and remove form tag
+        if not hasattr(form, "helper"):
+            form.helper = FormHelper()
+            form.helper.form_tag = False
+            if self.form_layout:
+                form.helper.layout = Layout(*self.form_layout)
+        return form
+
+
+class ModalFormViewMixin(HtmxFormMixin, CrispyFormHelperMixin):
     """Mixin for FormViews that should live in a modal.
 
     It relies on crispy-forms intensively, and already provides a form
@@ -156,9 +181,6 @@ class ModalFormViewMixin(HtmxFormMixin):
 
     modal_title: str = ""
     """The title of the modal form"""
-
-    form_layout: list = []
-    """The crispy forms layout for the form"""
 
     autofocus_field = ""  # FIXME: fix autofocus field
     """The field that gets the autofocus when the modal is shown"""
@@ -195,18 +217,6 @@ class ModalFormViewMixin(HtmxFormMixin):
             }
         )
         return context
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        # make sure that Crispy Forms doesn't create its own form tag
-        # as this would destroy the modal window.
-        # create a default form helper in case of none is created and remove form tag
-        if not hasattr(form, "helper"):
-            form.helper = FormHelper()
-            form.helper.form_tag = False
-            if self.form_layout:
-                form.helper.layout = Layout(*self.form_layout)
-        return form
 
     def form_valid(self, form):
         # call the super class, but return empty Response, including (Hx-) headers
@@ -315,10 +325,10 @@ class GenericPrivacyView(LatestVersionMixin, DetailView):
     model = PrivacyPage
 
 
-class GenericLicenseView(LatestVersionMixin, DetailView):
-    """Generic privacy page view that displays the newest LicensePage."""
+class GenericTermsConditionsView(LatestVersionMixin, DetailView):
+    """Generic T&C page view that displays the newest Terms and conditions."""
 
-    model = LicensePage
+    model = TermsConditionsPage
 
 
 class MaintenanceView(TemplateView):
