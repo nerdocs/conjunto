@@ -293,13 +293,28 @@ class LatestVersionMixin:
     You can override the template in `<your_app_name>/versioned_page.html`.
 
     Attributes:
-        title (str): The title of the view.
         no_object_available (str): The message to display when no object is available.
-
+        create_url (str): The URL to link to where a new object can be created.
     """
 
-    title: str = ""
     no_object_available: str = ""
+    create_url: str = ""
+
+    def __init__(self):
+        super().__init__()
+        if not self.model:
+            raise AttributeError(
+                f"{self.__class__.__name__} must provide a'model' attribute."
+            )
+        self.no_object_available = self.no_object_available or (
+            f"No {self.model._meta.verbose_name}vailable."
+        )
+
+        if not self.create_url:
+            raise AttributeError(
+                f"{self.__class__.__name__} must provide a 'create_url' attribute "
+                f" to link to a new {self.model._meta.verbose_name} object."
+            )
 
     def get_object(self):
         return super().get_queryset().order_by("-version").last()
@@ -307,7 +322,10 @@ class LatestVersionMixin:
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context.update(
-            {"title": self.title, "no_object_available": self.no_object_available}
+            {
+                "no_object_available": self.no_object_available,
+                "create_url": self.create_url,
+            }
         )
         return context
 
@@ -323,12 +341,14 @@ class GenericPrivacyView(LatestVersionMixin, DetailView):
     """Generic privacy page view that displays the newest PrivacyPage."""
 
     model = PrivacyPage
+    no_object_available = _("No privacy information available yet.")
 
 
 class GenericTermsConditionsView(LatestVersionMixin, DetailView):
     """Generic T&C page view that displays the newest Terms and conditions."""
 
     model = TermsConditionsPage
+    no_object_available = _("No terms and conditions available yet.")
 
 
 class MaintenanceView(TemplateView):

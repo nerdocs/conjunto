@@ -93,7 +93,8 @@ class VersionedPage(Page):
         abstract = True
 
     objects = VersionedPageManager()
-    version = VersionField(default="1.0.0")
+    # versions must be unique within one page type.
+    version = VersionField(default="1.0.0", unique=True)
 
     def __str__(self):
         return f"{self.title} (v{self.version})"
