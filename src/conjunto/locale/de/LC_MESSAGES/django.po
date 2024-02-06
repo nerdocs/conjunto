@@ -36,139 +36,139 @@ msgstr ""
 
 #: conjunto/tabler.py:6
 msgid "Blue"
-msgstr ""
+msgstr "Blau"
 
 #: conjunto/tabler.py:7
 msgid "Azure"
-msgstr ""
+msgstr "Azurblau"
 
 #: conjunto/tabler.py:8
 msgid "Indigo"
-msgstr ""
+msgstr "Indigo"
 
 #: conjunto/tabler.py:9
 msgid "Purple"
-msgstr ""
+msgstr "Purpur"
 
 #: conjunto/tabler.py:10
 msgid "Pink"
-msgstr ""
+msgstr "Pink"
 
 #: conjunto/tabler.py:11
 msgid "Red"
-msgstr ""
+msgstr "Rot"
 
 #: conjunto/tabler.py:12
 msgid "Orange"
-msgstr ""
+msgstr "Orange"
 
 #: conjunto/tabler.py:13
 msgid "Yellow"
-msgstr ""
+msgstr "Gelb"
 
 #: conjunto/tabler.py:14
 msgid "Lime"
-msgstr ""
+msgstr "Limette"
 
 #: conjunto/tabler.py:15
 msgid "Green"
-msgstr ""
+msgstr "Grün"
 
 #: conjunto/tabler.py:16
 msgid "Teal"
-msgstr ""
+msgstr "Blaugrün"
 
 #: conjunto/tabler.py:17
 msgid "Cyan"
-msgstr ""
+msgstr "Zyan"
 
 #: conjunto/tabler.py:19
 msgid "Blue Light"
-msgstr ""
+msgstr "Hellblau"
 
 #: conjunto/tabler.py:20
 msgid "Azure Light"
-msgstr ""
+msgstr "Azurblau hell"
 
 #: conjunto/tabler.py:21
 msgid "Indigo Light"
-msgstr ""
+msgstr "Indigo hell"
 
 #: conjunto/tabler.py:22
 msgid "Purple Light"
-msgstr ""
+msgstr "Purpur hell"
 
 #: conjunto/tabler.py:23
 msgid "Pink Light"
-msgstr ""
+msgstr "Pink hell"
 
 #: conjunto/tabler.py:24
 msgid "Red Light"
-msgstr ""
+msgstr "Hellrot"
 
 #: conjunto/tabler.py:25
 msgid "Orange Light"
-msgstr ""
+msgstr "Hellorange"
 
 #: conjunto/tabler.py:26
 msgid "Yellow Light"
-msgstr ""
+msgstr "Hellgelb"
 
 #: conjunto/tabler.py:27
 msgid "Lime Light"
-msgstr ""
+msgstr "Limette hell"
 
 #: conjunto/tabler.py:28
 msgid "Green Light"
-msgstr ""
+msgstr "Hellgrün"
 
 #: conjunto/tabler.py:29
 msgid "Teal Light"
-msgstr ""
+msgstr "Blaugrün hell"
 
 #: conjunto/tabler.py:30
 msgid "Cyan Light"
-msgstr ""
+msgstr "Zyan hell"
 
 #: conjunto/tabler.py:32
 msgid "Gray 50"
-msgstr ""
+msgstr "Grau 50"
 
 #: conjunto/tabler.py:33
 msgid "Gray 100"
-msgstr ""
+msgstr "Grau 100"
 
 #: conjunto/tabler.py:34
 msgid "Gray 200"
-msgstr ""
+msgstr "Grau 200"
 
 #: conjunto/tabler.py:35
 msgid "Gray 300"
-msgstr ""
+msgstr "Grau 300"
 
 #: conjunto/tabler.py:36
 msgid "Gray 400"
-msgstr ""
+msgstr "Grau 400"
 
 #: conjunto/tabler.py:37
 msgid "Gray 500"
-msgstr ""
+msgstr "Grau 500"
 
 #: conjunto/tabler.py:38
 msgid "Gray 600"
-msgstr ""
+msgstr "Grau 600"
 
 #: conjunto/tabler.py:39
 msgid "Gray 700"
-msgstr ""
+msgstr "Grau 700"
 
 #: conjunto/tabler.py:40
 msgid "Gray 800"
-msgstr ""
+msgstr "Grau 800"
 
 #: conjunto/tabler.py:41
 msgid "Gray 900"
-msgstr ""
+msgstr "Grau 900"
 
 #: conjunto/tables.py:55
 msgid "Actions"
@@ -194,8 +194,8 @@ msgid "Privacy"
 msgstr "Privatsphäre"
 
 #: conjunto/templates/conjunto/layouts/html.html:39
-msgid "License"
-msgstr "Lizenz"
+msgid "Terms and conditions"
+msgstr "Nutzungsbedingungen"
 
 #: conjunto/templates/conjunto/layouts/html.html:57
 msgid "All rights reserved."
