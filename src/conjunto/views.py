@@ -353,6 +353,11 @@ class AutoPermissionsViewMixin(PermissionRequiredMixin):
     def get_permission_required(self):
         if self.permission_required is None:
             model = self.model
+            if not model:
+                raise AttributeError(
+                    f"Model {self.__class__.__name__} needs a model attribute to "
+                    f"auto-calculate permissions from."
+                )
             return (
                 f"{model._meta.app_label}.{self._permissions_verb}_{model._meta.model_name}",
             )
