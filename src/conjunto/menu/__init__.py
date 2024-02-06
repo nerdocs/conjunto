@@ -149,6 +149,20 @@ class IMenuItem(MenuItemInterfaceMixin):
         icon = "user-delete"
     ```
 
+    You can then use the menu in your template:
+    ```django
+    <ul class="list-inline">
+    {% for item in menus.page_actions %}
+        <li class="list-inline-item">
+            <a href="{{ item.url }}"{% if item.selected %} class="active"{% endif %}>
+                <i class="ti ti-{{ item.icon }} me-2"></i>
+                {{ item.title }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+    ```
+
     Attributes:
         url: the URL to call when this menu item is clicked.
         separator: if `True`, this menu item has a separator after it.
@@ -260,11 +274,9 @@ class Menu:
         self.request = request
         self._cache = []
         for menu_item_class in IMenuItem:
+            # instantiate a MenuItem with current request as param
             item = menu_item_class(self.request)
             self._cache.append(item)
-
-    def _items(self):
-        """walk through"""
 
     def __getitem__(self, item):
         """Returns filtered out menu items with the given '.menu' name."""
