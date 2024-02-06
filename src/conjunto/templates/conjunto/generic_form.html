@@ -3,20 +3,22 @@
 {% load i18n %}
 
 {% block content %}
-{#  {% card form %}#}
-{#    {% slot header %}Header{% endslot %}#}
+  {#  {% card form %}#}
+  {#  {% slot header %}#}
 
-      <form action="." method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <div class="button-holder">
-          <button class="btn btn-primary" type="submit">{% translate 'Submit' %}</button>
-        </div>
-      </form>
 
-    {% slot footer %}
+  {#  {% endslot %}#}
+  <form action="." method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="button-holder">
+      <button class="btn btn-primary" type="submit">{% translate 'Submit' %}</button>
+    </div>
+  </form>
 
-    {% endslot %}
+  {# {% slot footer %}#}
 
-{#  {% endcard %}#}
+  {# {% endslot %}#}
+
+  {#  {% endcard %}#}
 {% endblock %}
