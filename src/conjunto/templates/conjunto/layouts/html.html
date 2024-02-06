@@ -40,7 +40,7 @@
                 <ul class="list-inline list-inline-dots mb-0">
                   {% for item in menus.footer %}
                     <li class="list-inline-item">
-                      <a href="{% url item.url %}" class="link-secondary" rel="noopener">
+                      <a href="{{ item.url }}" class="link-secondary" rel="noopener">
                         {% if item.icon %}
                           {# TODO: add possibility for colored icons:  text-{{ icon-color }}#}
                           {# TODO: add possibility for e.g. target="_blank" or rel="noopener" #}
