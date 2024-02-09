@@ -84,59 +84,6 @@ class ErrorLogMixin:
         super().add_error(field, error)
 
 
-class ExcludeMethod(IntegerChoices):
-    HIDE = 0
-    DELETE = 1
-    DISABLE = 2
-
-
-class MyDynamicFormMixin:
-    """
-    A mixin class for Django forms that allows dynamic fields to be included or excluded based on certain conditions.
-
-    Attributes:
-        context (dict[str, Any]): The context passed to the form from the view. This
-            variable can be accessed within the form via `self.context`.
-        Meta.excluded_fields_method (ExcludeMethod): The method to use to if a field is
-            excluded. The default is to hide the field (HIDE). DELETE removes the
-            excluded field entirely from the form, and DISABLE disables the field.
-
-    """
-
-    class Meta:
-        excluded_fields_method = ExcludeMethod.HIDE
-
-    def __init__(self, *args, **kwargs):
-        self.context = kwargs.pop("context", None)
-        super().__init__(*args, **kwargs)
-
-        for name, field in list(self.fields.items()):
-            if isinstance(field, DynamicField):
-                if field.should_be_included(self):
-                    self.fields[name] = field.make_real_field(self)
-                else:
-                    excluded_fields_method = (
-                        self.Meta.excluded_fields_method
-                        if (hasattr(self.Meta, "excluded_fields_method"))
-                        else (ExcludeMethod.HIDE)
-                    )
-                    if excluded_fields_method == ExcludeMethod.DELETE:
-                        del self.fields[name]
-                    elif excluded_fields_method == ExcludeMethod.HIDE:
-                        self.fields[name].widget = self.fields[name].hidden_widget()
-                    elif excluded_fields_method == ExcludeMethod.DISABLE:
-                        self.fields[name].disabled = True
-                    else:
-                        raise ValueError(
-                            f"Invalid value for 'excluded_fields_method': {excluded_fields_method}"
-                        )
-
-                    # In any case:
-                    # Even if the field is required, we still need to disable the field.
-                    # So remove the required state in the form, too.
-                    # self.fields[name].required = False
-
-
 class DynamicHtmxFormMixin(DynamicFormMixin):
     """
     Mixin class for creating dynamic forms with HTMX.
