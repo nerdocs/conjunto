@@ -41,7 +41,7 @@ class HtmxTemplateMixin:
         return super().get_template_names()
 
 
-class HtmxFormMixin(HtmxResponseMixin):
+class HtmxFormViewMixin(HtmxResponseMixin):
     """
     Mixin for a form view that uses HTMX.
 
@@ -78,7 +78,7 @@ class HtmxFormMixin(HtmxResponseMixin):
     #     return super().form_invalid(form)
 
 
-class HtmxDeleteView(HtmxFormMixin, DeleteView):
+class HtmxDeleteView(HtmxFormViewMixin, DeleteView):
     """Enhanced DeleteView that per default returns an empty HttpResponse.
 
     # TODO either use success_url, OR success_event.
@@ -150,7 +150,7 @@ class CrispyFormHelperMixin:
         return form
 
 
-class ModalFormViewMixin(HtmxFormMixin, CrispyFormHelperMixin):
+class ModalFormViewMixin(HtmxFormViewMixin, CrispyFormHelperMixin):
     """Mixin for FormViews that should live in a modal.
 
     It relies on crispy-forms intensively, and already provides a form
