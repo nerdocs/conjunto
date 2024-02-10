@@ -12,6 +12,7 @@ def conjunto_css_scripts() -> str:
         # "conjunto/css/bootstrap.min.css",
         "conjunto/css/tabler.min.css",
         "conjunto/css/tabler-icons.css",
+        "conjunto/css/dropzone.min.css",
     ]
 
     result = django_htmx_script()
@@ -33,6 +34,7 @@ def conjunto_js_scripts() -> str:
         "conjunto/js/Sortable.min.js",
         "conjunto/js/conjunto.js",
         "conjunto/js/toasts.js",
+        "conjunto/js/dropzone.min.js",
     ]
     result = ""
     for js_file in js:

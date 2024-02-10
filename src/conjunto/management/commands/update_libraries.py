@@ -28,6 +28,28 @@ class Command(BaseCommand):
     ti_version = "v2.46.0"
 
     libraries: dict[list[tuple[str, str, str]]] = {
+        "dropzone": [
+            (
+                "js/dropzone.min.js",
+                f"{unpkg_path}/dropzone@latest/dist/min/dropzone.min.js",
+                "w",
+            ),
+            (
+                "js/dropzone.js",
+                f"{unpkg_path}/dropzone@latest/dist/dropzone.min.js",
+                "w",
+            ),
+            (
+                "css/dropzone.min.css",
+                f"{unpkg_path}/dropzone@latest/dist/min/dropzone.min.css",
+                "w",
+            ),
+            (
+                "css/dropzone.css",
+                f"{unpkg_path}/dropzone@latest/dist/dropzone.min.css",
+                "w",
+            ),
+        ],
         "htmx": [
             ("js/htmx/htmx.js", "https://unpkg.com/htmx.org@latest/dist/htmx.js", "w"),
             (
