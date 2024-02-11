@@ -137,9 +137,11 @@ class DynamicHtmxFormMixin(DynamicFormMixin):
                 field.widget.attrs.update(
                     {
                         "hx-trigger": trigger,
-                        "hx-get": self.get_update_url(),
+                        "hx-post": self.get_update_url(),
                         "hx-target": f"#{self.form_id}",
                         "hx-select": f"#{self.form_id}",
+                        "hx-encoding": "multipart/form-data",  # allow file uploads
+                        "hx-vals": '{"_dynamic_reload": true}',
                         # "hx-push-url": "true",
                         "hx-swap": "outerHTML",
                     }

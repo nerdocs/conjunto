@@ -260,11 +260,10 @@ class PrepopulateFormViewMixin:
         return initial
 
 
-class DynamicHtmxFormViewMixin(PrepopulateFormViewMixin):
+class DynamicHtmxFormViewMixin(HtmxFormViewMixin):
     """Mixin class for dynamic form views.
 
-    This mixin can be used with any FormView class to automatically prepopulate fields
-    from GET parameters, and adds them to a "context" variable which is available within
+    This mixin can be used with any FormView class, and adds them to a "context" variable which is available within
     the form instance.
 
     This view is intended to be used together with `DynamicHtmxFormMixin` for the
@@ -279,11 +278,20 @@ class DynamicHtmxFormViewMixin(PrepopulateFormViewMixin):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["context"] = self.get_initial()
-        kwargs["context"].update(clean_dict(self.request.GET.dict()))
+        kwargs["context"].update(clean_dict(self.request.POST.dict()))
         kwargs["form_id"] = (
             self.form_id or f"form_id_{camel_case2snake(self.__class__.__name__)}"
         )
         return kwargs
+
+    def form_invalid(self, form):
+        """When a form is dynamically reloaded by a HTMX trigger, don't show errors.
+
+        This is achieved by adding a special attribute to the HTMX request.
+        """
+        if self.request.POST.get("_dynamic_reload"):
+            form.errors.clear()
+        return super().form_invalid(form)
 
 
 class LatestVersionMixin:
