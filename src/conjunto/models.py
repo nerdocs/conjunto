@@ -1,5 +1,6 @@
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import models, IntegrityError
+from django.utils import timezone
 from versionfield import VersionField
 from django.utils.translation import gettext as _
 
@@ -132,3 +133,35 @@ class AbstractSettings(SingletonModel):
 
     def __str__(self):
         return _("Settings")
+
+
+class Vendor(SingletonModel):
+    """The vendor that is responsible for this appliance."""
+
+    # TODO find an easy way to deploy data in Vendor model
+    # maybe in a preferences.toml file?
+
+    name = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    zip = models.CharField(max_length=10)
+    city = models.CharField(max_length=50)
+    phone = PhoneNumberField()
+    email = models.EmailField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class AutoDateTimeField(models.DateTimeField):
+    def pre_save(self, model_instance, add):
+        return timezone.now()
+
+
+class CreatedModifiedModel(models.Model):
+    """A simple mixin for model classes that need to have created/modified fields."""
+
+    created = models.DateTimeField(editable=False, default=timezone.now)
+    modified = AutoDateTimeField(default=timezone.now)
+
+    class Meta:
+        abstract = True
