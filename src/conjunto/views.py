@@ -173,6 +173,12 @@ class ModalFormViewMixin(HtmxFormViewMixin, CrispyFormHelperMixin):
     If the form is saved successfully, it returns an empty HttpResponse(204)
     and emits the event specified in ``success_event`` on the client,
     so that it can reload changed content.
+
+    Attributes:
+        modal_title: the title of the modal form
+        autofocus_field: the field that gets the autofocus when the modal is shown
+        button_content: the content of the 'Save' button. Default: _("Save")
+        dialog_type: the type of the dialog: INFO, DELETE, CREATE, UPDATE
     """
 
     template_name = "conjunto/modal_form.html"
@@ -180,16 +186,12 @@ class ModalFormViewMixin(HtmxFormViewMixin, CrispyFormHelperMixin):
     a simple modal form. You can extend it in your own templates too."""
 
     modal_title: str = ""
-    """The title of the modal form"""
 
     autofocus_field = ""  # FIXME: fix autofocus field
-    """The field that gets the autofocus when the modal is shown"""
 
     button_content = _("Save")
-    """The content of the 'Save' button"""
 
     dialog_type: DialogType = DialogType.NOTSET
-    """The type of the dialog: INFO, """
 
     def get_modal_title(self) -> str:
         """Returns a string that is used as title of the modal."""
