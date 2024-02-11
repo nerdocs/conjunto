@@ -31,22 +31,22 @@ class Command(BaseCommand):
         "dropzone": [
             (
                 "js/dropzone.min.js",
-                f"{unpkg_path}/dropzone@latest/dist/min/dropzone.min.js",
+                f"{unpkg_path}/dropzone@5/dist/min/dropzone.min.js",
                 "w",
             ),
             (
                 "js/dropzone.js",
-                f"{unpkg_path}/dropzone@latest/dist/dropzone.min.js",
+                f"{unpkg_path}/dropzone@5/dist/dropzone.js",
                 "w",
             ),
             (
                 "css/dropzone.min.css",
-                f"{unpkg_path}/dropzone@latest/dist/min/dropzone.min.css",
+                f"{unpkg_path}/dropzone@5/dist/min/dropzone.min.css",
                 "w",
             ),
             (
                 "css/dropzone.css",
-                f"{unpkg_path}/dropzone@latest/dist/dropzone.min.css",
+                f"{unpkg_path}/dropzone@5/dist/dropzone.css",
                 "w",
             ),
         ],
