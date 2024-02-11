@@ -59,7 +59,8 @@ class SingletonModel(models.Model):
 class Page(models.Model):
     """Represents a generic page.
 
-    This class is an abstract base class that provides common fields and methods for all page subclasses.
+    This class is an abstract base class that provides common fields and methods for
+    all page subclasses.
     """
 
     class Meta:
