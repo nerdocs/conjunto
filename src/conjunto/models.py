@@ -3,6 +3,7 @@ from django.db import models, IntegrityError
 from django.utils import timezone
 from versionfield import VersionField
 from django.utils.translation import gettext as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 # thanks to https://stackoverflow.com/questions/49735906/how-to-implement-singleton-in-django/49736970#49736970
