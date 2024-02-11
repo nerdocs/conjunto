@@ -191,7 +191,7 @@ msgstr "{object} ohne Bestätigung löschen"
 
 #: conjunto/templates/conjunto/layouts/html.html:38
 msgid "Privacy"
-msgstr "Privatsphäre"
+msgstr "Datenschutz"
 
 #: conjunto/templates/conjunto/layouts/html.html:39
 msgid "Terms and conditions"
