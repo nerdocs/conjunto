@@ -5,7 +5,7 @@ MANAGE = cd src && django-admin
 
 
 dev:
-	python -m pip install --editable ".[dev]"
+	$(PYTHON) -m pip install -e ".[dev]"
 
 all: init locale staticfiles
 production: localecompile staticfiles
@@ -14,7 +14,7 @@ localecompile:
 	$(MANAGE) compilemessages
 
 setup:
-	python -m pip install .
+	$(PYTHON) -m pip install .
 
 localegen:
     # don't --keep-pot
@@ -31,7 +31,7 @@ locale: localegen localecompile
 
 
 test:
-	pytest
+	$(PYTHON) -m pytest
 
 coverage:
 	coverage run -m pytest
