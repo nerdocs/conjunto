@@ -162,7 +162,7 @@ class ModalFormViewMixin(HtmxFormViewMixin, CrispyFormHelperMixin):
     This template uses a ``header`` with a ``title`` block, a ``body``,
     and a ``footer`` block to override, for your modal dialog. In the
     footer, there is always a "Cancel" button, and as default, a "Save"
-    button, which you can override using the "footer" block.
+    button, You can fully override the buttons using the "footer" block.
 
     When the modal pops up, the focus is set to the first visible input
     element.
@@ -222,6 +222,12 @@ class ModalFormViewMixin(HtmxFormViewMixin, CrispyFormHelperMixin):
         # call the super class, but return empty Response, including (Hx-) headers
         response = super().form_valid(form)
         response.status_code = 204
+        url = self.get_success_url()
+        if url:
+            # if success_url is given
+            #     redirect to success_url
+            response["HX-Redirect"] = url
+
         return response
 
 
