@@ -19,7 +19,7 @@ class StaticPageAdmin(admin.ModelAdmin):
 
 
 @admin.register(TermsConditionsPage)
-class LicensePageAdmin(admin.ModelAdmin):
+class TermsConditionsPageAdmin(admin.ModelAdmin):
     pass
 
 

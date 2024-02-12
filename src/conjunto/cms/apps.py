@@ -8,7 +8,7 @@ class CmsConfig(AppConfig):
     groups_permissions = {
         "Site editor": {
             "cms.StaticPage": ["view", "add", "change", "delete"],
-            "cms.LicensePage": ["view", "add", "change", "delete"],
+            "cms.TermsConditionsPage": ["view", "add", "change", "delete"],
             "cms.PrivacyPage": ["view", "add", "change", "delete"],
         },
     }
