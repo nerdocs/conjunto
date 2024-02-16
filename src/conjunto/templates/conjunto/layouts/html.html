@@ -10,6 +10,8 @@
   <title>{% block title %}{{ globals.project_title }}{% endblock %}</title>
   <link rel="manifest" href="/manifest.json">
 
+  {% block head %}{% endblock %}
+
   {% conjunto_css_scripts %}
 
   {% block styles %}{% endblock styles %}
