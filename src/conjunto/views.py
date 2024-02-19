@@ -16,10 +16,11 @@ from django.views.generic import (
     UpdateView,
     CreateView,
 )
+from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
 
 from conjunto.api.interfaces import (
     ISettingsSection,
-    HtmxResponseMixin,
+    HtmxRequestMixin,
     UseElementMixin,
 )
 from conjunto.cms.models import TermsConditionsPage, PrivacyPage
@@ -42,18 +43,18 @@ class HtmxTemplateMixin:
         return super().get_template_names()
 
 
-class HtmxFormViewMixin(HtmxResponseMixin):
+class HtmxFormViewMixin(HtmxRequestMixin):
     """
     Mixin for a form view that uses HTMX.
 
-    Returns an "Hx-Trigger" attribute which triggers a Javascript event on the client.
+    Returns a "HX-Trigger" attribute which triggers a Javascript event on the client.
 
     Attributes:
         success_event: a Javascript event that is triggered on the client after
             the request is completed.
     """
 
-    success_event = ""
+    success_event: str = ""
 
     def get_success_url(self):
         """Return success_url, even if it is empty.
@@ -64,30 +65,24 @@ class HtmxFormViewMixin(HtmxResponseMixin):
 
     def get_success_event(self):
         """Override this to return (e.g. generated) success event."""
-        return str(self.success_event)
+        return self.success_event
 
     def form_valid(self, form):
         """Trigger a Javascript event on the client."""
-
         response = super().form_valid(form)
-        # a FormView always returns an HttpResponseRedirect, so we need to change that
-        # into a normal HttpResponse with a Hx-Redirect directive.
-        if isinstance(response, HttpResponseRedirect):
-            # create a new responese with a Hx-Redirect directive
-            response = HttpResponseEmpty()
-            if self.get_success_url():
-                response["HX-Redirect"] = self.get_success_url()
+        # if coming from a HTMX request, we need to redirect to the success URL using
+        # HTMX too. So we replace the response with a `HX-Trigger` version.
+        if self.request.htmx and isinstance(response, HttpResponseRedirect):
+            response = HttpResponseClientRedirect(self.get_success_url())
 
-        # So we have our final response now, we can add the Js event via HTMX
+        # in case of a normal request origin, the original HttpResponse(Redirect?) is
+        # kept as is.
+
+        # In our final response, we can add the Js event via `HX-Trigger`
         event = self.get_success_event()
         if event:
-            response.headers["HX-Trigger"] = event
+            return trigger_client_event(response, event)
         return response
-
-    # def form_invalid(self, form):
-    #     # DEBUG
-    #     print(form.errors)
-    #     return super().form_invalid(form)
 
 
 class HtmxDeleteView(HtmxFormViewMixin, DeleteView):
@@ -260,8 +255,8 @@ class PrepopulateFormViewMixin:
 class DynamicHtmxFormViewMixin(HtmxFormViewMixin):
     """Mixin class for dynamic form views.
 
-    This mixin can be used with any FormView class, and adds them to a "context" variable which is available within
-    the form instance.
+    This mixin can be used with any FormView class, and adds them to a "context"
+    variable which is available within the form instance.
 
     This view is intended to be used together with `DynamicHtmxFormMixin` for the
     form_class.

@@ -9,16 +9,12 @@ from gdaps.api import Interface, InterfaceRegistry
 User = get_user_model()
 
 
-class HtmxResponseMixin:
-    """View Mixin to add HTMX functionality.
-
-    optionally checks if request originates from an HTMX request.
+class HtmxRequestMixin:
+    """Optionally checks if request originates from HTMX.
 
     Attributes:
         enforce_htmx: if True, all requests that do not come from a HTMX
-            element are blocked
-        success_event: a Javascript event that is triggered on the client after
-            the request is completed.
+            element are blocked.
 
     Raises:
         PermissionDenied: if enforce_htmx==True and request origins from a
@@ -36,7 +32,7 @@ class HtmxResponseMixin:
         return super().dispatch(request, *args, **kwargs)
 
 
-class IHtmxElementMixin(HtmxResponseMixin):
+class IHtmxElementMixin(HtmxRequestMixin):
     """An interface mixin that describes an element and can be rendered as plugin.
 
     1. Declare an interface for HTMX element
