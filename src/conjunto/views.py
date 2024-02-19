@@ -6,7 +6,7 @@ from crispy_forms.layout import Layout
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import (
@@ -23,6 +23,7 @@ from conjunto.api.interfaces import (
     UseElementMixin,
 )
 from conjunto.cms.models import TermsConditionsPage, PrivacyPage
+from conjunto.http import HttpResponseEmpty
 from conjunto.tools import camel_case2snake
 from django.utils.translation import gettext_lazy as _
 
@@ -55,8 +56,11 @@ class HtmxFormViewMixin(HtmxResponseMixin):
     success_event = ""
 
     def get_success_url(self):
-        """Return even an empty URL."""
-        return str(self.success_url)
+        """Return success_url, even if it is empty.
+
+        FormViews raise an Exception if success_url is empty. We need to capture that.
+        """
+        return self.success_url or ""
 
     def get_success_event(self):
         """Override this to return (e.g. generated) success event."""
@@ -64,11 +68,19 @@ class HtmxFormViewMixin(HtmxResponseMixin):
 
     def form_valid(self, form):
         """Trigger a Javascript event on the client."""
+
         response = super().form_valid(form)
+        # a FormView always returns an HttpResponseRedirect, so we need to change that
+        # into a normal HttpResponse with a Hx-Redirect directive.
+        if isinstance(response, HttpResponseRedirect):
+            # create a new responese with a Hx-Redirect directive
+            response = HttpResponseEmpty()
+            if self.get_success_url():
+                response["HX-Redirect"] = self.get_success_url()
+
+        # So we have our final response now, we can add the Js event via HTMX
         event = self.get_success_event()
         if event:
-            # in case of successful operation, and a success event is available,
-            # send this event via hx-trigger
             response.headers["HX-Trigger"] = event
         return response
 
@@ -81,29 +93,18 @@ class HtmxFormViewMixin(HtmxResponseMixin):
 class HtmxDeleteView(HtmxFormViewMixin, DeleteView):
     """Enhanced DeleteView that per default returns an empty HttpResponse.
 
-    # TODO either use success_url, OR success_event.
-
     Uses the `success_url` attribute of the view to get the URL to redirect
-    to. Defaults to None, in this case no redirection is made. If an URL is given,
-    the client is redirected to that URL after successful deletion by using the
-    HX-Redirect HTMX directive.
+    to via HTMX after successful deletion. If `success_url` is None, no redirection is
+    made.
     """
-
-    response_status = 204
 
     # most of the time, you will use POST, or a modal dialog for deleting,
     # so use this as default template, override as needed.
     template_name = "conjunto/modal_confirm_delete.html"
 
     def form_valid(self, form):
-        # don't call DeleteView's form_valid(), as this needs a success_url
+        response = super().form_valid(form)
         self.object.delete()
-        # ... and create an empty response
-        response = HttpResponse(status=self.response_status)
-        success_url = self.get_success_url()
-        if success_url:
-            # but if success_url is given, tell HTMX to redirect client to that URL.
-            response["HX-Redirect"] = success_url
         return response
 
 
@@ -219,18 +220,6 @@ class ModalFormViewMixin(HtmxFormViewMixin, CrispyFormHelperMixin):
             }
         )
         return context
-
-    def form_valid(self, form):
-        # call the super class, but return empty Response, including (Hx-) headers
-        response = super().form_valid(form)
-        response.status_code = 204
-        url = self.get_success_url()
-        if url:
-            # if success_url is given
-            #     redirect to success_url
-            response["HX-Redirect"] = url
-
-        return response
 
 
 def clean_dict(input_dict: dict) -> dict:
