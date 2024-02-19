@@ -3,7 +3,13 @@
 {% for field in fields %}
     <div class="datagrid-item mb-2">
       <div class="datagrid-title">{{ field.title }}</div>
-      <div class="datagrid-content">{{ field.content }}</div>
+      <div class="datagrid-content">
+        {% if field.content.file %}
+        	<img src="{{ field.content.url}}" alt="{{ field.content }}"/>
+        {% else %}
+          {{ field.content }}
+        {% endif %}
+      </div>
     </div>
 {% endfor %}
 </div>
