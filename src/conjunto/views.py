@@ -405,7 +405,7 @@ class AutoPermissionsViewMixin(PermissionRequiredMixin):
 
 
 class _ModalModelViewMixin(AutoPermissionsViewMixin, ModalFormViewMixin):
-    """Internal mixin vor Create/Update/DeleteViews (with permissions) that lives in a
+    """Internal mixin for Create/Update/DeleteViews (with permissions) that lives in a
     Modal.
 
     You shouldn't have to use this directly.
