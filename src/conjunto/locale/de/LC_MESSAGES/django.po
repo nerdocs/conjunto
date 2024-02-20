@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-23 13:34+0100\n"
+"POT-Creation-Date: 2024-02-19 23:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,19 +18,52 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: conjunto/forms/__init__.py:262
+#: conjunto/cms/models.py:10
+msgid "Static page"
+msgstr ""
+
+#: conjunto/cms/models.py:11
+msgid "Static pages"
+msgstr ""
+
+#: conjunto/cms/models.py:18
+#, fuzzy
+#| msgid "Terms and conditions"
+msgid "Terms and conditions page"
+msgstr "Nutzungsbedingungen"
+
+#: conjunto/cms/models.py:19
+#, fuzzy
+#| msgid "Terms and conditions"
+msgid "Terms and conditions pages"
+msgstr "Nutzungsbedingungen"
+
+#: conjunto/cms/models.py:26
+#, fuzzy
+#| msgid "Privacy"
+msgid "Privacy page"
+msgstr "Datenschutz"
+
+#: conjunto/cms/models.py:27
+#, fuzzy
+#| msgid "Privacy"
+msgid "Privacy pages"
+msgstr "Datenschutz"
+
+#: conjunto/forms/__init__.py:211
 msgid "This field is required."
 msgstr "Dieses Feld ist erforderlich."
 
-#: conjunto/models.py:113 conjunto/models.py:114 conjunto/models.py:135
+#: conjunto/models.py:115 conjunto/models.py:116 conjunto/models.py:137
+#: conjunto/templates/conjunto/settings.html:11
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: conjunto/models.py:121
+#: conjunto/models.py:123
 msgid "Text to display as site description. Supports Markdown."
 msgstr ""
 
-#: conjunto/models.py:128
+#: conjunto/models.py:130
 msgid "Text to display on the maintenance page. Supports Markdown."
 msgstr ""
 
@@ -189,15 +222,16 @@ msgstr "{object} löschen"
 msgid "Delete {object} without confirmation"
 msgstr "{object} ohne Bestätigung löschen"
 
-#: conjunto/templates/conjunto/layouts/html.html:38
-msgid "Privacy"
-msgstr "Datenschutz"
+#: conjunto/templates/conjunto/components/card.html:28
+#: conjunto/templates/conjunto/generic_form.html:15
+msgid "Submit"
+msgstr ""
 
-#: conjunto/templates/conjunto/layouts/html.html:39
-msgid "Terms and conditions"
-msgstr "Nutzungsbedingungen"
+#: conjunto/templates/conjunto/layouts/html.html:28
+msgid "Warning! This is a testing site."
+msgstr ""
 
-#: conjunto/templates/conjunto/layouts/html.html:57
+#: conjunto/templates/conjunto/layouts/html.html:64
 msgid "All rights reserved."
 msgstr "Alle Rechte vorbehalten."
 
@@ -245,6 +279,11 @@ msgstr "Noch kein Konto?"
 msgid "Sign up"
 msgstr "Registrieren"
 
+#: conjunto/templates/conjunto/modal_confirm_delete.html:5
+#, python-format
+msgid "Do you really want to delete '%(object)s'"
+msgstr "Wollen Sie '%(object)s' wirklich löschen?"
+
 #: conjunto/templates/conjunto/modal_form.html:37
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -253,10 +292,26 @@ msgstr "Abbrechen"
 msgid "Close"
 msgstr "Schließen"
 
-#: conjunto/views.py:183
+#: conjunto/views.py:188 conjunto/views.py:433
 msgid "Save"
 msgstr "Sichern"
 
-#, python-brace-format
-#~ msgid "Edit '{instance}'"
-#~ msgstr "'{instance}' bearbeiten"
+#: conjunto/views.py:344
+msgid "No privacy information available yet."
+msgstr ""
+
+#: conjunto/views.py:351
+#, fuzzy
+#| msgid "Terms and conditions"
+msgid "No terms and conditions available yet."
+msgstr "Nutzungsbedingungen"
+
+#: conjunto/views.py:423
+#, fuzzy, python-brace-format
+#| msgid "Edit '{instance}'"
+msgid "Create '{instance}'"
+msgstr "'{instance}' bearbeiten"
+
+#: conjunto/views.py:446
+msgid "Delete"
+msgstr ""

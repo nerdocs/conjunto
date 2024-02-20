@@ -420,7 +420,7 @@ class ModalCreateView(_ModalModelViewMixin, CreateView):
     """
 
     _permissions_verb = "create"
-    _modal_title_template = "Create '{instance}'"
+    _modal_title_template = _("Create '{instance}'")
 
 
 class ModalUpdateView(_ModalModelViewMixin, UpdateView):
@@ -433,7 +433,7 @@ class ModalUpdateView(_ModalModelViewMixin, UpdateView):
     button_content = _("Save")
     dialog_type = DialogType.UPDATE
     _permissions_verb = "change"
-    _modal_title_template = "Edit '{instance}'"
+    _modal_title_template = _("Edit '{instance}'")
 
 
 class ModalDeleteView(_ModalModelViewMixin, DeleteView):
@@ -447,7 +447,7 @@ class ModalDeleteView(_ModalModelViewMixin, DeleteView):
     template_name = "conjunto/modal_confirm_delete.html"
     dialog_type = DialogType.DELETE
     _permissions_verb = "delete"
-    _modal_title_template = "Delete '{instance}'"
+    _modal_title_template = _("Delete '{instance}'")
 
 
 class AnonymousRequiredMixin(PermissionRequiredMixin):
