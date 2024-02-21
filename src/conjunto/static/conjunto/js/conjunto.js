@@ -48,11 +48,11 @@
     }
     // if form contains no input fields, place focus on submit button
     submit = modal.querySelectorAll("button[type=submit]")
-    if (submit) {
+    if (submit && submit.length > 0) {
       submit[0].focus()
-      return
+    } else {
+      console.log("No input/textarea/submit button found to place focus.")
     }
-    console.log("No input/textarea/submit button found to place focus.")
   })
 
   // empty the dialog on hide
