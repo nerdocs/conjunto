@@ -169,11 +169,14 @@ class Updateable(component.Component):
                 raise AttributeError(
                     f"{self.__class__.__name__} has no '{attr}' attribute."
                 )
+
+        method = self.attributes.pop("method", "get")
         return {
             "id": self.attributes["id"],
             "elt": self.attributes.get("elt", "div"),
             "url": self.attributes["url"],
             "trigger": self.attributes["trigger"],
+            "method": method,
         }
 
 
