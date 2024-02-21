@@ -139,8 +139,8 @@ class ListItem(component.Component):
         }
 
 
-@component.register("updateable")
-class Updateable(component.Component):
+@component.register("updatable")
+class Updatable(component.Component):
     """
     HTML element that updates itself using HTMX when a certain
     Javascript event is triggerd anywhere in the body.
@@ -153,14 +153,14 @@ class Updateable(component.Component):
 
     Example:
         ```django
-        {% updateable id="my-card" trigger="person:changed" url=request.path %}
+        {% updatable id="my-card" trigger="person:changed" url=request.path %}
 
         {% url 'person:update' as person_update_url %}
-        {% updateable elt="ul" id="people-list" trigger="person:changed" url=person_update_url %}
+        {% updatable elt="ul" id="people-list" trigger="person:changed" url=person_update_url %}
         ```
     """
 
-    template_name = "conjunto/components/updateable.html"
+    template_name = "conjunto/components/updatable.html"
 
     def get_context_data(self, **kwargs) -> dict:
         # TODO: allow multiple triggers
