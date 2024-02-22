@@ -307,11 +307,9 @@ msgid "No terms and conditions available yet."
 msgstr "Nutzungsbedingungen"
 
 #: conjunto/views.py:423
-#, fuzzy, python-brace-format
-#| msgid "Edit '{instance}'"
 msgid "Create '{instance}'"
-msgstr "'{instance}' bearbeiten"
+msgstr "'{instance}' erstellen"
 
 #: conjunto/views.py:446
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
