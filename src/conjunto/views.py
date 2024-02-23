@@ -5,10 +5,12 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.views.static import serve
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.views import View
 from django.views.generic import (
     DeleteView,
     DetailView,
@@ -24,7 +26,6 @@ from conjunto.api.interfaces import (
     UseElementMixin,
 )
 from conjunto.cms.models import TermsConditionsPage, PrivacyPage
-from conjunto.http import HttpResponseEmpty
 from conjunto.tools import camel_case2snake
 from django.utils.translation import gettext_lazy as _
 
@@ -481,3 +482,71 @@ class SettingsView(PermissionRequiredMixin, UseElementMixin, DetailView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+class ProtectedMediaBaseView(View):
+    """Base view that served protected media files.
+
+    Don't use this class directly. Use `PermissionRequiredMediaView` or
+    `LoginRequiredMediaView` instead.
+    """
+
+    def get(self, request, path, as_download=False):  # noqa
+        # Construct the full path to the media file
+        response = serve(
+            request,
+            path,
+            document_root=settings.PROTECTED_MEDIA_ROOT,
+            show_indexes=False,
+        )
+        return response
+
+
+class LoginRequiredMediaView(LoginRequiredMixin, ProtectedMediaBaseView):
+    """A view that serves, but protects media files from unauthorized access by
+    checking if user is logged in.
+
+    It denies access to the `settings.PROTECTED_MEDIA_ROOT` directory to any
+    anonymous user.
+    You can directly use it in your urls.py:
+
+    Example usage:
+    ```python
+    # urls.py
+    urlpatterns = [
+        path(
+            "media/protected/<path>/",
+            LoginRequiredMediaView.as_view(),
+            name="protected_media",
+        ),
+        ...,
+    ]
+    ```
+    """
+
+
+class PermissionRequiredMediaView(PermissionRequiredMixin, ProtectedMediaBaseView):
+    """A view that serves, but protects media files from unauthorized access by
+    checking user permissions.
+
+    It denies access to the `settings.PROTECTED_MEDIA_ROOT` directory without proper
+    permissions.
+    As it inherits PermissionRequiredMixin, you have to use the `permission_required`
+    attribute to set the required permissions. You can directly use it in your urls.py
+    by adding the permission_required attribute as parameter to `as_view()`,
+    or subclass the view and set it there.
+
+    Example usage:
+    ```python
+    # urls.py
+    urlpatterns = [
+        path(
+            "media/protected/<path>/",
+            PermissionRequiredMediaView.as_view(
+                permission_required="my_project.view_media"),
+            name="protected_media",
+        ),
+        ...,
+    ]
+    ```
+    """
