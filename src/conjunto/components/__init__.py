@@ -73,7 +73,13 @@ class DataGrid(component.Component):
                 # You have to add a translation string manually to your project
                 # for this to work. @property display_name() -> "Display name"
                 field["title"] = _(capfirst(snake_case2spaces(field_name)))
-            field["content"] = getattr(object, field_name) or "-"
+
+            # check if there are TextChoices or IntegerChoices to map to
+            if hasattr(object, f"get_{field_name}_display"):
+                field["content"] = getattr(object, f"get_{field_name}_display")
+            else:
+                field["content"] = getattr(object, field_name) or "-"
+
             fields.append(field)
 
         return {"fields": fields}
