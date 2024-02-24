@@ -5,7 +5,7 @@ class HttpResponseEmpty(HttpResponse):
     """An HTTP response that has no content.
 
     Used for HTMX requests that should not return anything, like delete requests.
-    The returned status code is **204**.
+    The returned status code is **204** (No Content).
     """
 
     status_code = 204

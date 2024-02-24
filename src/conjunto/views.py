@@ -6,8 +6,11 @@ from crispy_forms.layout import Layout
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.views.generic.detail import (
+    SingleObjectMixin,
+)
 from django.views.static import serve
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views import View
@@ -26,6 +29,7 @@ from conjunto.api.interfaces import (
     UseElementMixin,
 )
 from conjunto.cms.models import TermsConditionsPage, PrivacyPage
+from conjunto.http import HttpResponseEmpty
 from conjunto.tools import camel_case2snake
 from django.utils.translation import gettext_lazy as _
 
@@ -62,7 +66,7 @@ class HtmxFormViewMixin(HtmxRequestMixin):
 
         FormViews raise an Exception if success_url is empty. We need to capture that.
         """
-        return self.success_url or ""
+        return getattr(self, "success_url", "")
 
     def get_success_event(self):
         """Override this to return (e.g. generated) success event."""
@@ -71,10 +75,15 @@ class HtmxFormViewMixin(HtmxRequestMixin):
     def form_valid(self, form):
         """Trigger a Javascript event on the client."""
         response = super().form_valid(form)
-        # if coming from a HTMX request, we need to redirect to the success URL using
-        # HTMX too. So we replace the response with a `HX-Trigger` version.
+        # if coming from a HTMX request, and there is a success_url, we need to redirect
+        # to it URL using HTMX. So we replace the HttpResponseRedirect with a
+        # `HX-Trigger` version.
+        success_url = self.get_success_url()
         if self.request.htmx and isinstance(response, HttpResponseRedirect):
-            response = HttpResponseClientRedirect(self.get_success_url())
+            if success_url:
+                response = HttpResponseClientRedirect(success_url)
+            else:
+                response = HttpResponseEmpty()
 
         # in case of a normal request origin, the original HttpResponse(Redirect?) is
         # kept as is.
@@ -407,7 +416,8 @@ class _ModalModelViewMixin(AutoPermissionsViewMixin, ModalFormViewMixin):
     It automatically generates the Modal title. Override as needed.
 
     Attributes:
-        _modal_title_template: the title of the modal dialog
+        _modal_title_template: the title of the modal dialog,
+            with an `{instance}` placeholder.
     """
 
     _modal_title_template = None  # "Edit/Create '{instance}'"
@@ -458,6 +468,41 @@ class ModalDeleteView(_ModalModelViewMixin, DeleteView):
     dialog_type = DialogType.DELETE
     _permissions_verb = "delete"
     _modal_title_template = _("Delete '{instance}'")
+
+
+class HtmxSetAttributeView(HtmxFormViewMixin, SingleObjectMixin, View):
+    """View mixin that sets an attribute on the given object and returns an empty
+    response.
+
+    This pattern is often needed in HTMX requests, to just set one or more attributes
+    of an object when clicking on a button, and just refresh the widget, or page.
+
+    Override the set_attribute method to set the desired attribute on the object.
+    """
+
+    # TODO: maybe don't use UpdateView as base. Has too many things (e.g. form) we don't
+    #  need.
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseNotAllowed("You can not use a GET request on this URL.")
+
+    def set_attribute(self):
+        """Set an attribute on `self.object`. You don't have to save it, as this
+        will be done automatically."""
+        raise NotImplementedError(
+            f"You must implement the 'set_attribute' method in {self.__class__.__name__}."
+        )
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.set_attribute()
+        self.object.save()
+
+        response = HttpResponseEmpty()
+        trigger_event = self.get_success_event()
+        if trigger_event:
+            return trigger_client_event(response, trigger_event)
+        return response
 
 
 class AnonymousRequiredMixin(PermissionRequiredMixin):
