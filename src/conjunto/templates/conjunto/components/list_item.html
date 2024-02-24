@@ -21,6 +21,8 @@
 
       {% if subtitle %}
         <div class="d-block text-muted text-truncate mt-n1">{{ subtitle }}</div>
+      {% elif slots.subtitle %}
+        <div class="d-block text-muted text-truncate mt-n1">{% render_slot slots.subtitle %}</div>
       {% endif %}
     </div>
 
