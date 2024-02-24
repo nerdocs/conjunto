@@ -176,6 +176,7 @@ class ModalFormViewMixin(HtmxFormViewMixin, CrispyFormHelperMixin):
         autofocus_field: the field that gets the autofocus when the modal is shown
         button_content: the content of the 'Save' button. Default: _("Save")
         dialog_type: the type of the dialog: INFO, DELETE, CREATE, UPDATE
+        autocomplete: if True, let the browser autocomplete the form. Default: True
     """
 
     template_name = "conjunto/modal_form.html"
@@ -185,6 +186,8 @@ class ModalFormViewMixin(HtmxFormViewMixin, CrispyFormHelperMixin):
     modal_title: str = ""
 
     autofocus_field = ""  # FIXME: fix autofocus field
+
+    autocomplete = True
 
     button_content = _("Save")
 
@@ -198,6 +201,9 @@ class ModalFormViewMixin(HtmxFormViewMixin, CrispyFormHelperMixin):
         context = super().get_context_data(**kwargs)
         icon = ""
         submit_btn_css_class = ""
+        form_attrs = {}
+        if self.autocomplete:
+            form_attrs["autocomplete"] = "off"
         match self.dialog_type:
             case DialogType.DELETE:
                 icon = "trash"
@@ -213,6 +219,9 @@ class ModalFormViewMixin(HtmxFormViewMixin, CrispyFormHelperMixin):
                 "DialogType": DialogType,
                 "icon": icon,
                 "submit_button_css_class": submit_btn_css_class or "primary",
+                "form_attrs": " ".join(
+                    [f"{key}={value}" for key, value in form_attrs.items()]
+                ),
             }
         )
         return context

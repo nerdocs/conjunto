@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.13] - unreleased
 ### Added
 - let listitem component accept subtitle slot additionally to attribute
+- allow autocomplete and custom form attrs in ModalFormViews
 
 ## [0.0.12] - 2023-02-23
 ### Added

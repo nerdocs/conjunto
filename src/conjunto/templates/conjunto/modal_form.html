@@ -1,7 +1,12 @@
 {% load i18n crispy_forms_tags %}
 {% if form %}
   {# only render form tag if a form is present. #}
-  <form id="modal-form" hx-post="{{ request.path }}" class="modal-content" enctype="multipart/form-data">
+  <form id="modal-form"
+        hx-post="{{ request.path }}"
+        class="modal-content"
+        enctype="multipart/form-data"
+        {{ form_attrs }}
+  >
 {% else %}
   <div class="modal-content">
 {% endif %}
