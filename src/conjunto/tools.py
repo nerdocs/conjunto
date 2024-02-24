@@ -17,18 +17,22 @@ def str_to_bool(bool_str: str) -> bool:
     return bool_str.lower() == "true"
 
 
-def snake_case2spaces(string):
+def snake_case2spaces(value: str | None):
     """Converts a snake_case string to spaces."""
-    return string.replace("_", " ")
+    value = value or ""
+    return value.replace("_", " ")
 
 
-def spaces2snake_case(string):
+def spaces2snake_case(value: str | None):
     """Converts a space separated string to snake_case."""
-    return string.lower().strip().replace(" ", "_")
+    value = value or ""
+    return value.lower().strip().replace(" ", "_")
 
 
-def camel_case2snake(camel_str, separator="_"):
+def camel_case2snake(camel_str: str | None, separator="_"):
     """Converts a CamelCase string to snake_case."""
+    if camel_str is None:
+        camel_str = ""
     snake_str = ""
     for index, char in enumerate(camel_str):
         if char.islower() or index == 0:
