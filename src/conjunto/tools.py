@@ -1,4 +1,6 @@
 import locale
+import secrets
+import string
 import subprocess
 
 from django.conf import settings
@@ -145,3 +147,27 @@ def create_groups_permissions(
                     )
                 except Permission.DoesNotExist:
                     logger.critical(f"  ERROR: Permission '{codename}' not found.")
+
+
+def generate_password(length=12, human_usable=False, with_punctuation=True) -> str:
+    min_length = getattr(settings, "PASSWORD_MIN_LENGTH", 8)
+    if not isinstance(length, int) or length < min_length:
+        raise ValueError(f"password must have positive length > {min_length}")
+    characters = string.ascii_letters + string.digits
+    if human_usable:
+        if with_punctuation:
+            characters += r"""!"#$%&()*+-./<=>?@[\]_{|}~"""
+            # remove characters that can be mixed easily with others when printed in the
+            # wrong font, like O0
+            # This reduces security a bit, but let's face it: Users tend to use the
+            # name of their children as passwords, so we don't need to worry about that.
+            characters = characters.replace("O", "")
+            characters = characters.replace("o", "")
+            characters = characters.replace("0", "")
+            characters = characters.replace("l", "")
+            characters = characters.replace("i", "")
+    else:
+        if with_punctuation:
+            characters += string.punctuation
+    characters = characters.replace("\\", "")
+    return "".join(secrets.choice(characters) for _ in range(length))
