@@ -470,7 +470,7 @@ class ModalDeleteView(_ModalModelViewMixin, DeleteView):
     _modal_title_template = _("Delete '{instance}'")
 
 
-class HtmxSetAttributeView(HtmxFormViewMixin, SingleObjectMixin, View):
+class HtmxSetModelAttributeView(HtmxFormViewMixin, SingleObjectMixin, View):
     """View mixin that sets an attribute on the given object and returns an empty
     response.
 
