@@ -30,6 +30,7 @@ class MaintenanceMiddleware:
                 and not path.startswith(settings.MEDIA_URL)
             ):
                 return redirect(reverse("maintenance") + f"?next={request.path}")
+                # FIXME kwargs
 
         response = self.get_response(request)
 
