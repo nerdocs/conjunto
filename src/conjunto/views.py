@@ -6,6 +6,7 @@ from crispy_forms.layout import Layout
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.core.exceptions import ImproperlyConfigured
 from django.views.generic.detail import (
     SingleObjectMixin,
 )
@@ -48,18 +49,53 @@ class HtmxTemplateMixin:
         return super().get_template_names()
 
 
-class HtmxFormViewMixin(HtmxRequestMixin):
-    """
-    Mixin for a form view that uses HTMX.
-
-    Returns a "HX-Trigger" attribute which triggers a Javascript event on the client.
+class SuccessEventMixin(HtmxRequestMixin):
+    """A HTMX view mixin that always returns an empty response.
 
     Attributes:
         success_event: a Javascript event that is triggered on the client after
             the request is completed.
+
+    Returns:
+        A response with a "HX-Trigger" attribute which triggers a Javascript event
+        on the client.
+
+    If your view parents have a `post` method, that method is called, and it's response
+    is reused and modified, so that the event is triggered on the client.
+
+    If your view has no post method (TemplateView etc.), a HttpResponseEmpty is created.
     """
 
     success_event: str = ""
+
+    def get_success_event(self):
+        """Override this to return (e.g. generated) success event."""
+        return self.success_event
+
+    def post(self, request, *args, **kwargs):
+        if hasattr(super(), "post"):
+            response = super().post(self, request, *args, **kwargs)
+        else:
+            response = HttpResponseEmpty()
+        trigger_event = self.get_success_event()
+        if trigger_event:
+            return trigger_client_event(response, trigger_event)
+        return response
+
+
+class HtmxFormViewMixin(SuccessEventMixin):
+    """
+    Mixin for a FormView that uses HTMX.
+
+    If any of the parent views return a HttpResponseRedirect, it will be converted
+    into a HttpResponseClientRedirect, so that HTMX does the redirection on the client.
+    HTMX forms also accept an empty success_url, if a success_event is present,
+    e.g. could a form reload itself after a button was pressed. There is not always
+    a need to redirect.
+
+    In case of a normal request origin (enforce_htmx must be False then), the original
+    HttpResponse(Redirect?) is kept as is.
+    """
 
     def get_success_url(self):
         """Return success_url, even if it is empty.
@@ -68,18 +104,26 @@ class HtmxFormViewMixin(HtmxRequestMixin):
         """
         return getattr(self, "success_url", "")
 
-    def get_success_event(self):
-        """Override this to return (e.g. generated) success event."""
-        return self.success_event
-
     def form_valid(self, form):
         """Trigger a Javascript event on the client."""
         response = super().form_valid(form)
         # if coming from a HTMX request, and there is a success_url, we need to redirect
-        # to it URL using HTMX. So we replace the HttpResponseRedirect with a
+        # to it's URL using HTMX. So we replace the HttpResponseRedirect with a
         # `HX-Trigger` version.
+        # FIXME: this shouldn't be in form_valid(), as it interferes with saving of
+        #  form data. Should be in post() or dispatch().
+        #  if e.g. a child view decides not to call super().form_valid (which is ok!)
+        #  this code isn't called - but it should be.
+
         success_url = self.get_success_url()
         if self.request.htmx and isinstance(response, HttpResponseRedirect):
+            # if neither success_url nor success_event is set, raise original Exception.
+            if not success_url and not self.get_success_event():
+                raise ImproperlyConfigured(
+                    "No URL to redirect to. Provide a "
+                    "success_url, or a success_event."
+                )
+
             if success_url:
                 response = HttpResponseClientRedirect(success_url)
             else:
@@ -87,11 +131,6 @@ class HtmxFormViewMixin(HtmxRequestMixin):
 
         # in case of a normal request origin, the original HttpResponse(Redirect?) is
         # kept as is.
-
-        # In our final response, we can add the Js event via `HX-Trigger`
-        event = self.get_success_event()
-        if event:
-            return trigger_client_event(response, event)
         return response
 
 
@@ -498,11 +537,7 @@ class HtmxSetModelAttributeView(HtmxFormViewMixin, SingleObjectMixin, View):
         self.set_attribute()
         self.object.save()
 
-        response = HttpResponseEmpty()
-        trigger_event = self.get_success_event()
-        if trigger_event:
-            return trigger_client_event(response, trigger_event)
-        return response
+        return super().post(self, request, *args, **kwargs)
 
 
 class AnonymousRequiredMixin(PermissionRequiredMixin):
