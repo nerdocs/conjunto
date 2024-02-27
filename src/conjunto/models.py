@@ -162,8 +162,8 @@ class AutoDateTimeField(models.DateTimeField):
 class CreatedModifiedModel(models.Model):
     """A simple mixin for model classes that need to have created/modified fields."""
 
-    created = models.DateTimeField(editable=False, default=timezone.now)
-    modified = AutoDateTimeField(default=timezone.now)
+    created = models.DateTimeField(_("Created"), editable=False, default=timezone.now)
+    modified = AutoDateTimeField(_("Modified"), default=timezone.now)
 
     class Meta:
         abstract = True
