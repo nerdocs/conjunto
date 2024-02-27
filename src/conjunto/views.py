@@ -478,7 +478,7 @@ class ModalCreateView(_ModalModelViewMixin, CreateView):
     of the given model as necessary permission. Override as needed.
     """
 
-    _permissions_verb = "create"
+    _permissions_verb = "add"
     _modal_title_template = _("Create '{instance}'")
 
 
