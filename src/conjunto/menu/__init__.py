@@ -23,7 +23,7 @@ class MenuItemInterfaceMixin:
         view_name: The name of the view (in the form 'module:view-name',
             like in urls.py) under which this menu item should show up.
             If left empty, the menu item will show up under all views.
-        required_permissions: The permissions necessary to view this menu item.
+        permission_required: The permissions necessary to view this menu item.
             !!! warning
                 this has nothing to do with the required permissions to call the URL
                 that this MenuItem points to. You must make sure for yourself that
@@ -43,7 +43,7 @@ class MenuItemInterfaceMixin:
     slug: str = ""
     view_name: str = ""
     icon: str = None
-    required_permissions: list = []  # FIXME: rename to permissions_required
+    permission_required: list = []  # FIXME: rename to permissions_required
     disabled: bool = False
     visible: bool = True  # FIXME: `check` and `visible` are more or less duplicated.
     check: bool = True
@@ -52,10 +52,10 @@ class MenuItemInterfaceMixin:
         self.request = request
         self._children = []
         # check permissions, and set visible as needed
-        if self.required_permissions:
-            if isinstance(self.required_permissions, str):
-                self.required_permissions = [self.required_permissions]
-            if not request.user.has_perms(self.required_permissions):
+        if self.permission_required:
+            if isinstance(self.permission_required, str):
+                self.permission_required = [self.permission_required]
+            if not request.user.has_perms(self.permission_required):
                 self.visible = False
                 return
 
@@ -230,7 +230,7 @@ class IActionButton(MenuItemInterfaceMixin):
 NON_CALLABLE_ATTRIBUTES = [
     "weight",
     "separator",
-    "required_permissions",
+    "permission_required",
     "view_name",
     "exact_url",
 ]
@@ -242,7 +242,7 @@ INTERNAL_ATTRIBUTES = [
     "weight",
     "icon",
     "separator",
-    "required_permissions",
+    "permission_required",
     "view_name",
     "badge",
     "disabled",

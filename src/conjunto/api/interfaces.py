@@ -226,12 +226,12 @@ class IBaseSettingsSectionMixin(IHtmxElementMixin):
         PermissionRequiredMixin, you can ignore this method.
 
         1. only allow authenticated users
-        2. if there is a "required_permissions" attribute, check for this perm
+        2. if there is a "permission_required" attribute, check for this perm
             additionally
         """
         return self.request.user.is_authenticated and (
-            self.request.user.has_perm(self.required_permissions)
-            if hasattr(self, "required_permissions")
+            self.request.user.has_perm(self.permission_required)
+            if hasattr(self, "permission_required")
             else True
         )
 
