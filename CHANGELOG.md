@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - provide function to generate secure passwords
 ### Changed
 - breaking change of HTMX mixin names to better explain their purpose
+- rename "Site Editor" permissions group to "Content Editor"
 
 ## [0.0.12] - 2023-02-23
 ### Added

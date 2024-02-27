@@ -6,7 +6,7 @@ class CmsConfig(AppConfig):
     name = "conjunto.cms"
 
     groups_permissions = {
-        "Site editor": {
+        "Content editor": {
             "cms.StaticPage": ["view", "add", "change", "delete"],
             "cms.TermsConditionsPage": ["view", "add", "change", "delete"],
             "cms.PrivacyPage": ["view", "add", "change", "delete"],
