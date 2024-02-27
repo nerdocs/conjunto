@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - let listitem component accept subtitle slot additionally to attribute
 - allow autocomplete and custom form attrs in ModalFormViews
 - provide function to generate secure passwords
+- add helper functions for menus: is_staff, is_authenticated
 ### Changed
 - breaking change of HTMX mixin names to better explain their purpose
 - rename "Site Editor" permissions group to "Content Editor"
