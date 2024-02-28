@@ -2,10 +2,13 @@
   {% if htmx %}
     hx-{{ htmx|lower }}="{{ url }}"{% if dialog %} hx-target="#dialog"{% elif target %} hx-target="{{ target }}"{% endif %}{% if select %} hx-select="{{ select }}"{% endif %}
     hx-swap="innerHTML"
+    {% if tag == "a" %}href="#"{% endif %}
+  {% else %}
+    {% if tag == "a" %}href="{{ url }}"{% endif %}
   {% endif %}
 >
   {% if icon %}
-    <i class="ti ti-{{ icon }} me-2 fs-2"></i>
+    <i class="ti ti-{{ icon }} fs-2"></i>
   {% endif %}
   {% render_slot slots.inner_block %}
 </{{ tag }}>

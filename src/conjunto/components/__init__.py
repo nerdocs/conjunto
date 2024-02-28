@@ -186,10 +186,9 @@ class Updatable(component.Component):
         }
 
 
-@component.register("button")
-class Button(component.Component):
+class HtmxLinkElement(component.Component):
     """
-    HTMX enabled base button.
+    HTMX enabled base element.
 
     This could be a <button> (default), a <div> or a <a> tag, resulting in a visual
     button.
@@ -204,9 +203,8 @@ class Button(component.Component):
         icon: the icon of the button. Optional.
     """
 
-    template_name = "conjunto/components/button.html"
-    tag = "button"
-    default_class = "btn"
+    template_name = "conjunto/components/link.html"
+    tag = "div"
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
@@ -217,6 +215,7 @@ class Button(component.Component):
         if htmx is True:
             htmx = "get"
         url = self.attributes.pop("url", None)
+
         context.update(
             {
                 "icon": self.attributes.pop("icon", None),
@@ -231,15 +230,62 @@ class Button(component.Component):
         return context
 
 
+class DisableMixin:
+    """Component mixin that adds a disabled class attribute to the component
+
+    It extracts a possible `disabled` attribute and adds it to the class list.
+    So you could conveniently write a component like this:
+    ```django
+    {% #button disabled %}
+    ```
+    instead of:
+    ```django
+    {% #button class="disabled" %}
+    ```
+    It also adds the content of the disabled attribute into the template context, so
+    you could react in other ways to it, like hiding the element completely.
+    """
+
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        disabled = self.attributes.pop("disabled", None)
+        if disabled:
+            self.attributes["class"] = self.attributes.get("class", "")
+            self.attributes["class"] += " disabled"
+            context["disabled"] = disabled
+        return context
+
+
+@component.register("link")
+class Link(HtmxLinkElement):
+    """HTMX enabled link."""
+
+    tag = "a"
+
+
+@component.register("button")
+class Button(DisableMixin, HtmxLinkElement):
+    """HTMX enabled button."""
+
+    tag = "button"
+    default_class = "btn"
+
+
 @component.register("actionbutton")
 class ActionButton(Button):
+    """Action button, e.g. in a `card-actions` section"""
+
     default_class = "btn btn-action"
 
 
 @component.register("listgroupaction")
-class ListGroupAction(Button):
-    tag = "a"
-    default_class = "list-group-item-actions"
+class ListGroupAction(Link):
+    """HTMX enabled list group action button"""
+
+    # FIXME: maybe hardcoded "text-secondary" here leads to problems, as
+    #   it will be merged with the attributes, which also could include
+    #   class="text-danger"
+    default_class = "list-group-item-actions text-secondary"
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)

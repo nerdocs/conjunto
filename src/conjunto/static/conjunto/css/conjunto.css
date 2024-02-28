@@ -1,0 +1,7 @@
+
+/*https://github.com/tabler/tabler/issues/1836*/
+/* Don't show underlines on list item action links */
+
+a.list-group-item-actions:hover {
+  text-decoration:none;
+}
