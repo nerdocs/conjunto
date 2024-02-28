@@ -1,0 +1,15 @@
+
+<div class="datagrid-item mb-2">
+  <div class="datagrid-title">{{ field.title }}</div>
+  <div class="datagrid-content">
+    {% if slots.inner_block %}
+      {% render_slot slots.inner_block %}
+    {% else %}
+      {% if field.content.file %}
+        <img src="{{ field.content.url }}" alt="{{ field.content }}"/>
+      {% else %}
+        {{ field.content }}
+      {% endif %}
+    {% endif %}
+  </div>
+</div>

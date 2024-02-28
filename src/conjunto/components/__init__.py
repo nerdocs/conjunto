@@ -61,28 +61,73 @@ class DataGrid(component.Component):
 
     def get_context_data(self, **kwargs) -> dict:
         """renders fields of given object in a datagrid-usable form."""
-        object = self.attributes.pop("object")
+        obj = self.attributes.pop("object")
         field_name_list: str = self.attributes.pop("fields", "")
         fields = []
         for field_name in field_name_list.split(","):
             field_name = field_name.strip()
             field = {}
             try:
-                field["title"] = object._meta.get_field(field_name).verbose_name
+                field["title"] = obj._meta.get_field(field_name).verbose_name
             except FieldDoesNotExist:
                 # You have to add a translation string manually to your project
                 # for this to work. @property display_name() -> "Display name"
                 field["title"] = _(capfirst(snake_case2spaces(field_name)))
 
             # check if there are TextChoices or IntegerChoices to map to
-            if hasattr(object, f"get_{field_name}_display"):
-                field["content"] = getattr(object, f"get_{field_name}_display")
+            if hasattr(obj, f"get_{field_name}_display"):
+                field["content"] = getattr(obj, f"get_{field_name}_display")
             else:
-                field["content"] = getattr(object, field_name) or "-"
+                field["content"] = getattr(obj, field_name) or "-"
 
             fields.append(field)
 
         return {"fields": fields}
+
+
+@component.register("datagrid-item")
+class DataGridItem(component.Component):
+    """
+    The `DataGridItem` class is a component that generates a data grid item for
+    displaying data in a tabular format.
+
+    Provided with a model object and a field name, it automatically displays the field's'
+    data in the usual datagrid's fashion.
+
+    Attributes:
+        object: the Django model
+        field: name of the field to display
+
+    Example usage:
+    ```django
+    {% #datagrid-item object=request.user field="last_name" %}
+    {% datagrid-item object=request.user field="last_name" %}
+      Mr/Mrs. {{ object.last_name }}
+    {% enddatagrid-item %}
+    ```
+    """
+
+    template_name = "conjunto/components/datagrid_item.html"
+
+    def get_context_data(self, **kwargs) -> dict:
+        """renders fields of given object in a datagrid-usable form."""
+        obj = self.attributes.pop("object")
+        field_name: str = self.attributes.pop("field", "").strip()
+        field = {}
+        try:
+            field["title"] = obj._meta.get_field(field_name).verbose_name
+        except FieldDoesNotExist:
+            # You have to add a translation string manually to your project
+            # for this to work. @property display_name() -> "Display name"
+            field["title"] = _(capfirst(snake_case2spaces(field_name)))
+
+        # check if there are TextChoices or IntegerChoices to map to
+        if hasattr(obj, f"get_{field_name}_display"):
+            field["content"] = getattr(obj, f"get_{field_name}_display")
+        else:
+            field["content"] = getattr(obj, field_name) or "-"
+
+        return {"field": field}
 
 
 @component.register("list")
