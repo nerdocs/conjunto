@@ -233,7 +233,7 @@ class Button(component.Component):
 
 @component.register("actionbutton")
 class ActionButton(Button):
-    default_class = "btn-action"
+    default_class = "btn btn-action"
 
 
 @component.register("listgroupaction")
