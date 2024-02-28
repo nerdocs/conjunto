@@ -226,8 +226,8 @@ class IBaseSettingsSectionMixin(IHtmxElementMixin):
         PermissionRequiredMixin, you can ignore this method.
 
         1. only allow authenticated users
-        2. if there is a "permission_required" attribute, check for this perm
-            additionally
+        2. if there is an additional "permission_required" attribute, check for this
+        perm additionally. If not, allow the user to display the view.
         """
         return self.request.user.is_authenticated and (
             self.request.user.has_perm(self.permission_required)
@@ -332,25 +332,38 @@ class UseElementMixin:
 
 
 class ISettingsSubSectionMixin(IBaseSettingsSectionMixin):
-    """Mixin for plugin hooks that are rendered as HTMX subsection in the settings
-    page.
+    """Mixin class to create interfaces for plugin hooks that are rendered as HTMX
+    subsection in the settings page.
 
-    You typically create a ISettingsSection implementation, which has some SubSections
-    as plugin elements.
+    This is fo creating **interfaces**, not implementations. The name could match
+    the section name you are using, so that you can associate it with it.
+    Create a subsection interface with this mixin for one section. You can add this
+    interface then to your Section as `elements`.
+
+    Conjunto provides a standard template for subsections, but you can override this
+    using the `template_name` attribute.
+
+    Attributes:
+        template_name: the name of the template that is used to render the
+            subsection.
 
     Example:
         ```python
-        class IPasswordSubSection(ISettingsSubSectionMixin, PasswordChangeView):
-
+        @Interface
+        class IAccountSubSection(ISettingsSubSectionMixin):
+            pass
         ```
     """
 
     template_name = "conjunto/layouts/settings_subsection.html"
+    # FIXME: this should not be necessary.
+    # But without it, a call to <host>/<path>/?section=account would fail.
     enforce_htmx = False
 
 
 @Interface
 class ISettingsSection(UseElementMixin, IBaseSettingsSectionMixin):
+    # FIXME: add PermissionRequiredMixin to this class.
     """
     Plugin hook that is rendered as HTMX view in the settings page section.
 
@@ -359,20 +372,29 @@ class ISettingsSection(UseElementMixin, IBaseSettingsSectionMixin):
     in this section.
 
     Examples:
-        class IAccountSubSection(ISettingsSubSection):
+        @Interface
+        class IAccountSubSection(ISettingsSubSectionMixin):
             '''This is the interface for your subsections'''
 
-        class AccountSection(ISettingsSection, DetailView):
+        class AccountSection(ISettingsSection, PermissionRequiredMixin, DetailView):
+            '''This is the main "account" section of your settings.'''
+            name = "account_general"
+            group = _("Account")
+            title = _("General Account settings")
             elements = [IAccountSubSection]
+            permission_required = "<app>.view_<your_model>"
 
-        class PasswordSubSection(ISettingsSubSectionMixin, PasswordChangeView):
+        class PasswordSubSection(IAccountSubSection, PasswordChangeView):
             '''This will be shown as subsection of "Account"'''
 
-        class SocialMediaSubSection(ISettingsSubSectionMixin, PasswordChangeView):
+        class SocialMediaSubSection(IAccountSubSection, PasswordChangeView):
             '''This will be shown as subsection of "Account"'''
     """
 
     __sort_attribute__ = "group"
     params = ["pk"]
     template_name = "conjunto/layouts/settings_section.html"
+
+    # FIXME: this should not be necessary.
+    # But without it, a call to <host>/<path>/?section=account would fail.
     enforce_htmx = False
