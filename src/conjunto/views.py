@@ -353,10 +353,12 @@ class LatestVersionMixin:
     Attributes:
         no_object_available (str): The message to display when no object is available.
         create_url (str): The URL to link to where a new object can be created.
+        edit_url (str): The URL to link to where an existing object can be edited.
     """
 
     no_object_available: str = ""
     create_url: str = ""
+    edit_url: str = ""
 
     def __init__(self):
         super().__init__()
