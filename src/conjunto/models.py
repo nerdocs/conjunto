@@ -56,8 +56,8 @@ class SingletonModel(models.Model):
             )
 
 
-class Page(models.Model):
-    """Represents a generic page.
+class Content(models.Model):
+    """Represents generic content.
 
     This class is an abstract base class that provides common fields and methods for
     all page subclasses.
@@ -85,7 +85,7 @@ class VersionedPageManager(models.Manager):
         return self.get_queryset().order_by("-version").first()
 
 
-class VersionedPage(Page):
+class VersionedPage(Content):
     """Represents a generic page with versioning.
 
     This class is an abstract base class that provides common fields and methods for

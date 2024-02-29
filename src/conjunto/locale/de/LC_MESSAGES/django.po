@@ -39,16 +39,12 @@ msgid "Terms and conditions pages"
 msgstr "Nutzungsbedingungen"
 
 #: conjunto/cms/models.py:26
-#, fuzzy
-#| msgid "Privacy"
 msgid "Privacy page"
-msgstr "Datenschutz"
+msgstr "Datenschutz-Seite"
 
 #: conjunto/cms/models.py:27
-#, fuzzy
-#| msgid "Privacy"
 msgid "Privacy pages"
-msgstr "Datenschutz"
+msgstr "Datenschutz-Seiten"
 
 #: conjunto/forms/__init__.py:211
 msgid "This field is required."

@@ -1,14 +1,26 @@
-from conjunto.models import Page, VersionedPage
+from django.db import models
+
+from conjunto.models import Content, VersionedPage
 from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
-class StaticPage(Page):
-    """A page that holds static content."""
+class StaticPage(Content):
+    """A page that holds static content.
+
+    You can add a `name` attribute to match it with `conjunto.constants.StaticPages`
+    """
 
     class Meta:
         verbose_name = _("Static page")
         verbose_name_plural = _("Static pages")
+
+    name = models.CharField(
+        max_length=255,
+        help_text=_("Internal name of the page. Leave empty of in doubt."),
+        blank=True,
+        null=True,
+    )
 
 
 class TermsConditionsPage(VersionedPage):

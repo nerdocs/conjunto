@@ -12,7 +12,7 @@ from django.views.generic.detail import (
 )
 from django.views.static import serve
 from django.http import HttpResponseRedirect, HttpResponseNotAllowed
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
 from django.views.generic import (
@@ -29,7 +29,7 @@ from conjunto.api.interfaces import (
     HtmxRequestMixin,
     UseElementMixin,
 )
-from conjunto.cms.models import TermsConditionsPage, PrivacyPage
+from conjunto.cms.models import TermsConditionsPage, PrivacyPage, StaticPage
 from conjunto.http import HttpResponseEmpty
 from conjunto.tools import camel_case2snake
 from django.utils.translation import gettext_lazy as _
@@ -407,6 +407,31 @@ class GenericTermsConditionsView(LatestVersionMixin, DetailView):
 
     model = TermsConditionsPage
     no_object_available = _("No terms and conditions available yet.")
+
+
+class GeneralStaticPageView(DetailView):
+    """Renders a static page.
+
+    Attributes:
+        name: The name of the static page.
+        model: The model of the static page. Defaults to StaticPage, but you can
+            override it
+    """
+
+    name = ""
+
+    model = StaticPage
+    template_name = "conjunto/cms/staticpage.html"
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if not self.name:
+            raise ImproperlyConfigured(
+                f"{self.__class__.__name__} must provide a 'name' attribute."
+            )
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model._meta.model, name=self.name)
 
 
 class MaintenanceView(TemplateView):
