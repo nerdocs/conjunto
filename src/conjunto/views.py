@@ -388,6 +388,12 @@ class LatestVersionMixin:
         return context
 
     def get_template_names(self):
+        """If no template_name is defined, return "versioned_page.html" for the app
+        the current view is coming from.
+
+        e.g. if the current view is in the app "my_app" and the template name is not
+        defined, it returns "my_app/versioned_page.html".
+        """
         return (
             self.template_name
             if self.template_name
