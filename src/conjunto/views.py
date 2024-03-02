@@ -72,14 +72,17 @@ class SuccessEventMixin(HtmxRequestMixin):
         """Override this to return (e.g. generated) success event."""
         return self.success_event
 
-    def post(self, request, *args, **kwargs):
-        if hasattr(super(), "post"):
-            response = super().post(self, request, *args, **kwargs)
-        else:
-            response = HttpResponseEmpty()
-        trigger_event = self.get_success_event()
-        if trigger_event:
-            return trigger_client_event(response, trigger_event)
+    def dispatch(self, request, *args, **kwargs):
+        """If POST request and response status is 200, trigger a Javascript event."""
+        response = super().dispatch(request, *args, **kwargs)
+        if (
+            request.htmx
+            and self.request.method == "POST"
+            and self.get_success_event()
+            and 200 <= response.status_code < 300
+        ):
+            trigger_client_event(response, self.get_success_event())
+
         return response
 
 
