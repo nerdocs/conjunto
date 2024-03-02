@@ -9,10 +9,10 @@ register = template.Library()
 @register.simple_tag
 def conjunto_css_scripts() -> str:
     css = [
-        "conjunto/css/conjunto.css",
         "conjunto/css/tabler.min.css",
         "conjunto/css/tabler-icons.css",
         "conjunto/css/dropzone.min.css",
+        "conjunto/css/conjunto.css",
     ]
 
     result = django_htmx_script()

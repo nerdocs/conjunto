@@ -5,3 +5,15 @@
 a.list-group-item-actions:hover {
   text-decoration:none;
 }
+
+
+/* HTMX indicators */
+.htmx-indicator {
+  display: none;
+}
+.htmx-request .htmx-indicator {
+  display: inline;
+}
+.htmx-request.htmx-indicator {
+  display: inline;
+}
