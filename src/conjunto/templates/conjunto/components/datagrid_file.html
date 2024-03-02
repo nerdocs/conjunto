@@ -1,0 +1,26 @@
+{% load conjunto %}
+<div class="datagrid-item mb-2">
+  <div class="datagrid-title">{{ field.title }}</div>
+  <div class="datagrid-content">
+    <p>
+      {% if field.content|is_image %}
+        <a href="#" hx-get="{% url 'lightbox' path=field.content.file.name %}" hx-target="#dialog">
+          <div class="card card-link">
+            <div class="card-body d-flex justify-content-center">
+              <img src="{{ field.content.url }}" alt="{{ field.content.path|truncatechars:25 }}"/>
+            </div>
+          </div>
+        </a>
+      {% else %}
+        <a href="{{ field.content.url }}" target="_blank">
+          <div class="card card-link">
+            <div class="card-body d-flex justify-content-center">
+              <i class="ti ti-file-type-pdf fs-1"></i>
+            </div>
+          </div>
+        </a>
+      {% endif %}
+    </p>
+    {% render_slot slots.inner_block %}
+  </div>
+</div>

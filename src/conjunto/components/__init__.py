@@ -130,6 +130,11 @@ class DataGridItem(component.Component):
         return {"field": field}
 
 
+@component.register("datagrid-file")
+class DataGridFile(DataGridItem):
+    template_name = "conjunto/components/datagrid_file.html"
+
+
 @component.register("list")
 class List(component.Component):
     """A flexible component to display a Tabler.io list.
