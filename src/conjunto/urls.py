@@ -1,6 +1,7 @@
-from django.urls import path, include
-from .views import MaintenanceView, SettingsView
+from django.urls import path, include, re_path
+from .views import MaintenanceView, SettingsView, LightboxView
 from .api.interfaces import IHtmxElementMixin
+
 
 urlpatterns = [
     path("maintenance/", MaintenanceView.as_view(), name="maintenance"),
@@ -12,4 +13,5 @@ urlpatterns = [
         ),
     ),
     path("settings/", SettingsView.as_view(), name="settings"),
+    re_path(r"lightbox/(?P<path>.+)/$", LightboxView.as_view(), name="lightbox"),
 ]

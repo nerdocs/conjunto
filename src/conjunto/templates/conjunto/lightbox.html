@@ -1,0 +1,10 @@
+{% extends 'conjunto/modal_form.html' %}
+{% load i18n %}
+
+{% block body %}
+  <img class="card-img" src="{{ image_url }}" alt="{{ image_url }}">
+{% endblock %}
+
+{# Footer should not be displayed #}
+{% block modal-footer %}
+{% endblock %}

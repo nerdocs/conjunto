@@ -62,3 +62,13 @@ def render_element(context, element, **kwargs):
     return mark_safe(
         element.__class__.as_view(**kwargs)(context.request).render().content.decode()
     )
+
+
+@register.filter
+def is_image(file) -> bool:
+    """Returns True if the file is an image, False otherwise
+
+    This ATM works just by determining the file extension.
+    # TODO: maybe use PIL for this purpose - CAVE speed.
+    """
+    return file.name.split(".")[-1] in ["png", "jpg", "jpeg", "gif"]

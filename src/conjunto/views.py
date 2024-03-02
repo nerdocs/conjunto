@@ -528,6 +528,14 @@ class ModalUpdateView(_ModalModelViewMixin, UpdateView):
     _modal_title_template = _("Edit '{instance}'")
 
 
+class ModalDetailView(_ModalModelViewMixin, DetailView):
+    """Convenience DetailView (with permissions) that lives in a Modal."""
+
+    dialog_type = DialogType.NOTSET
+    _permissions_verb = "view"
+    _modal_title_template = None
+
+
 class ModalDeleteView(_ModalModelViewMixin, DeleteView):
     """Convenience UpdateView (with permissions) that lives in a Modal.
 
@@ -672,3 +680,47 @@ class PermissionRequiredMediaView(PermissionRequiredMixin, ProtectedMediaBaseVie
     ]
     ```
     """
+
+
+class LightboxView(SuccessEventMixin, TemplateView):
+    """Gets path from URL and shows given file in a lightbox.
+
+    The path can be relative to MEDIA_ROOT or PROTECTED_MEDIA_ROOT,
+    or even include one of the two paths. LightBoxView will determine the path
+    automatically, so it can be used perfectly from within a HTMX request.
+    In fact, it does not respond to a non-HTMX request, as it should always open in a
+    modal dialog.
+
+    Arguments:
+        path (str): path to the file to show in the lightbox.
+
+    Example:
+        ```django
+        <a href="{% url 'lightbox' object.file.name %}">
+            <img src="{% url 'lightbox' object.file.name %}"/>
+        </a>
+        ```
+    """
+
+    template_name = "conjunto/lightbox.html"
+    permission_required = "conjunto.view_lightbox"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        image_path: str = kwargs["path"]
+        image_url = ""
+        # check if image_path is in MEDIA_ROOT or PROTECTED_MEDIA_ROOT
+        if image_path.startswith(settings.PROTECTED_MEDIA_ROOT):
+            if self.request.user.is_authenticated:
+                image_url = settings.PROTECTED_MEDIA_URL + image_path.replace(
+                    settings.PROTECTED_MEDIA_ROOT, ""
+                )
+        elif image_path.startswith(settings.MEDIA_ROOT):
+            image_url = settings.MEDIA_URL + image_path.replace(settings.MEDIA_ROOT, "")
+        # or, path is already a media relative path
+        elif image_path.startswith(settings.MEDIA_URL) or image_path.startswith(
+            settings.PROTECTED_MEDIA_URL
+        ):
+            image_url = image_path
+        context["image_url"] = image_url
+        return context
