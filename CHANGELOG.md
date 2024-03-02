@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.16] - unreleased
 - add HTMX lightbox
+- disable modal form button when posting
+- enable htmx spinner
 
 ## [0.0.15] - 2023-02-29
 - add datagrid-item component
