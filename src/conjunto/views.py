@@ -367,10 +367,10 @@ class LatestVersionMixin:
         super().__init__()
         if not self.model:
             raise AttributeError(
-                f"{self.__class__.__name__} must provide a'model' attribute."
+                f"{self.__class__.__name__} must provide a 'model' attribute."
             )
         self.no_object_available = self.no_object_available or (
-            f"No {self.model._meta.verbose_name}vailable."
+            f"No {self.model._meta.verbose_name} available."
         )
 
         if not self.create_url:
@@ -580,8 +580,7 @@ class HtmxSetModelAttributeView(HtmxFormViewMixin, SingleObjectMixin, View):
         self.object = self.get_object()
         self.set_attribute()
         self.object.save()
-
-        return super().post(self, request, *args, **kwargs)
+        return HttpResponseEmpty()
 
 
 class AnonymousRequiredMixin(PermissionRequiredMixin):
