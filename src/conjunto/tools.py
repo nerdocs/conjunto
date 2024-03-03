@@ -160,7 +160,7 @@ def generate_password(length=12, human_usable=False, with_punctuation=True) -> s
     characters = string.ascii_letters + string.digits
     if human_usable:
         if with_punctuation:
-            characters += r"""!"#$%&()*+-./<=>?@[\]_{|}~"""
+            characters += r"""!"#$%&()*+-./=?@[]_{|}~"""
             # remove characters that can be mixed easily with others when printed in the
             # wrong font, like O0
             # This reduces security a bit, but let's face it: Users tend to use the
