@@ -553,7 +553,7 @@ class ModalDeleteView(_ModalModelViewMixin, DeleteView):
     _modal_title_template = _("Delete '{instance}'")
 
 
-class HtmxSetModelAttributeView(HtmxFormViewMixin, SingleObjectMixin, View):
+class HtmxSetModelAttributeView(SuccessEventMixin, SingleObjectMixin, View):
     """View mixin that sets an attribute on the given object and returns an empty
     response.
 
@@ -562,9 +562,6 @@ class HtmxSetModelAttributeView(HtmxFormViewMixin, SingleObjectMixin, View):
 
     Override the set_attribute method to set the desired attribute on the object.
     """
-
-    # TODO: maybe don't use UpdateView as base. Has too many things (e.g. form) we don't
-    #  need.
 
     def get(self, request, *args, **kwargs):
         return HttpResponseNotAllowed("You can not use a GET request on this URL.")
