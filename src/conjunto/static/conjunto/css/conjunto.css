@@ -7,13 +7,13 @@ a.list-group-item-actions:hover {
 }
 
 
-/* HTMX indicators */
-.htmx-indicator {
+/* HTMX busy indicators */
+.busy-indicator {
   display: none;
 }
-.htmx-request .htmx-indicator {
+.htmx-request .busy-indicator {
   display: inline;
 }
-.htmx-request.htmx-indicator {
+.htmx-request.busy-indicator {
   display: inline;
 }
