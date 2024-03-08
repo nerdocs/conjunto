@@ -255,6 +255,7 @@ class HtmxLinkElement(component.Component):
 
     template_name = "conjunto/components/link.html"
     tag = "div"
+    default_class = ""
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
