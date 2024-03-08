@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.0.16] - unreleased
+## [0.0.18] - unreleased
+- variable icon font sizes in button components
+
+## [0.0.17] - 2024-03-08
+- update HtmxLinkElement
+
+## [0.0.16] - 2024-03-05
 - add HTMX lightbox
 - disable modal form button when posting
 - enable htmx spinner

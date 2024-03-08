@@ -267,10 +267,15 @@ class HtmxLinkElement(component.Component):
             htmx = "get"
         url = self.attributes.pop("url", None)
         klass: str = self.attributes.pop("class", "")
+        if "-sm" in klass or "-sm" in self.default_class:
+            icon_fs = ""
+        else:
+            icon_fs = "fs-2"
 
         context.update(
             {
                 "icon": self.attributes.pop("icon", None),
+                "icon_fs": icon_fs,
                 "url": url,
                 "htmx": htmx,
                 "target": self.attributes.pop("target", None),
