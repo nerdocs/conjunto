@@ -266,6 +266,7 @@ class HtmxLinkElement(component.Component):
         if htmx is True:
             htmx = "get"
         url = self.attributes.pop("url", None)
+        klass: str = self.attributes.pop("class", "")
 
         context.update(
             {
@@ -275,7 +276,9 @@ class HtmxLinkElement(component.Component):
                 "target": self.attributes.pop("target", None),
                 "dialog": dialog,
                 "tag": self.tag,
-                "default_class": self.default_class,
+                "default_class": f"{self.default_class} {klass}"
+                if klass
+                else self.default_class,
             }
         )
         return context
