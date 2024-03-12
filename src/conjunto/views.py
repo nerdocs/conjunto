@@ -6,12 +6,14 @@ from crispy_forms.layout import Layout
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.http import urlsafe_base64_decode
 from django.views.generic.detail import (
     SingleObjectMixin,
 )
 from django.views.static import serve
-from django.http import HttpResponseRedirect, HttpResponseNotAllowed
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -723,3 +725,64 @@ class LightboxView(SuccessEventMixin, TemplateView):
             image_url = image_path
         context["image_url"] = image_url
         return context
+
+
+class TokenValidationView(TemplateView):
+    """A TemplateView that verifies a token link.
+
+    It renders a template you have to set, which has some context variables available:
+
+    - token_valid (bool): Whether the token is valid or not.
+
+    Attributes:
+        template_name: The name of the template to render.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.token_user = None
+
+    def get_context_data(self, **kwargs) -> dict:
+        """Get token from URL and pass it into the template."""
+        context = super().get_context_data(**kwargs)
+        context["token_user"] = self.token_user
+        return context
+
+    def token_valid(self) -> HttpResponse:
+        return self.render_to_response(self.get_context_data(token_valid=True))
+
+    def token_invalid(self, **kwargs) -> HttpResponse:
+        return self.render_to_response(self.get_context_data(token_valid=False))
+
+    def token_preconditions_met(self) -> bool:
+        """Returns True if a precondition for token validity was already met,
+        else False.
+
+        It can be assumed that self.token_user is already set.
+        E.g., the token could be invalid if clicked a second time on the link,
+        The user must be above 16 years, etc.
+        """
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        try:
+            uid = urlsafe_base64_decode(kwargs.get("uidb64")).decode()
+            self.token_user = User.objects.get(pk=uid)
+
+            # Check token precondition in subclasses
+            if not self.token_preconditions_met():
+                return self.token_invalid()
+
+            # if user is just a system user, no MedSpeakAccount -> deny it!
+            if not self.token_user:
+                raise User.DoesNotExist
+            if default_token_generator.check_token(
+                self.token_user, kwargs.get("token")
+            ):
+                return self.token_valid()
+            else:
+                return self.token_invalid()
+
+        except User.DoesNotExist:
+            pass
+
+        return self.token_invalid()
