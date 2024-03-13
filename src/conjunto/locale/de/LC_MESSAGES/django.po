@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-19 23:26+0100\n"
+"POT-Creation-Date: 2024-03-14 00:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,31 +18,33 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: conjunto/cms/models.py:10
+#: conjunto/cms/models.py:15
 msgid "Static page"
-msgstr ""
+msgstr "Statische Seite"
 
-#: conjunto/cms/models.py:11
+#: conjunto/cms/models.py:16
 msgid "Static pages"
+msgstr "Statische Seiten"
+
+#: conjunto/cms/models.py:20
+msgid "Internal name of the page. Leave empty of in doubt."
 msgstr ""
 
-#: conjunto/cms/models.py:18
-#, fuzzy
-#| msgid "Terms and conditions"
+#: conjunto/cms/models.py:30
 msgid "Terms and conditions page"
-msgstr "Nutzungsbedingungen"
+msgstr "Nutzungsbedingungen-Seite"
 
-#: conjunto/cms/models.py:19
+#: conjunto/cms/models.py:31
 #, fuzzy
 #| msgid "Terms and conditions"
 msgid "Terms and conditions pages"
-msgstr "Nutzungsbedingungen"
+msgstr "Nutzungsbedingungen-Seiten"
 
-#: conjunto/cms/models.py:26
+#: conjunto/cms/models.py:38
 msgid "Privacy page"
 msgstr "Datenschutz-Seite"
 
-#: conjunto/cms/models.py:27
+#: conjunto/cms/models.py:39
 msgid "Privacy pages"
 msgstr "Datenschutz-Seiten"
 
@@ -61,7 +63,15 @@ msgstr ""
 
 #: conjunto/models.py:130
 msgid "Text to display on the maintenance page. Supports Markdown."
-msgstr ""
+msgstr "Text, der auf der Maintenance-Seite angezeigt wird. Unterstützt Markdown."
+
+#: conjunto/models.py:165
+msgid "Created"
+msgstr "Erstellt"
+
+#: conjunto/models.py:166
+msgid "Modified"
+msgstr "Verändert"
 
 #: conjunto/tabler.py:6
 msgid "Blue"
@@ -218,14 +228,24 @@ msgstr "{object} löschen"
 msgid "Delete {object} without confirmation"
 msgstr "{object} ohne Bestätigung löschen"
 
+#: conjunto/templates/conjunto/cms/staticpage.html:15
+#, fuzzy
+#| msgid "Privacy page"
+msgid "Create page"
+msgstr "Datenschutz-Seite"
+
+#: conjunto/templates/conjunto/cms/staticpage.html:20
+msgid "Edit page"
+msgstr "Seite bearbeiten"
+
 #: conjunto/templates/conjunto/components/card.html:28
 #: conjunto/templates/conjunto/generic_form.html:15
 msgid "Submit"
-msgstr ""
+msgstr "Absenden"
 
 #: conjunto/templates/conjunto/layouts/html.html:28
 msgid "Warning! This is a testing site."
-msgstr ""
+msgstr "Warnung! Das ist eine Test-Seite"
 
 #: conjunto/templates/conjunto/layouts/html.html:64
 msgid "All rights reserved."
@@ -280,7 +300,7 @@ msgstr "Registrieren"
 msgid "Do you really want to delete '%(object)s'"
 msgstr "Wollen Sie '%(object)s' wirklich löschen?"
 
-#: conjunto/templates/conjunto/modal_form.html:37
+#: conjunto/templates/conjunto/modal_form.html:42
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -288,24 +308,35 @@ msgstr "Abbrechen"
 msgid "Close"
 msgstr "Schließen"
 
-#: conjunto/views.py:188 conjunto/views.py:433
+#: conjunto/views.py:245 conjunto/views.py:530
 msgid "Save"
 msgstr "Sichern"
 
-#: conjunto/views.py:344
+#: conjunto/views.py:415
 msgid "No privacy information available yet."
-msgstr ""
+msgstr "Bisher keine Privatsphäreinformationen verfügbar."
 
-#: conjunto/views.py:351
-#, fuzzy
-#| msgid "Terms and conditions"
+#: conjunto/views.py:422
 msgid "No terms and conditions available yet."
-msgstr "Nutzungsbedingungen"
+msgstr "Bisher keine Nutzungsbedingungen verfügbar."
 
-#: conjunto/views.py:423
+#: conjunto/views.py:520
+#, python-brace-format
 msgid "Create '{instance}'"
 msgstr "'{instance}' erstellen"
 
-#: conjunto/views.py:446
+#: conjunto/views.py:533
+#, fuzzy, python-brace-format
+#| msgid "Create '{instance}'"
+msgid "Edit '{instance}'"
+msgstr "'{instance}' erstellen"
+
+#: conjunto/views.py:551
 msgid "Delete"
 msgstr "Löschen"
+
+#: conjunto/views.py:555
+#, fuzzy, python-brace-format
+#| msgid "Create '{instance}'"
+msgid "Delete '{instance}'"
+msgstr "'{instance}' erstellen"
