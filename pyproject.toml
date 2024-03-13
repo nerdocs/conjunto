@@ -1,10 +1,7 @@
-[build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
-
 [project]
 name = "conjunto"
-dynamic = ["version", "description"]
+dynamic = ["version"]
+description = "Django application framework/helpers using HTMX, tabler.io, tables2, crispy-forms & more."
 authors = [
     { name = "Christian González", email = "christian.gonzalez@nerdocs.at" }
 ]
@@ -53,3 +50,6 @@ doc = [
     "mkdocs-literate-nav",
     "mkdocs-section-index",
 ]
+
+[tool.setuptools.dynamic]
+version = {attr = "conjunto.__version__"}

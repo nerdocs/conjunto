@@ -1,6 +1,6 @@
 .PHONY: test build dev publish
 LANGUAGES:=`find conjunto/locale/ -mindepth 1 -maxdepth 1 -type d -printf "--locale %f "`
-PYTHON = $(VENV)/bin/python3
+PYTHON = $(VIRTUAL_ENV)/bin/python3
 MANAGE = cd src && django-admin
 
 
@@ -45,9 +45,11 @@ doc:
 livedocs:
 	mkdocs serve
 
+clean:
+	rm -rf dist/* build/*
 
-build:
-	flit build
+build: clean
+	$(PYTHON) -m build
 
 publish: build
-	flit publish
+	$(PYTHON) -m twine upload dist/*
