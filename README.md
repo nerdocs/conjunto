@@ -11,7 +11,7 @@ pip install conjunto
 ```
 
 ## Usage
-There is an own section in the [documentation](https://conjunto.readthedocs.io) available.
+There is a separate section in the [documentation](https://conjunto.readthedocs.io) available.
 
 
 ## Development setup
