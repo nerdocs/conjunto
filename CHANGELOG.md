@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.19] - unreleased
 - switch build tool from flit to setuptools
+- gitignore mo files
 
 ## [0.0.18] - 2024-03-13
 ### Added
