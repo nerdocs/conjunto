@@ -20,6 +20,9 @@ class MenuItemInterfaceMixin:
         icon: The (Bootstrap) icon name to display, if the menu shows icons.
         slug: The slug (machine name) of the item, used for css classes etc.
             If not provided, it is auto-generated from the title.
+            To create submenus, you have to provide a slug, e.g. "extras". MenuItems
+            that start with this slug + a "__" are considered submenus, e.g.
+            "extras__license".
         view_name: The name of the view (in the form 'module:view-name',
             like in urls.py) under which this menu item should show up.
             If left empty, the menu item will show up under all views.
