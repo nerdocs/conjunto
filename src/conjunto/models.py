@@ -2,7 +2,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from django.db import models, IntegrityError
 from django.utils import timezone
 from versionfield import VersionField
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, gettext
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -134,7 +134,7 @@ class AbstractSettings(SingletonModel):
     )
 
     def __str__(self):
-        return _("Settings")
+        return gettext("Settings")
 
 
 class Vendor(SingletonModel):
