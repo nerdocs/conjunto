@@ -11,3 +11,7 @@ def is_staff(request):
 
 def is_authenticated(request):
     return request.user.is_authenticated
+
+
+def is_anonymous(request):
+    return request.user.is_anonymous
