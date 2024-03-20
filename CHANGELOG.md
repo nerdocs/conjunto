@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.21] - 2024-03-21
 - use gettext_lazy for model translations
+- rename conjunto migration 0003 to proper name
+
 ## [0.0.20] - 2024-03-21
 ### Fixes
 - add missing data files
