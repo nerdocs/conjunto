@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "setuptools-scm>=8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "conjunto"
 dynamic = ["version"]
@@ -28,6 +32,8 @@ dependencies = [
     "django-extensions>=3.2",
     "Pillow",
 ]
+
+
 
 [project.urls]
 Homepage = "https://github.com/nerdocs/conjunto"
