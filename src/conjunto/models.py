@@ -2,7 +2,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from django.db import models, IntegrityError
 from django.utils import timezone
 from versionfield import VersionField
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 
