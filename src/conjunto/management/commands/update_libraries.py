@@ -168,6 +168,13 @@ class Command(BaseCommand):
                 "w",
             ),
         ],
+        "fslightbox": [
+            (
+                "js/fslightbox.js",
+                f"{unpkg_path}/fslightbox",
+                "w",
+            ),
+        ],
     }
     help = (
         "DEV COMMAND: downloads needed Javascript/CSS libraries and fonts for "
