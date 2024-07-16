@@ -1,35 +1,26 @@
 from django.core.exceptions import FieldDoesNotExist
+from django.db import models
 from django.utils.text import capfirst
-from django_web_components import component
 from django.utils.translation import gettext_lazy as _
-
+from sourcetypes import django_html, javascript
+from tetra import Library, Component, BasicComponent, public
 from conjunto.tools import snake_case2spaces
 
-
-class SlippersFormatter:
-    def format_block_start_tag(self, name):
-        return f"#{name}"
-
-    def format_block_end_tag(self, name):
-        return f"/{name}"
-
-    def format_inline_tag(self, name):
-        return name
+default = Library()
 
 
-@component.register("card")
-class Card(component.Component):
+@default.register
+class Card(BasicComponent):
     template_name = "conjunto/components/card.html"
     tag = "div"
 
-    def get_context_data(self, **kwargs) -> dict:
-        if self.attributes.pop("form", False):
+    def load(self, form=None) -> None:
+        if form:
             self.tag = "form"
-        return {"tag": self.tag}
 
 
-@component.register("datagrid")
-class DataGrid(component.Component):
+@default.register
+class DataGrid(Component):
     """
     The `DataGrid` class is a component that generates a data grid for displaying data
      in a tabular format.
@@ -57,86 +48,301 @@ class DataGrid(component.Component):
     ```
     """
 
-    template_name = "conjunto/components/datagrid.html"
+    object = None
+    fields: list = []
 
-    def get_context_data(self, **kwargs) -> dict:
-        """renders fields of given object in a datagrid-usable form."""
-        obj = self.attributes.pop("object")
-        field_name_list: str = self.attributes.pop("fields", "")
+    def load(self, object, fields: str) -> None:
+        """Renders fields of given object in a datagrid-usable form."""
+        self.object = object
+        field_name_list: str = fields
         fields = []
         for field_name in field_name_list.split(","):
             field_name = field_name.strip()
             field = {}
             try:
-                field["title"] = obj._meta.get_field(field_name).verbose_name
+                field["title"] = self.object._meta.get_field(field_name).verbose_name
             except FieldDoesNotExist:
                 # You have to add a translation string manually to your project
                 # for this to work. @property display_name() -> "Display name"
                 field["title"] = _(capfirst(snake_case2spaces(field_name)))
 
             # check if there are TextChoices or IntegerChoices to map to
-            if hasattr(obj, f"get_{field_name}_display"):
-                field["content"] = getattr(obj, f"get_{field_name}_display")
+            if hasattr(self.object, f"get_{field_name}_display"):
+                field["content"] = getattr(self.object, f"get_{field_name}_display")
             else:
-                field["content"] = getattr(obj, field_name) or "-"
-
+                field["content"] = getattr(self.object, field_name) or "-"
             fields.append(field)
 
-        return {"fields": fields}
-
-
-@component.register("datagrid-item")
-class DataGridItem(component.Component):
-    """
-    The `DataGridItem` class is a component that generates a data grid item for
-    displaying data in a tabular format.
-
-    Provided with a model object and a field name, it automatically displays the field's'
-    data in the usual datagrid's fashion.
-
-    Attributes:
-        object: the Django model
-        field: name of the field to display
-
-    Example usage:
-    ```django
-    {% #datagrid-item object=request.user field="last_name" %}
-    {% datagrid-item object=request.user field="last_name" %}
-      Mr/Mrs. {{ object.last_name }}
-    {% enddatagrid-item %}
-    ```
+    # language=html
+    template: django_html = """
+    <div class="datagrid">
+        {% for field in fields %}
+            <div class="datagrid-item mb-2">
+              <div class="datagrid-title">{{ field.title }}</div>
+              <div class="datagrid-content">
+                {% if field.content.file %}
+                    <img src="{{ field.content.url }}" alt="{{ field.content }}"/>
+                {% else %}
+                  {{ field.content }}
+                {% endif %}
+              </div>
+            </div>
+        {% endfor %}
+    </div>
     """
 
-    template_name = "conjunto/components/datagrid_item.html"
 
-    def get_context_data(self, **kwargs) -> dict:
-        """renders fields of given object in a datagrid-usable form."""
-        obj = self.attributes.pop("object")
-        field_name: str = self.attributes.pop("field", "").strip()
-        field = {}
+class DatagridItemBase(BasicComponent):
+    """Tetra base component for datagrid functionality."""
+
+    title: str = ""
+    content: str = ""
+    object: models.Model = None
+
+    def load(self, object: models.Model, field_name: str):
+        assert object, f"No object assigned to {self.__class__.__name__}"
+        assert field_name, f"No field_name assigned to {self.__class__.__name__}"
+        self.object = object
+        field_name = field_name.strip()
         try:
-            field["title"] = obj._meta.get_field(field_name).verbose_name
+            self.title = self.object._meta.get_field(field_name).verbose_name
         except FieldDoesNotExist:
             # You have to add a translation string manually to your project
             # for this to work. @property display_name() -> "Display name"
-            field["title"] = _(capfirst(snake_case2spaces(field_name)))
+            self.title = _(capfirst(snake_case2spaces(field_name)))
 
         # check if there are TextChoices or IntegerChoices to map to
-        if hasattr(obj, f"get_{field_name}_display"):
-            field["content"] = getattr(obj, f"get_{field_name}_display")
+        if hasattr(self.object, f"get_{field_name}_display"):
+            self.content = getattr(self.object, f"get_{field_name}_display")
         else:
-            field["content"] = getattr(obj, field_name) or "-"
-
-        return {"field": field}
+            self.content = getattr(self.object, field_name) or "-"
 
 
-@component.register("datagrid-file")
-class DataGridFile(DataGridItem):
-    template_name = "conjunto/components/datagrid_file.html"
+@default.register
+class DatagridItem(DatagridItemBase):
+    """Item in a data grid with a title and a content.
+
+    Attributes:
+        object: The Django model instance to display
+        field_name: The name of the field to display. The title will be autogenerated
+            from the field's verbose_name.
+    Usage:
+    ```django
+    {% @ datagrid-item object=request.user field="last_name" / %}
+
+    {% datagrid-item object=request.user field="last_name" %}
+      Mr/Mrs. {{ object.last_name }}
+    {% /@ datagrid-item %}
+    ```
+    """
+
+    content = ""
+
+    # language=html
+    template: django_html = """
+    <div {% ... attrs %} class="datagrid-item mb-2">
+      <div class="datagrid-title">{{ title }}</div>
+      <div class="datagrid-content">
+      {% block default %}
+          {% if content.file %}
+            <img src="{{ content.url }}" alt="{{ content }}"/>
+          {% else %}
+                {{ content }}
+          {% endif %}
+      {% endblock %}
+      </div>
+    </div>
+    """
 
 
-@component.register("list")
-class List(component.Component):
+@default.register
+class DatagridFile(DatagridItemBase):
+    # language=html
+    template: django_html = """
+    {% load conjunto %}
+    <div {% ... attrs %} class="datagrid-item mb-2">
+      {% csrf_token %}
+      <div class="datagrid-title">{{ title }}</div>
+      <div class="datagrid-content">
+        <p>
+          {% if content|is_image %}
+            {% @ lightbox_image url=content.url /%}
+          {% else %}
+            <a href="{{ content.url }}">
+              <div class="card card-link">
+                <div class="card-body d-flex justify-content-center">
+                  <i class="ti ti-file-type-pdf fs-1"></i>
+                </div>
+              </div>
+            </a>
+          {% endif %}
+        </p>
+        {% block default %}{% endblock %}
+      </div>
+    </div>
+    """
+
+
+@default.register
+class LightboxImage(BasicComponent):
+    """
+    Lightbox image link component.
+
+    Add images to your page with this component. They will be automatically found by the
+    FullScreenLightbox plugin and shown in a lightbox when clicked.
+    """
+
+    url: str = ""
+    alt: str = ""
+
+    def load(self, url: str, alt: str = "") -> None:
+        self.url = url
+        self.alt = alt
+
+    # language=html
+    template: django_html = """
+    <a data-fslightbox="gallery" href="{{ url }}">
+      <img src="{{ url }}" alt="{{ alt|truncatechars:25 }}"/>
+    </a>
+    """
+
+
+@default.register
+class Modal(Component):
+    """A modal component.
+
+    Blocks:
+        footer: A footer block. Per default, the footer shows a "Close" button.
+
+    Attributes:
+        title (str): The title of the modal.
+        static_backdrop (bool): Whether the backdrop is static or not. Defaults to False.
+    """
+
+    id: str = ""
+    title: str = ""
+    static_backdrop: bool = False
+
+    def load(
+        self,
+        id: str,
+        title: str = "",
+        success_event: str = "",
+        static_backdrop: bool = False,
+        *args,
+        **kwargs,
+    ):
+        self.id = id
+        self.title = title
+        self.static_backdrop = static_backdrop
+        self.success_event = success_event
+
+    @public
+    def submit(self) -> None:
+        """If the submit button was clicked, dispatch the success_event."""
+        if self.success_event:
+            self.client._dispatch(self.success_event)
+
+    # language=html
+    template: django_html = """
+    {% load i18n %}
+    <div class="modal" tabindex="-1" {% ... id=id %}
+        {% if static_backdrop %}
+        data-bs-backdrop="static" data-bs-keyboard="false"
+        {% endif %}
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            {% if title %}<h5 class="modal-title">{{ title }}</h5>{% endif %}
+            <button type="button" class="btn-close" data-bs-dismiss="modal" 
+            aria-label={% translate "Close" %}></button>
+          </div>
+          <div class="modal-body">
+            {% block default %}{% endblock %}
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            {% block buttons %}
+            <button type="submit" class="btn btn-primary" @click='submit()'>
+                {% translate "OK" %}
+            </button>
+            {% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+    """
+
+    # language=javascript
+    script: javascript = """
+        export default {
+            init() {
+                // add listener to modal shown event, that puts focus on the submit 
+                // button, or first input element if available
+                document.addEventListener('shown.bs.modal', (e) => {
+                    const modal = e.target
+                    // first try textareas
+                    const textareas = modal.querySelectorAll('textarea:not([type="hidden"])');
+                    for(const input of textareas) {
+                      if (!input.hidden) {
+                        input.focus()
+                        return
+                      }
+                    }
+                    // then input fields
+                    const inputs = modal.querySelectorAll('input:not([type="hidden"])');
+                    for(const input of inputs) {
+                      if (!input.hidden) {
+                        input.focus()
+                        return
+                      }
+                    }
+                    // if form contains no input fields, place focus on submit button
+                    let submit = modal.querySelectorAll("button[type=submit]")
+                    if (submit && submit.length > 0) {
+                      submit[0].focus()
+                    } else {
+                      console.log("No input/textarea/submit button found to place focus.")
+                    }
+              })
+            }
+        }
+        """
+
+
+@default.register
+class ModalButton(BasicComponent):
+    """Basically a button that opens a modal dialog.
+
+    Attributes:
+        target (str): The id of the modal to open.
+
+    The default block is the content of the button.
+    """
+
+    target_id: str = ""
+
+    def load(self, target: str = None, *args, **kwargs):
+        # take target with and without leading "#"
+        if target and target.startswith("#"):
+            self.target_id = target[1:]
+        else:
+            self.target_id = target
+
+    # language=html
+    template: django_html = """
+    <button {% ... attrs class="btn" %}
+        data-bs-toggle="modal" 
+        data-bs-target="#{{target_id}}">
+        {% block default %}{% endblock %}
+    </button>
+    """
+
+
+@default.register
+class List(Component):
     """A flexible component to display a Tabler.io list.
 
     Attributes:
@@ -146,22 +352,25 @@ class List(component.Component):
         ```django
         {% list  hoverable=True %}
           {% for item in items %}
-            {% #listitem title=item.title %}
+            {% @ listitem title=item.title / %}
           {% endfor %}
         {% endlist %}
         ```
     """
 
-    template_name = "conjunto/components/list.html"
+    hoverable: bool = False
 
-    def get_context_data(self, **kwargs):
-        # TODO: should "items" be renamed into "queryset"
-        hoverable = self.attributes.pop("hoverable", False)
-        return {"hoverable": hoverable}
+    # language=html
+    template: django_html = """
+    <div class="list-group{% if hoverable %} list-group-hoverable{% endif %}">
+      {% block default %}
+      {% endblock %}
+    </div>
+"""
 
 
-@component.register("listitem")
-class ListItem(component.Component):
+@default.register
+class ListItem(Component):
     """A flexible component to display a Tabler.io list item.
 
     Attributes:
@@ -174,7 +383,7 @@ class ListItem(component.Component):
 
     Example:
         ```django
-        {% #list-item
+        {% @ listitem
             title=item.title
             active=False
             badge_color="red"
@@ -182,21 +391,69 @@ class ListItem(component.Component):
         ```
     """
 
-    template_name = "conjunto/components/list_item.html"
+    title = ""
+    # template_name = "conjunto/components/list_item.html"
 
-    def get_context_data(self, **kwargs):
-        return {
-            "title": self.attributes.pop("title"),
-            "subtitle": self.attributes.pop("subtitle", None),
-            "picture": self.attributes.pop("picture", None),
-            "badge_color": self.attributes.pop("badge_color", None),
-            "active": self.attributes.pop("active", False),
-            "url": self.attributes.pop("url", ""),
-        }
+    def load(
+        self,
+        title: str = None,
+        subtitle: str = None,
+        picture: str = None,
+        badge_color: str = None,
+        active: bool = False,
+        url: str = None,
+    ):
+        self.title = title
+        self.subtitle = subtitle
+        self.picture = picture
+        self.badge_color = badge_color
+        self.active = active
+        self.url = url
+
+    # language=html
+    template: django_html = """
+    <div class="list-group-item{% if active %} active{% endif %}">
+      <div class="row align-items-center">
+    
+        {% if badge_color %}
+          <div class="col-auto"><span class="badge bg-{{ badge_color }}"></span></div>
+        {% endif %}
+    
+        {% if picture %}
+          <div class="col-auto">
+            {% if url %}<a href="{{ url }}">{% endif %}
+            <span class="avatar" {# style="..." #} }></span>
+            {% if url %}</a>{% endif %}
+          </div>
+        {% endif %}
+    
+        <div class="col text-truncate">
+          {% if url %}<a href="{{ url }}" class="text-reset d-block">
+          {% else %}<div class="text-reset d-block">{% endif %}
+          {{ title }}
+          {% if not url %}</div>{% else %}</a>{% endif %}
+    
+          {% if subtitle %}
+            <div class="d-block text-muted text-truncate mt-n1">{{ subtitle }}</div>
+          {% elif blocks.subtitle %}
+            <div class="d-block text-muted text-truncate mt-n1">
+            {% block subtitle %}{% endblock %}</div>
+          {% endif %}
+        </div>
+    
+        {% if blocks.actions %}
+          <div class="col-auto">
+            {% block actions %}{% endblock %}
+          </div>
+        {% endif %}
+    
+      </div>
+    </div>
+    """
 
 
-@component.register("updatable")
-class Updatable(component.Component):
+@default.register
+class Updatable(Component):
     """
     HTML element that updates itself using HTMX when a certain
     Javascript event is triggerd anywhere in the body.
@@ -217,6 +474,20 @@ class Updatable(component.Component):
     """
 
     template_name = "conjunto/components/updatable.html"
+    # language=html
+    templates: django_html = """
+{% load markdownify %}
+<{{ elt }}
+    id="{{ id }}"
+    hx-{{ method }}="{{ url }}"
+    hx-target="#{{ id }}" {# find any child element #}
+    hx-select="#{{ id }}"
+    hx-trigger="{{ trigger }} from:body"
+    hx-swap="outerHTML"
+    hx-disinherit="*"
+>
+    {% render_slot slots.inner_block %}
+</{{ elt }}>"""
 
     def get_context_data(self, **kwargs) -> dict:
         # TODO: allow multiple triggers
@@ -236,7 +507,7 @@ class Updatable(component.Component):
         }
 
 
-class HtmxLinkElement(component.Component):
+class HtmxLinkElement(BasicComponent):
     """
     HTMX enabled base element.
 
@@ -253,43 +524,59 @@ class HtmxLinkElement(component.Component):
         icon: the icon of the button. Optional.
     """
 
-    template_name = "conjunto/components/link.html"
-    tag = "div"
-    default_class = ""
+    # language=html
+    template: django_html = """<{{ tag }} {% ... attrs class=default_class %}
+  {% if htmx %}
+    hx-{{ htmx|lower }}="{{ url }}"{% if dialog %} hx-target="#{{ dialog }}"{% elif 
+    target %} hx-target="{{ target }}"{% endif %}{% if select %} hx-select="{{ select }}"{% endif %}
+    hx-swap="innerHTML"
+    {% if tag == "a" %}href="#"{% endif %}
+  {% else %}
+    {% if tag == "a" %}href="{{ url }}"{% endif %}
+  {% endif %}
+>
+  {% if icon %}
+    <i class="ti ti-{{ icon }} {{ icon_fs }}"></i>
+  {% endif %}
+  {% block default %}{% endblock %}
+</{{ tag }}>"""
 
-    def get_context_data(self, **kwargs) -> dict:
-        context = super().get_context_data(**kwargs)
-        dialog = self.attributes.pop("dialog", False)
-        htmx = self.attributes.pop("htmx", False)
-        if dialog and not htmx:
-            htmx = True
+    tag: str = "div"
+    default_class: str = ""
+    icon: str = ""
+    icon_fs: str = ""
+    url: str = ""
+    modal_id: str = ""
+    target: str = ""
+
+    def load(
+        self,
+        tag: str = "div",
+        icon: str = "",
+        url: str = "",
+        *args,
+        **kwargs,
+    ):
+        self.tag = tag
+        klass = kwargs.pop("class", "")
+        if "-sm" in klass or "-sm" in self.default_class:
+            self.icon_fs = ""
+        else:
+            self.icon_fs = "fs-2"
+
+        self.target = kwargs.pop("target", "")
+        htmx = kwargs.pop("htmx", False)
+        modal = kwargs.pop("modal", "")
+        if modal and not htmx:
+            self.dialog_id = ""
         if htmx is True:
             htmx = "get"
-        url = self.attributes.pop("url", None)
-        klass: str = self.attributes.pop("class", "")
-        if "-sm" in klass or "-sm" in self.default_class:
-            icon_fs = ""
-        else:
-            icon_fs = "fs-2"
-
-        context.update(
-            {
-                "icon": self.attributes.pop("icon", None),
-                "icon_fs": icon_fs,
-                "url": url,
-                "htmx": htmx,
-                "target": self.attributes.pop("target", None),
-                "dialog": dialog,
-                "tag": self.tag,
-                "default_class": f"{self.default_class} {klass}"
-                if klass
-                else self.default_class,
-            }
+        self.default_class = (
+            f"{self.default_class} {klass}" if klass else self.default_class
         )
-        return context
 
 
-class DisableMixin:
+class DisableMixin:  # FIXME: use Tetra
     """Component mixin that adds a disabled class attribute to the component
 
     It extracts a possible `disabled` attribute and adds it to the class list.
@@ -315,14 +602,12 @@ class DisableMixin:
         return context
 
 
-@component.register("link")
+@default.register
 class Link(HtmxLinkElement):
-    """HTMX enabled link."""
-
     tag = "a"
 
 
-@component.register("button")
+@default.register
 class Button(DisableMixin, HtmxLinkElement):
     """HTMX enabled button."""
 
@@ -330,24 +615,26 @@ class Button(DisableMixin, HtmxLinkElement):
     default_class = "btn"
 
 
-@component.register("actionbutton")
-class ActionButton(Button):
-    """Action button, e.g. in a `card-actions` section"""
-
-    default_class = "btn btn-action"
-
-
-@component.register("listgroupaction")
-class ListGroupAction(Link):
-    """HTMX enabled list group action button"""
-
-    # FIXME: maybe hardcoded "text-secondary" here leads to problems, as
-    #   it will be merged with the attributes, which also could include
-    #   class="text-danger"
-    default_class = "list-group-item-actions text-secondary"
-
-    def get_context_data(self, **kwargs) -> dict:
-        context = super().get_context_data(**kwargs)
-        if "url" not in context:
-            raise AttributeError(f"{self.__class__.__name__} has no 'url' attribute.")
-        return context
+#
+#
+# @default.register
+# class ActionButton(Button):
+#     """Action button, e.g. in a `card-actions` section"""
+#
+#     default_class = "btn btn-action"
+#
+#
+# @default.register
+# class ListGroupAction(Link):
+#     """HTMX enabled list group action button"""
+#
+#     # FIXME: maybe hardcoded "text-secondary" here leads to problems, as
+#     #   it will be merged with the attributes, which also could include
+#     #   class="text-danger"
+#     default_class = "list-group-item-actions text-secondary"
+#
+#     def get_context_data(self, **kwargs) -> dict:
+#         context = super().get_context_data(**kwargs)
+#         if "url" not in context:
+#             raise AttributeError(f"{self.__class__.__name__} has no 'url' attribute.")
+#         return context

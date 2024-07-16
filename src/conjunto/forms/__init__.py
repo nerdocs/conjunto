@@ -2,7 +2,9 @@ import logging
 
 from django import forms
 from django.db.models import IntegerChoices
-from dynamic_forms import DynamicField, DynamicFormMixin
+
+# FIXME: remove dynamic_forms, not needed with Tetra
+from dynamic_forms import DynamicFormMixin
 from django.utils.translation import gettext_lazy as _
 
 logger = logging.getLogger(__file__)
