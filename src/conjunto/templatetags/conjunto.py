@@ -24,7 +24,7 @@ def conjunto_css_scripts() -> str:
 @register.simple_tag
 def conjunto_js_scripts() -> str:
     js = [
-        "conjunto/js/alpine.min.js",
+        # "conjunto/js/alpine.min.js",
         # "conjunto/js/bootstrap.bundle.min.js",
         "conjunto/js/htmx/htmx.js",
         "conjunto/js/htmx/ext/ws.js",

@@ -12,6 +12,7 @@ urlpatterns = [
             namespace="elements",
         ),
     ),
+    path("__tetra__", include("tetra.urls")),
     path("settings/", SettingsView.as_view(), name="settings"),
     re_path(r"lightbox/(?P<path>.+)/$", LightboxView.as_view(), name="lightbox"),
 ]

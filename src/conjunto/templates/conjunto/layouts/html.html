@@ -1,4 +1,4 @@
-{% load static i18n statici18n conjunto %}
+{% load static i18n statici18n conjunto tetra %}
 <!DOCTYPE html>
 {#This is a generic html file for your application. You can extend it, or copy it and sort out the good parts ;-)#}
 {% get_current_language as LANGUAGE_CODE %}
@@ -13,7 +13,7 @@
   {% block head %}{% endblock %}
 
   {% conjunto_css_scripts %}
-
+  {% tetra_styles %}
   {% block styles %}{% endblock styles %}
 
   <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" >
@@ -88,6 +88,7 @@
 {#<script type="application/javascript" src="{% get_static_prefix %}jsi18n/{{ LANGUAGE_CODE }}/djangojs.js"></script>#}
 
 {% conjunto_js_scripts %}
+{% tetra_scripts include_alpine=True %}
 
 
 {# NEVER, EVER use htmx directly in the script tag. #}
@@ -96,12 +97,6 @@
 {% block scripts %}{% endblock scripts %}
 
 {% block modal %}
-  {# modal HTMX target. Override if needed #}
-  <div id="modal" class="modal">
-    <div id="dialog" class="modal-dialog modal-dialog-centered" role="document" hx-target="this">
-      <!-- modal content will be inserted here -->
-    </div>
-  </div>
 {% endblock modal %}
 
 {% block toasts %}

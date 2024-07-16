@@ -3,10 +3,8 @@
 {% load i18n %}
 
 {% block content %}
-  {#  {% card form %}#}
+  {#  {% @ card form %}#}
   {#  {% slot header %}#}
-
-
   {#  {% endslot %}#}
   <form action="." method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -20,5 +18,5 @@
 
   {# {% endslot %}#}
 
-  {#  {% endcard %}#}
+  {#  {% /@ card %}#}
 {% endblock %}

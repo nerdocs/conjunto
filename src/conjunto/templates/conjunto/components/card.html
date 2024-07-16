@@ -1,31 +1,29 @@
-{% load markdownify %}
-{% load i18n %}
-
+{% load markdownify i18n %}
 <{{ tag }} class="card mb-2"{% if tag == "form" %} method="post" action="."{% endif %}>
-{% if slots.title or slots.actions %}
-  <div class="card-header">
-    {% if slots.title %}
-      <h3 class="card-title">
-        {% render_slot slots.title %}
-      </h3>
+    {% if blocks.title or blocks.actions %}
+    <div class="card-header">
+        <h3 class="card-title">
+            {% block title %}{% endblock %}
+        </h3>
+        {% block header-between %}{% endblock %}
+        <div class="card-actions">
+            {% block actions %}{% endblock %}
+        </div>
+    </div>
     {% endif %}
-    {% if slots.actions %}
-      <div class="card-actions">
-        {% render_slot slots.actions %}
+    {% block card-content %}
+    <div class="card-body">
+        {% block default %}
+        {% endblock %}
+    </div>
+    {% endblock %}
+    {% if blocks.footer %}
+      <div class="card-footer">
+        {% block footer %}{% endblock %}
+      </div>
+    {% elif tag == "form" %}
+      <div class="button-holder">
+        <button class="btn btn-primary" type="submit">{% translate 'Submit' %}</button>
       </div>
     {% endif %}
-  </div>
-{% endif %}
-<div class="card-body">
-  {% render_slot slots.inner_block %}
-</div>
-{% if slots.footer %}
-  <div class="card-footer">
-    {% render_slot slots.footer %}
-  </div>
-{% elif tag == "form" %}
-  <div class="button-holder">
-    <button class="btn btn-primary" type="submit">{% translate 'Submit' %}</button>
-  </div>
-{% endif %}
 </{{ tag }}>

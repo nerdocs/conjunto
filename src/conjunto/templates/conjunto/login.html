@@ -32,17 +32,17 @@
               {% endfor %}
               {#                <div class="invalid-feedback">Invalid feedback</div>#}
             </div>
-            <div class="mb-2" x-data="{ hide: true }">
+            <div class="mb-2" x-data="{ visible:false }">
               <label class="form-label">
                 {% translate 'Password' %}
               </label>
               <div class="input-group input-group-flat">
-                <input :type="hide ? 'password' : 'text'" class="form-control{% if form.password.errors %} is-invalid{% endif %}" placeholder="{% translate 'Your password' %}" autocomplete="off" name="password">
-                {#                <span class="input-group-text">#}
-                {#                    <a href="#" class="link-secondary" aria-label="{% translate 'Show password' %}" @click="hide = !hide">#}
-                {#                      <i class="ti" :class="hide? 'ti-eye' : 'ti-eye-off'"></i>#}
-                {#                    </a>#}
-                {#                  </span>#}
+                <input type="password" :type="visible ? 'text' : 'password'" class="form-control{% if form.password.errors %} is-invalid{% endif %}" placeholder="{% translate 'Your password' %}" autocomplete="off" name="password">
+                <span class="input-group-text">
+                  <a href="#" class="link-secondary" aria-label="{% translate 'Show password' %}" @click="visible = !visible">
+                    <i class="ti ti-eye" :class="visible? 'ti-eye-off' : 'ti-eye'"></i>
+                  </a>
+                </span>
                 {% for error in form.password.errors %}
                   <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}

@@ -21,14 +21,14 @@
 
       {% if subtitle %}
         <div class="d-block text-muted text-truncate mt-n1">{{ subtitle }}</div>
-      {% elif slots.subtitle %}
-        <div class="d-block text-muted text-truncate mt-n1">{% render_slot slots.subtitle %}</div>
+      {% elif blocks.subtitle %}
+        <div class="d-block text-muted text-truncate mt-n1">{% block subtitle %}{% endblock %}</div>
       {% endif %}
     </div>
 
-    {% if slots.actions %}
+    {% if blocks.actions %}
       <div class="col-auto">
-        {% render_slot slots.actions %}
+        {% block actions %}{% endblock %}
       </div>
     {% endif %}
 

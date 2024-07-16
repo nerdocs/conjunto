@@ -1,6 +1,6 @@
-<{{ tag }} {% merge_attrs attributes class=default_class %}
+<{{ tag }} {% ... attrs class=default_class %}
   {% if htmx %}
-    hx-{{ htmx|lower }}="{{ url }}"{% if dialog %} hx-target="#dialog"{% elif target %} hx-target="{{ target }}"{% endif %}{% if select %} hx-select="{{ select }}"{% endif %}
+    hx-{{ htmx|lower }}="{{ url }}"{% if dialog %} hx-target="#{{ target }}"{% elif target %} hx-target="{{ target }}"{% endif %}{% if select %} hx-select="{{ select }}"{% endif %}
     hx-swap="innerHTML"
     {% if tag == "a" %}href="#"{% endif %}
   {% else %}
