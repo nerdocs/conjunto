@@ -9,10 +9,10 @@ from django.conf import settings
 
 
 class MaintenanceMiddleware:
-    def __init__(self, get_response):
+    def __init__(self, get_response) -> None:
         self.get_response = get_response
 
-    def __call__(self, request):
+    def __call__(self, request) -> HttpResponse:
         path = request.META.get("PATH_INFO", "")
 
         settings_model_name = settings.SETTINGS_MODEL
@@ -47,12 +47,12 @@ class HtmxMessageMiddleware:
     async_capable = True
     sync_capable = False
 
-    def __init__(self, get_response):
+    def __init__(self, get_response) -> None:
         self.get_response = get_response
         if iscoroutinefunction(self.get_response):
             markcoroutinefunction(self)
 
-    async def __call__(self, request):
+    async def __call__(self, request) -> HttpResponse:
         response: HttpResponse = await self.get_response(request)
         # TODO: implement device fetching in middleware
 
