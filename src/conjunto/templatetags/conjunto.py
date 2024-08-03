@@ -1,9 +1,17 @@
 from django import template
+from django.contrib.sites.models import Site
 from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 from django_htmx.jinja import django_htmx_script
 
 register = template.Library()
+
+
+@register.simple_tag(takes_context=True)
+def site_title(context) -> str:
+    # Get the current site
+    current_site = Site.objects.get_current(context.request)
+    return current_site.name if current_site else ""
 
 
 @register.simple_tag
@@ -15,6 +23,7 @@ def conjunto_css_scripts() -> str:
         "conjunto/css/conjunto.css",
     ]
 
+    # FIXME remove HTMX
     result = django_htmx_script()
     for css_file in css:
         result += f"<link rel='stylesheet' href='{static(css_file)}'>\n"
