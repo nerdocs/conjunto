@@ -20,7 +20,7 @@ class Card(BasicComponent):
 
 
 @default.register
-class DataGrid(Component):
+class DataGrid(BasicComponent):
     """
     The `DataGrid` class is a component that generates a data grid for displaying data
      in a tabular format.
