@@ -9,8 +9,9 @@ class SettingsAdmin(admin.ModelAdmin):
     pass
 
 
-settings_model = apps.get_model(settings.SETTINGS_MODEL)
-admin.site.register(settings_model, SettingsAdmin)
+if hasattr(settings, "SETTINGS_MODEL"):
+    settings_model = apps.get_model(settings.SETTINGS_MODEL)
+    admin.site.register(settings_model, SettingsAdmin)
 
 
 @admin.register(Vendor)
