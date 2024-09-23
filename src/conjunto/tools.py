@@ -63,11 +63,18 @@ def _split_locale(loc: tuple[str, str] | str) -> tuple[str, str, str]:
     """returns language, country_code, encoding from a locale string."""
     if isinstance(loc, str):
         loc = locale.normalize(loc)
-        locale_name, encoding = loc.split(".")
+        if "." in loc:
+            locale_name, encoding = loc.split(".")
+        else:
+            locale_name = loc
+            encoding = ""
     else:
         locale_name, encoding = loc
     # here we can be sure that loc is in the format "de_AT.UTF8"
-    language, country_code = locale_name.split("_")
+    if "_" in locale_name:
+        language, country_code = locale_name.split("_")
+    else:
+        language, country_code = locale_name, ""
     return language, country_code, encoding
 
 
