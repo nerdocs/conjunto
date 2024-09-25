@@ -7,7 +7,7 @@ from django.db.models import IntegerChoices
 from dynamic_forms import DynamicFormMixin
 from django.utils.translation import gettext_lazy as _
 
-logger = logging.getLogger(__file__)
+logger = logging.getLogger(__name__)
 
 
 # class DependencyFormMixin:

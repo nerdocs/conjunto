@@ -9,7 +9,7 @@ from django_extensions.management.commands.update_permissions import (
 import conjunto.tools
 
 User = get_user_model()
-logger = logging.getLogger(__file__)
+logger = logging.getLogger(__name__)
 
 
 class Command(UpdatePermissionsCommand):

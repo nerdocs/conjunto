@@ -6,7 +6,7 @@ import requests
 from django.apps import apps
 from django.core.management import BaseCommand
 
-logger = logging.getLogger(__file__)
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):

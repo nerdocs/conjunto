@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 import logging
 
-logger = logging.getLogger(__file__)
+logger = logging.getLogger(__name__)
 
 
 def str_to_bool(bool_str: str) -> bool:
