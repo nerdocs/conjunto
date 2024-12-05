@@ -167,16 +167,22 @@ def generate_password(length=12, human_usable=False, with_punctuation=True) -> s
     characters = string.ascii_letters + string.digits
     if human_usable:
         if with_punctuation:
-            characters += r"""!"#$%&()*+-./=?@[]_{|}~"""
+            # only use punctuation that is safe for humans to read and write,
+            # omit chars like `'
+            # characters += r"""!"#$%&()*+-./=?@[]_{|}~"""
+            characters += r"""!#$%&()*+-./=?@"""
             # remove characters that can be mixed easily with others when printed in the
-            # wrong font, like O0
+            # wrong font, like O/0 or i/l/1
             # This reduces security a bit, but let's face it: Users tend to use the
             # name of their children as passwords, so we don't need to worry about that.
-            characters = characters.replace("O", "")
-            characters = characters.replace("o", "")
-            characters = characters.replace("0", "")
-            characters = characters.replace("l", "")
-            characters = characters.replace("i", "")
+            # Using a strong password with slightly reduced complexity is a good
+            # trade-off to human-generated passwords which tend to be very bad.
+        characters = characters.replace("O", "")
+        characters = characters.replace("o", "")
+        characters = characters.replace("0", "")
+        characters = characters.replace("l", "")
+        characters = characters.replace("i", "")
+        characters = characters.replace("1", "")
     else:
         if with_punctuation:
             characters += string.punctuation
