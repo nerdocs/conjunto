@@ -31,6 +31,7 @@ templatetags as builtins:
 MIDDLEWARE = [
     # ...
     "conjunto.middleware.SettingsMiddleware",
+    "tetra.middleware.TetraMiddleware"
 ]
 
 TEMPLATES = [
@@ -43,9 +44,6 @@ TEMPLATES = [
                 "conjunto.context_processors.settings",
             ]
         }
-        "builtins": [
-            "django_web_components.templatetags.components",
-        ],
     }
 ]
 ```
