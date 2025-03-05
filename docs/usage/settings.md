@@ -1,7 +1,5 @@
 # Settings
 
-
-
 Conjunto provides a simple interface for you application's settings.
 There is an abstract model named "AbstractSettings" which you can inherit from and add your own application
 settings as fields.
@@ -21,7 +19,7 @@ class MyApplicationSettings(AbstractSettings):
 Conjunto provides a few fields in `AbstractSettings`:
 
 * site_name: A machine readable site name, like "conjunto"
-* site_title: The human readable site name, like "Conjunto" - this is used as `<title>` meta tag, and can be used on your
+* site_title: The human-readable site name, like "Conjunto" - this is used as `<title>` meta tag, and can be used on your
     starting page, e.g. in a hero.
 * site_description: A short description, which e.g. could be displayed on your starter page in a hero.
 * maintenance_mode: boolean. Self-explanatory.
@@ -30,7 +28,7 @@ Conjunto provides a few fields in `AbstractSettings`:
 
 
 
-Set the `SettingsMiddleware`  and the model that is used as settings by your application in `settings.py`:
+Set the `SettingsMiddleware` and the model that is used as settings by your application in `settings.py`:
 
 ```python
 

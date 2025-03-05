@@ -23,8 +23,7 @@ INSTALLED_APPS =  [
 
 ### Middleware & Context processor
 
-For the settings to be applied, you have to add conjunto's middlewares, context processors, and `django-web-component`'s
-templatetags as builtins:
+For the settings to be applied, you have to add conjunto's middlewares, and context processors:
 
 ```python
 
