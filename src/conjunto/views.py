@@ -6,8 +6,8 @@ from crispy_forms.layout import Layout
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
-from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views.generic.detail import (
     SingleObjectMixin,
@@ -730,59 +730,76 @@ class LightboxView(SuccessEventMixin, TemplateView):
 class TokenValidationView(TemplateView):
     """A TemplateView that verifies a token link.
 
-    It renders a template you have to set, which has some context variables available:
+    It renders a template you have to set, which has some context variables
+    available:
+        token_valid (bool): True if the token was verified correctly, else False
+        token_user (User): The User object from the token.
+        token_already_used (bool): True if the cause of the token being invalid was
+            that a certain hashed user attribute checked in the token had been changed.
 
-    - token_valid (bool): Whether the token is valid or not.
+    You have to provide a template_name.
 
     Attributes:
         template_name: The name of the template to render.
+        token_generator: The obligatory token generator to use.
+        token_already_used: Whether the token has already been used. Defaults to
+            False, you can set it to true depending on conditions you set for yourself
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.token_user = None
+    token_generator = None
+    token_already_used: bool = False
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.token_user: User = None
+
+        if not self.token_generator:
+            raise ImproperlyConfigured(
+                f"{self.__class__.__name__} requires 'token_generator' attribute."
+            )
 
     def get_context_data(self, **kwargs) -> dict:
         """Get token from URL and pass it into the template."""
         context = super().get_context_data(**kwargs)
-        context["token_user"] = self.token_user
+        context.update(
+            token_user=self.token_user, token_already_used=self.token_already_used
+        )
         return context
 
-    def token_valid(self) -> HttpResponse:
-        return self.render_to_response(self.get_context_data(token_valid=True))
+    def token_valid(self) -> None:
+        pass
 
-    def token_invalid(self, **kwargs) -> HttpResponse:
-        return self.render_to_response(self.get_context_data(token_valid=False))
+    def token_invalid(self, **kwargs) -> None:
+        pass
 
-    def token_preconditions_met(self) -> bool:
+    def check_token_preconditions(self) -> bool:
         """Returns True if a precondition for token validity was already met,
         else False.
 
         It can be assumed that self.token_user is already set.
         E.g., the token could be invalid if clicked a second time on the link,
         The user must be above 16 years, etc.
+        Use view attributes and include them into your template context if you want to
+        show more information about the failing in your template
         """
 
-    def get(self, request, *args, **kwargs) -> HttpResponse:
+    def get(self, request, uidb64, token, *args, **kwargs) -> HttpResponse:
         try:
-            uid = urlsafe_base64_decode(kwargs.get("uidb64")).decode()
+            uid = force_str(urlsafe_base64_decode(uidb64))
             self.token_user = User.objects.get(pk=uid)
-
-            # Check token precondition in subclasses
-            if not self.token_preconditions_met():
-                return self.token_invalid()
-
-            # if user is just a system user, no MedSpeakAccount -> deny it!
-            if not self.token_user:
-                raise User.DoesNotExist
-            if default_token_generator.check_token(
-                self.token_user, kwargs.get("token")
-            ):
-                return self.token_valid()
-            else:
-                return self.token_invalid()
-
-        except User.DoesNotExist:
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            # user stays None in case of any error
             pass
 
-        return self.token_invalid()
+        # Check token precondition in subclasses
+        if self.token_user is not None:
+            if self.check_token_preconditions():
+                # if user is just a system user, no MedSpeakAccount -> deny it!
+                if self.token_generator.check_token(self.token_user, token):
+                    self.token_valid()
+                    return self.render_to_response(
+                        self.get_context_data(token_valid=True)
+                    )
+
+        self.token_invalid()
+        return self.render_to_response(self.get_context_data(token_valid=False))
