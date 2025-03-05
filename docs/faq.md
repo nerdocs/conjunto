@@ -7,14 +7,11 @@ Yes, well. You can, and I did, but I found all of them usable all the time, and 
 And installing them all of them, maintaining all the dependencies, and gluing them togther in each project using those
 helpers is much of a burden. So I just externalized it into a single library.
 
-##### Why HTMX? Why not use Vue.js/Quasar/Svelte/Angular/React?
-Sigh. Long story. Because these (while being really cool) are forcing you to code a monolithic frontend facing a
-plugin-based Django-backend, and to do everything (validation, data management, state) twice: on the frontend *and* on
-the backend.
+##### Why Tetra ? Why not use Vue.js/Quasar/Svelte/Angular/React/HTMX?
+Sigh. Long story. Because Javascript frontends (while being really cool) more or less are forcing you to code a monolithic frontend facing a plugin-based Django-backend, and to do everything (validation, data management, state) twice: on the frontend *and* on the backend again.
 I'd like to allow application plugins to bring their own plugin frontends, which is much easier to achieve using
-Django's templating language and HTMX. Conjunto is trying its best to support component based development.
-HTMX does not provide that from the start, but in combination with `django-web-components` and some Javascript event
-handling this is getting closer.
+Django's templating language and Django style components. Conjunto (with Tetra) is trying its best to support component based development.
+
 
 ##### Could you use library XYZ instead of ABC?
 Short answer: No.<br/>

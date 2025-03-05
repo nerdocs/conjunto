@@ -6,7 +6,7 @@ plugin-extendable large-scale applications.
 
 Basically, it is a combination of the following packages:
 
-* [HTMX](https://htmx.org)
+* [Tetra](https://trtraframework.com)
 * [GDAPS plugin framework](https://gdaps.readthedocs.io)
 * [Django Web Components](https://pypi.org/project/django-web-components)
 * [Tabler.io](https://tabler.io) + [Tabler.io icons](https://tabler.io/icons)
