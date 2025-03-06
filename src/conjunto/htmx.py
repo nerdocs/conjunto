@@ -27,27 +27,16 @@ class HxLink:
         self.text = text
         self.dialog = dialog
         if icon:
-            self.text = f"{Icon(icon)}'></i> {text}"
+            self.text = (
+                # f"{Icon(icon)}'></i> {text}"
+                f"<i class='ti ti-{icon}'></i> {text}"
+            )
 
     def __str__(self):
         target = ""
         if self.dialog:
             target = " hx-target='#dialog'"
         return f"<a href='#' hx-get='{self.url}'{target}>{self.text}</a>"
-
-
-class Icon:
-    """Render an icon using Bootstrap 5.
-
-    Attributes:
-        name: the name of the icon
-    """
-
-    def __init__(self, name: str):
-        self.name = name
-
-    def __str__(self):
-        return f"<i class='bi bi-{self.name}'></i>"
 
 
 class HxButton:
@@ -113,7 +102,8 @@ class HxButton:
 
         return (
             f"<button hx-{self.method}='{self.url}'{target} "
-            f"class='{self.css_class}'{title_attr}>{Icon(self.icon)}</a>"
+            f"class='{self.css_class}'{title_attr}><i class='ti ti-"
+            f"{self.icon}'></i></a>"
         )
 
     def __str__(self):
