@@ -4,8 +4,12 @@ from tetra.exceptions import ComponentError
 
 class Updatable(Component):
     """
-    Tetra component that reloads itself when a certain
-    Javascript event is triggerd anywhere in its body.
+    Tetra component that reloads itself when a certain Javascript event is triggered.
+
+    This can be used as parent for other components that need to be all updated,
+    but have no direct connection to each other. When one subcomponent triggers this
+    event, the Updatable component will re-render itself, and therefore all its
+    children will be re-rendered as well.
 
     Attributes:
         id: the id attribute of the div.
