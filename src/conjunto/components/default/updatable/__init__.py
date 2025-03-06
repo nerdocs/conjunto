@@ -20,10 +20,9 @@ class Updatable(Component):
         ```
     """
 
-    template_name = "conjunto/components/updatable.html"
     elt = "div"
     trigger = ""
 
-    def load(self, trigger: str, elt: str = "div"):
+    def load(self, trigger: str, elt: str = "div", *args, **kwargs):
         if not trigger:
             raise ComponentError("'trigger' event must be provided.")

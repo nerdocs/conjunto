@@ -37,6 +37,18 @@ class MaintenanceMiddleware:
         return response
 
 
+class SettingsMiddleware:
+
+    def __init__(self, get_response) -> None:
+        self.get_response = get_response
+
+    def __call__(self, request) -> HttpResponse:
+        # Load the model specified in settings.SETTINGS_MODEL asynchronously
+        AppSettings = apps.get_model(settings.SETTINGS_MODEL)
+        request.settings = AppSettings.objects.all()
+        return self.get_response(request)
+
+
 class HtmxMessageMiddleware:
     """Filters out django messages and puts them in to the HX-Trigger header if
     current request is a HTMX request"""

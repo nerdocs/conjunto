@@ -1,8 +1,16 @@
+from crispy_forms.exceptions import CrispyError
+from crispy_forms.templatetags.crispy_forms_field import is_file
+from crispy_forms.utils import TEMPLATE_PACK
 from django import template
+from django.conf import settings
 from django.contrib.sites.models import Site
+from django.core.files import File
+from django.forms import boundfield
+from django.template.defaultfilters import stringfilter
+from django.template.loader import get_template
 from django.templatetags.static import static
 from django.utils.safestring import mark_safe
-from django_htmx.jinja import django_htmx_script
+
 
 register = template.Library()
 
@@ -15,7 +23,7 @@ def site_title(context) -> str:
 
 
 @register.simple_tag
-def conjunto_css_scripts() -> str:
+def conjunto_css() -> str:
     css = [
         "conjunto/css/tabler.min.css",
         "conjunto/css/tabler-icons.css",
@@ -23,8 +31,7 @@ def conjunto_css_scripts() -> str:
         "conjunto/css/conjunto.css",
     ]
 
-    # FIXME remove HTMX
-    result = django_htmx_script()
+    result = ""
     for css_file in css:
         result += f"<link rel='stylesheet' href='{static(css_file)}'>\n"
     return mark_safe(result)
@@ -35,14 +42,10 @@ def conjunto_js_scripts() -> str:
     js = [
         # "conjunto/js/alpine.min.js",
         # "conjunto/js/bootstrap.bundle.min.js",
-        "conjunto/js/htmx/htmx.js",
-        "conjunto/js/htmx/ext/ws.js",
-        "conjunto/js/htmx/ext/debug.js",
         "conjunto/js/litepicker.js",
         "conjunto/js/tabler.js",
         "conjunto/js/Sortable.min.js",
         "conjunto/js/conjunto.js",
-        "conjunto/js/toasts.js",
         "conjunto/js/dropzone.min.js",
         "conjunto/js/fslightbox.js",
     ]
@@ -76,9 +79,45 @@ def render_element(context, element, **kwargs):
 
 @register.filter
 def is_image(file) -> bool:
-    """Returns True if the file is an image, False otherwise
+    """Returns True if the file is an image, False otherwise.
 
     This ATM works just by determining the file extension.
     # TODO: maybe use PIL for this purpose - CAVE speed.
     """
-    return file.name.split(".")[-1] in ["png", "jpg", "jpeg", "gif"]
+    return isinstance(file, File) and file.name.split(".")[-1] in [
+        "png",
+        "jpg",
+        "jpeg",
+        "gif",
+    ]
+
+
+@register.filter(name="display_only")
+def as_crispy_display(field, label_class="", field_class=""):
+    """
+    Renders a form field like a django-crispy-forms field, but read-only, without the input field.
+
+        {% load crispy_forms_tags %}
+        {{ form.field|as_crispy_display }}
+    """
+    if not isinstance(field, boundfield.BoundField) and settings.DEBUG:
+        raise CrispyError(
+            "|as_crispy_display got passed an invalid or inexistent " f"field: {field}"
+        )
+
+    attributes = {
+        "field": field,
+        "form_show_errors": True,
+        "form_show_labels": True,
+        "label_class": label_class,
+        "field_class": field_class,
+    }
+
+    attributes["field"].field.disabled = True
+    return get_template("conjunto/widgets/field_display.html").render(attributes)
+
+
+@register.filter
+@stringfilter
+def trim(value):
+    return value.strip()

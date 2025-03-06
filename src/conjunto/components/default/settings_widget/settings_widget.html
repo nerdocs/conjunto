@@ -1,0 +1,47 @@
+<div class="card">
+  <div class="row g-0">
+    <div class="col-12 col-md-3 border-end">
+      <div class="card-body">
+        {% for section in sections.plugins %}
+          {% ifchanged section.group.name %}
+            {% if not forloop.first %}
+              </div> {# close last list-group #}
+            {% endif %}
+            <h4 class="subheader mt-2">
+              {{ section.group.title }}</h4>
+            <div class="list-group list-group-transparent" id="v-settings-tab">
+          {% endifchanged %}
+          <button class="list-group-item list-group-item-action
+                d-flex align-items-center{% if section.name == active_section_name %} active{% endif %}"
+                  @click.prevent="show_section('{{ section.name }}')"
+          >
+            {% if section.icon %}
+              <i class='ti ti-{{section.icon}} me-2'></i>
+            {% endif %}
+            {{ section.title }}
+          </button>
+        {% endfor %}
+        </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-9 d-flex flex-column">
+    <div class="card-body tab-content">
+      {% for section in sections.plugins %}
+        {% if section.name == active_section_name %}
+          {% if section.component %}
+            {% @ =section.component key=section.name object=request.user /%}
+          {% else %}
+            {% for subsection_component in section.subsections %}
+              {% if not forloop.first %}
+                <hr class="divider"/>
+              {% endif %}
+              {% @ =subsection_component key=subsection_component.name object=request.user /%}
+            {% endfor %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+</div>

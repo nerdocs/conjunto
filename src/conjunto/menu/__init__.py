@@ -1,5 +1,5 @@
 import re
-from typing import Iterable
+from typing import Iterable, Self
 
 from django.utils.text import slugify
 from gdaps.api import Interface
@@ -39,7 +39,6 @@ class MenuItemInterfaceMixin:
 
     CALLABLE_ATTRIBUTES = {"visible", "check", "icon", "title"}
 
-    __service__ = False
     menu: str = "main"
     weight: int = 0
     title: str = ""
@@ -51,7 +50,10 @@ class MenuItemInterfaceMixin:
     visible: bool = True  # FIXME: `check` and `visible` are more or less duplicated.
     check: bool = True
 
-    def __init__(self, request):
+    def init(self, request, *args, **kwargs) -> Self:
+        """Helper function that needs to be called when the menu item is initialized
+        during the request cycle.
+        """
         self.request = request
         self._children = []
         # check permissions, and set visible as needed
@@ -60,7 +62,7 @@ class MenuItemInterfaceMixin:
                 self.permission_required = [self.permission_required]
             if not request.user.has_perms(self.permission_required):
                 self.visible = False
-                return
+                return self
 
         self._prepare_callable_attributes()
 
@@ -70,7 +72,7 @@ class MenuItemInterfaceMixin:
 
         if not self.check:
             self.visible = False
-            return
+            return self
 
     def _prepare_callable_attributes(self):
         """Checks if any of the "callable attributes" are really callable, and sets
@@ -86,7 +88,9 @@ class MenuItemInterfaceMixin:
         if self._children:
             return True
         found = False
-        for item in filter(lambda i: i.menu == self.menu and "__" in i.slug, IMenuItem):
+        for item in filter(
+            lambda i: i.menu == self.menu and "__" in i.slug, IMenuItem.plugins()
+        ):
             # TODO improve children handling
             parts = item.slug.split("__")
             if len(parts) > 2:
@@ -127,11 +131,16 @@ class MenuItemInterfaceMixin:
     def attrs(self, value):
         self._attrs = value
 
+    def enabled(self):
+        return True
+
     def __getattr__(self, item):
-        """For all attrs that are requested in the template and are
+        """For all regular attributes that are requested in the template and are
         not defined in the class, don't produce an error, just return an empty
         string."""
-        return ""
+        if not item.startswith("_"):
+            return ""
+        return super().__getattribute__(item)
 
     @classmethod
     def filter(cls, name: str):
@@ -139,8 +148,7 @@ class MenuItemInterfaceMixin:
         return filter(lambda item: item.menu == name, cls.plugins())
 
 
-@Interface
-class IMenuItem(MenuItemInterfaceMixin):
+class IMenuItem(MenuItemInterfaceMixin, Interface):
     """An extendable and versatile MenuItem Interface
 
     You can use that for creating menu items in a named menu:
@@ -184,14 +192,13 @@ class IMenuItem(MenuItemInterfaceMixin):
     collapsed: bool = True
     _attrs: dict = {}
 
-    def __init__(self, request):
-        super(IMenuItem, self).__init__(request)
-
+    def init(self, request, *args, **kwargs) -> Self:
+        super().init(request, *args, **kwargs)
         if self.view_name and self.url:
             raise AttributeError("'view_name' and 'url' cannot be used together")
         if self.view_name and not request.resolver_match.view_name == self.view_name:
             self.visible = False
-            return
+        return self
 
     def selected(self) -> bool:
         """Check current URL against this item."""
@@ -204,8 +211,7 @@ class IMenuItem(MenuItemInterfaceMixin):
         return is_current
 
 
-@Interface
-class IActionButton(MenuItemInterfaceMixin):
+class IActionButton(MenuItemInterfaceMixin, Interface):
     """An action button that can be added to an e.g. table row.
 
     Attributes:
@@ -276,10 +282,9 @@ class Menu:
     def __init__(self, request):
         self.request = request
         self._cache = []
-        for menu_item_class in IMenuItem:
+        for item in IMenuItem.plugins():
             # instantiate a MenuItem with current request as param
-            item = menu_item_class(self.request)
-            self._cache.append(item)
+            self._cache.append(item.init(request))
 
     def __getitem__(self, item):
         """Returns filtered out menu items with the given '.menu' name."""

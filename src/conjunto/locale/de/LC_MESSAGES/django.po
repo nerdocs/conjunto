@@ -31,14 +31,8 @@ msgid "Internal name of the page. Leave empty of in doubt."
 msgstr ""
 
 #: conjunto/cms/models.py:30
-msgid "Terms and conditions page"
-msgstr "Nutzungsbedingungen-Seite"
-
-#: conjunto/cms/models.py:31
-#, fuzzy
-#| msgid "Terms and conditions"
-msgid "Terms and conditions pages"
-msgstr "Nutzungsbedingungen-Seiten"
+msgid "Terms and conditions"
+msgstr "Nutzungsbedingungen"
 
 #: conjunto/cms/models.py:38
 msgid "Privacy page"
@@ -247,7 +241,7 @@ msgstr "Absenden"
 msgid "Warning! This is a testing site."
 msgstr "Warnung! Das ist eine Test-Seite"
 
-#: conjunto/templates/conjunto/layouts/html.html:64
+#: conjunto/templates/conjunto/layouts/base.html:64
 msgid "All rights reserved."
 msgstr "Alle Rechte vorbehalten."
 

@@ -1,0 +1,21 @@
+<div class="card">
+{#  <div class="card-header">#}
+    <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs" role="tablist">
+      {% for element in elements %}
+        <li class="nav-item" role="presentation">
+          <a href="#tabs-{{ forloop.counter }}" class="nav-link active" data-bs-toggle="tab" aria-selected="true" role="tab">{{ tab.title }}</a> {# tabindex="-1" #}
+        </li>
+      {% endfor %}
+    </ul>
+{#  </div>#}
+{#  <div class="card-body">#}
+    <div class="tab-content">
+      {% for element in elements %}
+        <div class="tab-pane active show" id="tabs-{{ forloop.counter }}" role="tabpanel">
+          <h4>Home tab</h4>
+          <div>Cursus turpis vestibulum, dui in pharetra vulputate id sed non turpis ultricies fringilla at sed facilisis lacus pellentesque purus nibh</div>
+        </div>
+      {% endfor %}
+    </div>
+{#  </div>#}
+</div>

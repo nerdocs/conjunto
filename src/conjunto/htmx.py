@@ -3,6 +3,8 @@ from django.urls import reverse
 
 from conjunto.menu import IActionButton
 
+# FIXME: htmx is deprecated
+
 
 class HxLink:
     """Render a hyperlink using HTMX.
@@ -118,6 +120,7 @@ class HxButton:
         return self.render()
 
 
+# FIXME: deprecated
 class HxActionButton(HxButton):
     """A renderable action button from an IActionButton instance.
 

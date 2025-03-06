@@ -1,0 +1,36 @@
+{% load static %}
+<aside class="offcanvas offcanvas-start w-auto" tabindex="-1" id="offcanvas-left">
+
+  <div class="offcanvas-header">
+    <h1 class="offcanvas-title">
+      <a href="{% url 'home' %}">
+        <img src="{% static 'img/logo.png' %}" alt="{{ globals.project_title }}" class="navbar-brand-image me-2" width="110" height="32">
+      </a>
+    </h1>
+    <h5 class="offcanvas-title">
+      <span class="d-block">{{ globals.project_title }}</span>
+      <span class="d-block small text-black-50">v{{ globals.version }}</span>
+    </h5>
+{#    <button type="button" class="btn-close text-reset d-none d-lg-flex" data-bs-dismiss="offcanvas" aria-label="Close"></button>#}
+  </div>
+
+  <div id="sidebar-menu" class="offcanvas-body p-0">
+    <div class="d-flex flex-column flex-shrink-0 p-0 bg-light">
+      <ul class="nav nav-pills flex-column list-group">
+        {% for item in menus.views %}
+          <li class="nav-item list-group-item">
+            <a href="{{ item.url }}" class="nav-link{% if item.selected %} active{% endif %}" aria-current="page">
+              <i class="bi bi-{{ item.icon }} fs-1 me-2"></i>
+              {{ item.title }}
+            </a>
+            {% if item.badge %}
+              <span class="position-absolute top-3 start-100 translate-middle badge rounded-pill bg-danger">
+                  {{ child.badge }}
+              </span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</aside>

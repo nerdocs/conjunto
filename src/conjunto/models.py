@@ -1,7 +1,6 @@
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import models, IntegrityError
 from django.utils import timezone
-from versionfield import VersionField
 from django.utils.translation import gettext_lazy as _, gettext
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -54,53 +53,6 @@ class SingletonModel(models.Model):
             raise IntegrityError(
                 f"There are more than one instances of {cls.__name__} saved in the database"
             )
-
-
-class Content(models.Model):
-    """Represents generic content.
-
-    This class is an abstract base class that provides common fields and methods for
-    all page subclasses.
-    """
-
-    class Meta:
-        abstract = True
-
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-
-    def __str__(self):
-        return self.title
-
-
-class VersionedPageManager(models.Manager):
-    """Model manager that provides a method for getting the latest version of a page."""
-
-    def get_latest_version(self):
-        """Get the latest version of a page.
-
-        Returns:
-            The latest version of a page.
-        """
-        return self.get_queryset().order_by("-version").first()
-
-
-class VersionedPage(Content):
-    """Represents a generic page with versioning.
-
-    This class is an abstract base class that provides common fields and methods for
-    all page subclasses.
-    """
-
-    class Meta:
-        abstract = True
-
-    objects = VersionedPageManager()
-    # versions must be unique within one page type.
-    version = VersionField(default="1.0.0", unique=True)
-
-    def __str__(self):
-        return f"{self.title} (v{self.version})"
 
 
 class AbstractSettings(SingletonModel):

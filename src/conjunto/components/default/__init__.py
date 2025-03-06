@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from sourcetypes import django_html, javascript
 
 from conjunto.api.interfaces import IElementMixin
-from tetra import Component, BasicComponent
+from tetra import Component, BasicComponent, public
 from conjunto.tools import snake_case2spaces
 from django.contrib import messages
 
@@ -76,7 +76,7 @@ class DataGrid(BasicComponent):
     object = None
     fields: list = []
 
-    def load(self, object, fields: str) -> None:
+    def load(self, object, fields: str, *args, **kwargs) -> None:
         """Renders fields of given object in a datagrid-usable form."""
         self.object = object
         field_name_list: str = fields
@@ -160,7 +160,7 @@ class Accordion(BasicComponent):
     """
 
 
-class DatagridItemBase(BasicComponent):
+class DataGridItemBase(BasicComponent):
     """Tetra base component for datagrid functionality."""
 
     __abstract__ = True
@@ -168,11 +168,13 @@ class DatagridItemBase(BasicComponent):
     content: str = ""
     object: models.Model = None
 
-    def load(self, object: models.Model, field_name: str):
-        assert object, f"No object assigned to {self.__class__.__name__}"
-        assert field_name, f"No field_name assigned to {self.__class__.__name__}"
+    def load(self, object: models.Model, field_name: str, *args, **kwargs):
+        if not object:
+            return
+        # assert object, f"No object assigned to {self.__class__.__name__}"
         self.object = object
         field_name = field_name.strip()
+        assert field_name, f"No field_name assigned to {self.__class__.__name__}"
         try:
             self.title = self.object._meta.get_field(field_name).verbose_name
         except FieldDoesNotExist:
@@ -187,7 +189,7 @@ class DatagridItemBase(BasicComponent):
             self.content = getattr(self.object, field_name) or "-"
 
 
-class DatagridItem(DatagridItemBase):
+class DataGridItem(DataGridItemBase):
     """Item in a data grid with a title and a content.
 
     Attributes:
@@ -204,15 +206,13 @@ class DatagridItem(DatagridItemBase):
     ```
     """
 
-    content = ""
-
     # language=html
     template: django_html = """
     <div {% ... attrs %} class="datagrid-item mb-2">
       <div class="datagrid-title">{{ title }}</div>
       <div class="datagrid-content">
       {% block default %}
-          {% if content.file %}
+          {% if content and content.file %}
             <img src="{{ content.url }}" alt="{{ content }}"/>
           {% else %}
                 {{ content }}
@@ -223,7 +223,7 @@ class DatagridItem(DatagridItemBase):
     """
 
 
-class DatagridFile(DatagridItemBase):
+class DataGridFile(DataGridItemBase):
     # language=html
     template: django_html = """
     {% load conjunto %}
@@ -234,7 +234,7 @@ class DatagridFile(DatagridItemBase):
         <p>
           {% if content|is_image %}
             {% @ LightboxImage url=content.url /%}
-          {% else %}
+          {% elif content %}
             <a href="{{ content.url }}">
               <div class="card card-link">
                 <div class="card-body d-flex justify-content-center">
@@ -261,7 +261,7 @@ class LightboxImage(BasicComponent):
     url: str = ""
     alt: str = ""
 
-    def load(self, url: str, alt: str = "") -> None:
+    def load(self, url: str, alt: str = "", *args, **kwargs) -> None:
         self.url = url
         self.alt = alt
 
@@ -271,103 +271,6 @@ class LightboxImage(BasicComponent):
       <img src="{{ url }}" alt="{{ alt|truncatechars:25 }}"/>
     </a>
     """
-
-
-class Modal(Component):
-    """A modal component.
-
-    Blocks:
-        footer: A footer block. Per default, the footer shows a "Close" button.
-
-    Attributes:
-        title (str): The title of the modal.
-        static_backdrop (bool): Whether the backdrop is static or not. Defaults to False.
-    """
-
-    id: str = ""
-    title: str = ""
-    static_backdrop: bool = False
-
-    def load(
-        self,
-        id: str,
-        title: str = "",
-        success_event: str = "",
-        static_backdrop: bool = False,
-        **kwargs,
-    ):
-        self.id = id
-        self.title = title
-        self.static_backdrop = static_backdrop
-        self.success_event = success_event
-
-    # language=html
-    template: django_html = """
-    {% load i18n %}
-    <div class="modal" tabindex="-1" {% ... id=id %}
-        {% if static_backdrop %}
-        data-bs-backdrop="static" data-bs-keyboard="false"
-        {% endif %}
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            {% if title %}<h5 class="modal-title">{{ title }}</h5>{% endif %}
-            <button type="button" class="btn-close" data-bs-dismiss="modal" 
-            aria-label={% translate "Close" %}></button>
-          </div>
-          <div class="modal-body">
-            {% block default %}{% endblock %}
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            {% block buttons %}
-            <button type="submit" class="btn btn-primary" @click='submit()'>
-                {% translate "OK" %}
-            </button>
-            {% endblock %}
-          </div>
-        </div>
-      </div>
-    </div>
-    """
-
-    # language=javascript
-    script: javascript = """
-        export default {
-            init() {
-                // add listener to modal shown event, that puts focus on the submit 
-                // button, or first input element if available
-                document.addEventListener('shown.bs.modal', (e) => {
-                    const modal = e.target
-                    // first try textareas
-                    const textareas = modal.querySelectorAll('textarea:not([type="hidden"])');
-                    for(const input of textareas) {
-                      if (!input.hidden) {
-                        input.focus()
-                        return
-                      }
-                    }
-                    // then input fields
-                    const inputs = modal.querySelectorAll('input:not([type="hidden"])');
-                    for(const input of inputs) {
-                      if (!input.hidden) {
-                        input.focus()
-                        return
-                      }
-                    }
-                    // if form contains no input fields, place focus on submit button
-                    let submit = modal.querySelectorAll("button[type=submit]")
-                    if (submit && submit.length > 0) {
-                      submit[0].focus()
-                    } else {
-                      console.log("No input/textarea/submit button found to place focus.")
-                    }
-              })
-            }
-        }
-        """
 
 
 # class FormModal(Modal):
@@ -485,6 +388,8 @@ class ListItem(Component):
         badge_color: str = None,
         active: bool = False,
         url: str = None,
+        *args,
+        **kwargs,
     ):
         self.title = title
         self.subtitle = subtitle

@@ -5,48 +5,37 @@ from django.db.models import IntegerChoices
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from sourcetypes import django_html
 
-from conjunto.htmx import HxActionButton, HxButton
 from conjunto.menu import IActionButton
 from conjunto.tools import camel_case2snake
+from tetra import BasicComponent
 
 
-class UpdateTableMixin:
-    """A table mixin that that updates itself using HTMX when a javascript event is
-    triggered.
+class TActionButton:
+    """An action button that can be used in a table.
 
-    Arguments in Meta class:
-        id: The id of the table that should be used as HTML id attribute.
-        listen_events: A list of events that the table will listen to.
-        update_url: the url to call to update the table.
+    Arguments:
+        label: The label for the button.
+        icon: The Bootstrap icon name for the button.
     """
 
-    class Meta:
-        id: str = None
-        listen_events: list[str] = []
-        update_url: str = ""
+    label: str = ""
+    icon: str = ""
 
-    def __init__(self, id=None, listen_events=None, update_url=None, **kwargs):
-        attrs = getattr(self.Meta, "attrs", {})
-        self._update_url = update_url or getattr(self.Meta, "update_url", ".")
+    def __init__(self, label: str, icon: str = None, **kwargs):
+        self.label = label
+        self.icon = icon or ""
+        self.kwargs = kwargs
 
-        # set id for table
-        table_id = id or getattr(self.Meta, "id", None)
-        if not table_id:
-            table_id = camel_case2snake(self.__class__.__name__, separator="-")
-        attrs["id"] = table_id
-
-        if not listen_events:
-            listen_events = getattr(self.Meta, "listen_events", None)
-        if listen_events:
-            attrs["hx-trigger"] = ", ".join([f"{e} from:body" for e in listen_events])
-            attrs["hx-get"] = self._update_url
-            attrs["hx-swap"] = "outerHTML"
-            attrs["hx-target"] = f"#{table_id}"
-            attrs["hx-select"] = f"#{table_id}"
-            attrs["hx-disinherit"] = "*"
-
-        super().__init__(attrs=attrs, **kwargs)
+    # language=html
+    def render(self):
+        return """
+    <button 
+        {% ... %}
+        @click='kwargs'
+    >{% block default%} {% endblock %}</button>
+    """
 
 
 class ActionButtonsColumn(tables.Column):
@@ -58,7 +47,8 @@ class ActionButtonsColumn(tables.Column):
             *args,
             **kwargs,
         )
-        self.buttons: list[HxActionButton] = kwargs.pop("buttons", [])
+        # TODO: TActionButton
+        self.buttons: list[TActionButton] = kwargs.pop("buttons", [])
 
 
 class ActionButtonType(IntegerChoices):
@@ -69,7 +59,7 @@ class ActionButtonType(IntegerChoices):
     DELETE_WITH_CONFIRM = 21
 
 
-class ActionButtonsTable(UpdateTableMixin, tables.Table):
+class ActionButtonsTable(tables.Table):
     """A table mixin that provides an "actions" column for row actions.
 
     The table will update itself if a given event is triggered. Per default,
@@ -105,11 +95,13 @@ class ActionButtonsTable(UpdateTableMixin, tables.Table):
         listen_events=None,
         **kwargs,
     ):
-        self._action_buttons = standard_buttons or getattr(
-            self.Meta,
-            "standard_buttons",
-            [ActionButtonType.EDIT, ActionButtonType.DELETE],
-        )
+        # FIXME: standard_buttons
+        self._action_buttons = []
+        # standard_buttons or getattr(
+        #     self.Meta,
+        #     "standard_buttons",
+        #     [ActionButtonType.EDIT, ActionButtonType.DELETE],
+        # )
 
         # make sure that record_view_name was set
         self._record_view_name = record_view_name or getattr(
@@ -154,9 +146,11 @@ class ActionButtonsTable(UpdateTableMixin, tables.Table):
         self._button_classes = []
         # get IActionButtons classes, filtered by menu name
         # and cache them, if there is an action_buttons_menu attribute
-        self._action_buttons_menu = action_buttons_menu or getattr(
-            self.Meta, "action_buttons_menu", ""
-        )
+        # FIXME: actionbuttonemenu
+        self._action_buttons_menu = []
+        # action_buttons_menu or getattr(
+        #    self.Meta, "action_buttons_menu", ""
+        # )
         if self._action_buttons_menu:
             for menu_button_class in IActionButton.filter(self._action_buttons_menu):
                 if menu_button_class not in self._button_classes:
@@ -168,7 +162,7 @@ class ActionButtonsTable(UpdateTableMixin, tables.Table):
         for ActionButtonClass in self._button_classes:
             # instantiate action buttons with request and record
             item: IActionButton = ActionButtonClass(self.request, record)
-            button = HxActionButton(self.request, item, dialog=True)
+            button = TActionButton(self.request, item, dialog=True)
             weight = item.weight
             if weight in content_dict:
                 content_dict[weight] += button.render(record)

@@ -27,11 +27,8 @@ from django.views.generic import (
 from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
 
 from conjunto.api.interfaces import (
-    ISettingsSection,
     HtmxRequestMixin,
-    UseElementMixin,
 )
-from conjunto.cms.models import TermsConditionsPage, PrivacyPage, StaticPage
 from conjunto.http import HttpResponseEmpty
 from conjunto.tools import camel_case2snake
 from django.utils.translation import gettext_lazy as _
@@ -315,40 +312,6 @@ class PrepopulateFormViewMixin:
         return initial
 
 
-class DynamicHtmxFormViewMixin(HtmxFormViewMixin):
-    """Mixin class for dynamic form views.
-
-    This mixin can be used with any FormView class, and adds them to a "context"
-    variable which is available within the form instance.
-
-    This view is intended to be used together with `DynamicHtmxFormMixin` for the
-    form_class.
-
-    It creates a form_id (if not given) and passes it to the form. This is needed as
-    HTMX target id.
-    """
-
-    form_id: str = ""
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["context"] = self.get_initial()
-        kwargs["context"].update(clean_dict(self.request.POST.dict()))
-        kwargs["form_id"] = (
-            self.form_id or f"form_id_{camel_case2snake(self.__class__.__name__)}"
-        )
-        return kwargs
-
-    def form_invalid(self, form):
-        """When a form is dynamically reloaded by a HTMX trigger, don't show errors.
-
-        This is achieved by adding a special attribute to the HTMX request.
-        """
-        if self.request.POST.get("_dynamic_reload"):
-            form.errors.clear()
-        return super().form_invalid(form)
-
-
 class LatestVersionMixin:
     """
     A mixin for views that require fetching the latest version of an object.
@@ -406,45 +369,6 @@ class LatestVersionMixin:
             if self.template_name
             else [f"{ self.request.resolver_match.app_name}/versioned_page.html"]
         )
-
-
-class GenericPrivacyView(LatestVersionMixin, DetailView):
-    """Generic privacy page view that displays the newest PrivacyPage."""
-
-    model = PrivacyPage
-    no_object_available = _("No privacy information available yet.")
-
-
-class GenericTermsConditionsView(LatestVersionMixin, DetailView):
-    """Generic T&C page view that displays the newest Terms and conditions."""
-
-    model = TermsConditionsPage
-    no_object_available = _("No terms and conditions available yet.")
-
-
-class GeneralStaticPageView(DetailView):
-    """Renders a static page.
-
-    Attributes:
-        name: The name of the static page.
-        model: The model of the static page. Defaults to StaticPage, but you can
-            override it
-    """
-
-    name = ""
-
-    model = StaticPage
-    template_name = "conjunto/cms/staticpage.html"
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        if not self.name:
-            raise ImproperlyConfigured(
-                f"{self.__class__.__name__} must provide a 'name' attribute."
-            )
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(self.model._meta.model, name=self.name)
 
 
 class MaintenanceView(TemplateView):
@@ -593,20 +517,17 @@ class AnonymousRequiredMixin(PermissionRequiredMixin):
         return True
 
 
-class SettingsView(PermissionRequiredMixin, UseElementMixin, DetailView):
+class SettingsView(PermissionRequiredMixin, DetailView):
     """A generic view for application settings.
 
     This view doesn't update data itself.
     The actual forms processing and user data updating is done in component plugins.
 
-    You can create `ISettingsSection` element plugins to add your own sections.
+    You must create `ISettingsSection` element plugins to add your own sections.
     """
 
     model = User
     template_name = "conjunto/settings.html"
-    elements = [ISettingsSection]
-    query_variable = "section"
-    default_element_name = "account"
 
     def has_permission(self):
         return self.request.user.is_authenticated
@@ -681,50 +602,6 @@ class PermissionRequiredMediaView(PermissionRequiredMixin, ProtectedMediaBaseVie
     ]
     ```
     """
-
-
-class LightboxView(SuccessEventMixin, TemplateView):
-    """Gets path from URL and shows given file in a lightbox.
-
-    The path can be relative to MEDIA_ROOT or PROTECTED_MEDIA_ROOT,
-    or even include one of the two paths. LightBoxView will determine the path
-    automatically, so it can be used perfectly from within a HTMX request.
-    In fact, it does not respond to a non-HTMX request, as it should always open in a
-    modal dialog.
-
-    Arguments:
-        path (str): path to the file to show in the lightbox.
-
-    Example:
-        ```django
-        <a href="{% url 'lightbox' object.file.name %}">
-            <img src="{% url 'lightbox' object.file.name %}"/>
-        </a>
-        ```
-    """
-
-    template_name = "conjunto/lightbox.html"
-    permission_required = "conjunto.view_lightbox"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        image_path: str = kwargs["path"]
-        image_url = ""
-        # check if image_path is in MEDIA_ROOT or PROTECTED_MEDIA_ROOT
-        if image_path.startswith(settings.PROTECTED_MEDIA_ROOT):
-            if self.request.user.is_authenticated:
-                image_url = settings.PROTECTED_MEDIA_URL + image_path.replace(
-                    settings.PROTECTED_MEDIA_ROOT, ""
-                )
-        elif image_path.startswith(settings.MEDIA_ROOT):
-            image_url = settings.MEDIA_URL + image_path.replace(settings.MEDIA_ROOT, "")
-        # or, path is already a media relative path
-        elif image_path.startswith(settings.MEDIA_URL) or image_path.startswith(
-            settings.PROTECTED_MEDIA_URL
-        ):
-            image_url = image_path
-        context["image_url"] = image_url
-        return context
 
 
 class TokenValidationView(TemplateView):

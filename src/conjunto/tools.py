@@ -53,6 +53,9 @@ def country_name_from_code(iso3166_code: str) -> str:
 
     # TODO: this assumes that LANGUAGES is defined in settings.py
     for code, language in settings.LANGUAGES:
+        # if code is in xx-xx format, use the first part only
+        if "-" in code:
+            code = code.split("-", 1)[0]
         if code == iso3166_code:
             return language
     else:

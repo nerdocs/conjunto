@@ -1,0 +1,8 @@
+{% if not field.is_hidden %}
+  <div class="mb-3{% if 'form-horizontal' in form_class %} row{% endif %}">
+    <label for="{{ field.id }}" class="form-label">
+      {{ field.label }}
+    </label>
+    {{ field.value }}
+  </div>
+{% endif %}

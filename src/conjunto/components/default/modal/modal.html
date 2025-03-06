@@ -1,0 +1,28 @@
+{% load i18n %}
+<div class="modal" tabindex="-1" {% ... id=id %}
+    {% if static_backdrop %}
+     data-bs-backdrop="static" data-bs-keyboard="false"
+    {% endif %}
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        {% if title %}<h5 class="modal-title">{{ title }}</h5>{% endif %}
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label={% translate "Close" %}></button>
+      </div>
+      <div class="modal-body">
+        {% block default %}{% endblock %}
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {% block buttons %}
+          <button type="submit" class="btn btn-primary" @click='submit()'>
+            {% translate "OK" %}
+          </button>
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+</div>
