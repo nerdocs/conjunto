@@ -5,13 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "conjunto"
 dynamic = ["version"]
-description = "Django application framework/helpers using HTMX, tabler.io, tables2, crispy-forms & more."
+description = "Django application framework/helpers using Tetra, tabler.io, tables2, crispy-forms & more."
 authors = [
     { name = "Christian González", email = "christian.gonzalez@nerdocs.at" }
 ]
 license = {file = "LICENSE"}
 readme = "README.md"
-keywords = ["python", "django", "htmx", "framework", "i18n"]
+keywords = ["python", "django", "tetra", "framework", "i18n"]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
   "Programming Language :: Python"
@@ -22,13 +22,12 @@ dependencies = [
     "django-phonenumber-field[phonenumberslite]",
     "django-crispy-forms",
     "crispy-bootstrap5",
-    "django-htmx",
     "django-tables2",
     "django-versionfield",
     "django-markdownify",
     "django-web-components",
     "django-statici18n",
-    "gdaps>=0.8.5",
+    "gdaps>=0.8.6",
     "django-extensions>=3.2",
     "Pillow",
     "tetra>=0.1.1"

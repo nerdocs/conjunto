@@ -1,7 +1,7 @@
 site_name: Conjunto documentation
 repo_url: https://github.com/nerdocs/conjunto
 edit_uri: blob/main/docs/
-site_description: "Conjunto - Django application framework using HTMX, Tabler.io, tables2, crispy, etc."
+site_description: "Conjunto - Django application framework using Tetra, Tabler.io, tables2, crispy, etc."
 site_dir: public
 
 nav:

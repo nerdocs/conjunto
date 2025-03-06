@@ -1,7 +1,7 @@
 # Conjunto
 
 ## Description
-Conjunto is a Django application framework using [HTMX](https://htmx.org), [tabler.io](https://tabler.io), [crispy-forms](https://github.com/django-crispy-forms/django-crispy-forms) and more.
+Conjunto is a Django application framework using [Tetra](https://tetraframework.com), [tabler.io](https://tabler.io), [crispy-forms](https://github.com/django-crispy-forms/django-crispy-forms) and more.
 
 ## Installation
 You can install the package by using pip (best using a virtualenv):
