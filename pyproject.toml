@@ -44,6 +44,7 @@ Repository = "https://github.com/nerdocs/conjunto"
 
 [project.optional-dependencies]
 dev = [
+    "conjunto[prod]",
     "build",
     "twine",
     "pytest",
