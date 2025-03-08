@@ -89,7 +89,7 @@ class MenuItemInterfaceMixin:
             return True
         found = False
         for item in filter(
-            lambda i: i.menu == self.menu and "__" in i.slug, IMenuItem.plugins()
+            lambda i: i.menu == self.menu and "__" in i.slug, IMenuItem  # FIXME
         ):
             # TODO improve children handling
             parts = item.slug.split("__")
@@ -282,7 +282,7 @@ class Menu:
     def __init__(self, request):
         self.request = request
         self._cache = []
-        for item in IMenuItem.plugins():
+        for item in IMenuItem:
             # instantiate a MenuItem with current request as param
             self._cache.append(item.init(request))
 
