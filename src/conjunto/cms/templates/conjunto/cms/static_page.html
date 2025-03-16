@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load markdownify i18n %}
+
+{% block card_title %}{{ object.title }}{% endblock %}
+
+{% block card-actions %}
+  {% if create_url and not object and user.is_authenticated %}
+    <a class="btn btn-action" href="{{ create_url }}" title="{% translate 'Create page' %}">
+      <i class="ti ti-file-plus fs-2"></i>
+    </a>
+  {% endif %}
+  {% if edit_url and object and user.is_authenticated %} {# FIXME this will most probably not work #}
+    <a class="btn btn-action" href="{{ edit_url }}" title="{% translate 'Edit page' %}">
+      <i class="ti ti-file-pencil fs-2"></i>
+    </a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% if object %}
+    {{ object.content|markdownify|safe }}
+  {% else %}
+    {{ no_object_available }}
+  {% endif %}
+{% endblock %}

@@ -45,20 +45,9 @@
         <div class="page-body" id="page-body">
           {% block page-body %}
             <div class="container-{{ tabler.container_breakpoint|default:"xl" }}">
-              {% block content %}
-                <div id="content" class="card mb-5">
-                  <div class="card-header">
-                    <div class="card-title">
-                      {% block card-title %}{% endblock %}
-                    </div>
-
-                    <div class="card-actions">
-                      {% block card-actions %}{% endblock %}
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    {% block card-body %}{% endblock %}
-                  </div>
+              {% block canvas %}
+                <div id="canvas">
+                  {% block content %}{% endblock %}
                 </div>
               {% endblock %}
             </div>
