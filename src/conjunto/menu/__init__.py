@@ -89,7 +89,7 @@ class MenuItemInterfaceMixin:
             return True
         found = False
         for item in filter(
-            lambda i: i.menu == self.menu and "__" in i.slug, IMenuItem  # FIXME
+            lambda i: i.menu == self.menu and "__" in i.slug, iter(IMenuItem)
         ):
             # TODO improve children handling
             parts = item.slug.split("__")
@@ -101,7 +101,7 @@ class MenuItemInterfaceMixin:
                 child = item(self.request)
                 self._children.append(child)
                 found = True
-        self._children.sort(key=lambda item: item.weight)
+        self._children.sort(key=lambda child: child.weight)
         return found
 
     def has_parent(self) -> bool:
