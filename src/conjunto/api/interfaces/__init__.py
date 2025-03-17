@@ -58,8 +58,8 @@ class IElementMixin:
     """An interface mixin that describes an element and can be rendered as
     plugin.
 
-    1. Declare a GDAPS @Interface for a pluggable element with a subclass of
-        IElementMixin, like `ISettingsSection`.
+    1. Declare a GDAPS Interface for a pluggable element with a subclass of
+        IElementMixin, like `class ISettingsSection(IElementMixin, Interface):`.
     2. Create implementations of that interface that describe the element's behavior,
         with filled out name, and optionally group, icon, weight etc. attributes.
     3. Use them in your template by iterating over ISettingsSection
