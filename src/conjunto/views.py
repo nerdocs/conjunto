@@ -543,6 +543,14 @@ class ProtectedMediaBaseView(View):
     `LoginRequiredMediaView` instead.
     """
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if self.__class__.__name__ == "ProtectedMediaBaseView":
+            raise NotImplementedError(
+                "ProtectedMediaBaseView may not be used directly. "
+                "Use PermissionRequiredMediaView or LoginRequiredMediaView instead."
+            )
+
     def get(self, request, path, as_download=False):  # noqa
         # Construct the full path to the media file
         response = serve(
