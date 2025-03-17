@@ -179,7 +179,7 @@ class DataGridItemBase(BasicComponent):
             self.title = self.object._meta.get_field(field_name).verbose_name
         except FieldDoesNotExist:
             # You have to add a translation string manually to your project
-            # for this to work. @property display_name() -> "Display name"
+            # for this to work.
             self.title = _(capfirst(snake_case2spaces(field_name)))
 
         # check if there are TextChoices or IntegerChoices to map to
