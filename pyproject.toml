@@ -57,6 +57,8 @@ doc = [
     "mkdocs-literate-nav",
     "mkdocs-section-index",
 ]
+prod = [
+]
 
 [tool.setuptools.dynamic]
 version = {attr = "conjunto.__version__"}
