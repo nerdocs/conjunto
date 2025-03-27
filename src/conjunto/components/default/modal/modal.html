@@ -1,13 +1,16 @@
 {% load i18n %}
+<!-- Modal -->
 <div class="modal" tabindex="-1" {% ... id=id %}
     {% if static_backdrop %}
      data-bs-backdrop="static" data-bs-keyboard="false"
     {% endif %}
 >
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered{% if scrollable %} modal-dialog-scrollable{% endif %}"{% if title %} aria-labelledby="modal-label-{{ id }}" aria-hidden="true"{% endif %}
+    @keyup.enter="submit();"
+  >
     <div class="modal-content">
       <div class="modal-header">
-        {% if title %}<h5 class="modal-title">{{ title }}</h5>{% endif %}
+        {% if title %}<h5 id="modal-label-{{ id }}" class="modal-title">{{ title }}</h5>{% endif %}
         <button type="button" class="btn-close" data-bs-dismiss="modal"
                 aria-label={% translate "Close" %}></button>
       </div>
@@ -16,10 +19,15 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         {% block buttons %}
-          <button type="submit" class="btn btn-primary" @click='submit()'>
-            {% translate "OK" %}
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            {% block cancel_button_title %}{% translate "Cancel" %}{% endblock %}
+          </button>
+          <button type="button" id="{{ id }}_ok_button" class="btn btn-primary" data-bs-toggle="modal"
+                  @click="submit()">
+            {% block submit_button_title %}
+              {% translate "OK" %}
+            {% endblock %}
           </button>
         {% endblock %}
       </div>

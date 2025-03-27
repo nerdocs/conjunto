@@ -321,6 +321,7 @@ class ModalButton(BasicComponent):
 
     # language=html
     template: django_html = """
+    <!-- ModalButton -->
     <button {% ... attrs class="btn" %}
         data-bs-toggle="modal" 
         data-bs-target="#{{target_id}}">
