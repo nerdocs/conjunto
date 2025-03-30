@@ -286,12 +286,12 @@ class Menu:
             # instantiate a MenuItem with current request as param
             self._cache.append(item.init(request))
 
-    def __getitem__(self, item):
+    def __getitem__(self, name):
         """Returns filtered out menu items with the given '.menu' name."""
         for menu_item in self._cache:
             # TODO: handle submenus
             if (
-                menu_item.menu == item  # only items in requested menu
+                menu_item.menu == name  # only items in requested menu
                 and "." not in menu_item.slug  # only top level items
                 and menu_item.visible  # only visible items
             ):
