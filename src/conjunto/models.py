@@ -1,3 +1,4 @@
+from django.contrib.sites.models import Site
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import models, IntegrityError
 from django.utils import timezone
@@ -55,7 +56,7 @@ class SingletonModel(models.Model):
             )
 
 
-class AbstractSettings(SingletonModel):
+class AbstractSettings(models.Model):
     """Represents the settings of the application.
 
     This model is meant to be subclassed by your application.
@@ -67,6 +68,16 @@ class AbstractSettings(SingletonModel):
         verbose_name = _("Settings")
         verbose_name_plural = _("Settings")
 
+    # if site == null, it is assumed that the settings are "global" settings.
+    # there is only ONE settings model allowed per site
+    site = models.OneToOneField(
+        Site,
+        on_delete=models.CASCADE,
+        related_name="app_settings",
+        blank=True,
+        null=True,
+    )
+    # General site settings
     site_name = models.CharField(max_length=100, default="", blank=True)
     site_title = models.CharField(max_length=100, default="", blank=True)
     site_description = models.TextField(
@@ -74,6 +85,7 @@ class AbstractSettings(SingletonModel):
         blank=True,
         help_text=_("Text to display as site description. Supports Markdown."),
     )
+    # Maintenance mode settings
     maintenance_mode = models.BooleanField(default=False)
     maintenance_title = models.CharField(max_length=100, default="", blank=True)
     maintenance_content = models.TextField(
@@ -86,7 +98,27 @@ class AbstractSettings(SingletonModel):
     )
 
     def __str__(self):
-        return gettext("Settings")
+        if not self.id:
+            return gettext("Empty settings")
+        if self.site is None:
+            return gettext("Global settings")
+        else:
+            return gettext("Settings for {site}").format(site=self.site)
+
+    def save(self, *args, **kwargs):
+        """make sure no other settings exist with site == None"""
+        if self.site is None:
+            site = self._meta.model.objects.filter(site=None)
+            if self.id:
+                site = site.exclude(id=self.id)
+            if site.exists():
+                raise ValueError(
+                    gettext(
+                        "Cannot save another settings model without a site. There can "
+                        "only be one global settings instance."
+                    )
+                )
+        super().save(*args, **kwargs)
 
 
 class Vendor(SingletonModel):

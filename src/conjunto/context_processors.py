@@ -25,7 +25,7 @@ def globals(request):
 
 def settings(request):
     return {
-        "settings": request.settings,
+        "app_settings": request.app_settings,
         "PRODUCTION": getattr(django_settings, "PRODUCTION", False),
         "tabler": getattr(django_settings, "TABLER", {}),
     }

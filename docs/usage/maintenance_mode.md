@@ -14,6 +14,6 @@ In each view, you can also use the maintenance mode:
 
 ```python
 def my_view(request):
-    if request.settings.maintenance_mode:
+    if request.app_settings.maintenance_mode:
         ...
 ```
