@@ -29,8 +29,8 @@ For the settings to be applied, you have to add conjunto's middlewares, and cont
 
 MIDDLEWARE = [
     # ...
-    "conjunto.middleware.SettingsMiddleware",
     "tetra.middleware.TetraMiddleware"
+    "conjunto.middleware.ConjuntoMiddleware",
 ]
 
 TEMPLATES = [

@@ -268,7 +268,7 @@ class Menu:
     Usually it is used in Django templates by calling ``menus.<name>``
     which then will return all ``MenuItem``s with a matching "menu" name
     attribute. Therefore, Menu will be instantiated by a context_processor,
-    so that the ``menu`` variable in the template
+    so that the ``menus`` variable in the template is available:
 
     ```django
     <ul>
