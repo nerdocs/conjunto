@@ -20,7 +20,7 @@ You have to have `TetraMiddleware` installed in your `settings.MIDDLEWARE` list 
 Include the `Toasts` component in a Django (base) template:
 
 ```django
-{% conjunto.Toasts delay=6000 position="bottom-right" %}
+{% conjunto.Toasts delay=6000 position="bottom-right" / %}
 ```
 
 - The `delay` parameter is **optional**.  
