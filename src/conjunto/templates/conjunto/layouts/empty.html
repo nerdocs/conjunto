@@ -1,2 +1,9 @@
-{% extends 'tabler/empty.html' %}
+{% extends 'conjunto/html.html' %}
 
+
+{% block page %}
+  <div class="container-xl d-flex flex-column justify-content-center">
+    {% block content %}
+    {% endblock %}
+  </div>
+{% endblock %}

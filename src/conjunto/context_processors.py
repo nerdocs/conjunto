@@ -27,4 +27,5 @@ def settings(request):
     return {
         "settings": request.settings,
         "PRODUCTION": getattr(django_settings, "PRODUCTION", False),
+        "tabler": getattr(django_settings, "TABLER", {}),
     }

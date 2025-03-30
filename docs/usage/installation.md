@@ -99,3 +99,23 @@ You can also access this setting via `PRODUCTION` anywhere in your templates:
   <div>TESTING SITE!</div>
 {% endif %}
 ```
+
+## Tabler specific settings
+
+You can customize tabler settings. Add the following to your settings.py:
+
+### Layout
+
+### `layout`
+
+Choose between different layouts: `fluid`, `vertical`
+
+### `container_breakpoint`
+Select the (bootstrap) container breakpoint: `xl`, `lg`, `md`, `sm`,... (default to `xl`)
+
+```python
+TABLER = {
+    "layout": "fluid",  
+    "container_breakpoint": "md",  
+}
+```

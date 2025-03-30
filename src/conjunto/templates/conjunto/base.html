@@ -1,4 +1,5 @@
-{% extends tabler.layout %}
+{% extends "conjunto/layouts/"|add:tabler.layout|add:".html" %}
+{#{% extends tabler.layout %}#}
 {% load conjunto tetra %}
 
 {% block extra-css %}
