@@ -242,6 +242,7 @@ class ProtectedMediaBaseView(View):
             )
 
     def get(self, request, path, as_download=False):  # noqa
+        # TODO: implement `as_download`
         # Construct the full path to the media file
         response = serve(
             request,
