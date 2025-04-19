@@ -27,10 +27,9 @@ class Toasts(Component):
     export default {
         delete_message(uid) {
             this.messages = this.messages.filter(msg => msg.uid !== uid);
-            console.log("deleted message", uid)
         },
         add_message(message) {
-            // save the message to the internal list, if not already saved (uid!)
+            // save the message to the internal list, if not already saved (check uid!)
             if (!this.messages.some(m => m.uid === message.uid)) { 
                 this.messages.push(message)
                

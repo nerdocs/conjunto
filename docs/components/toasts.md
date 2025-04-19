@@ -66,7 +66,7 @@ The `Toasts` component includes **JavaScript logic** to manage toast messages dy
 
 To display a toast dynamically in JavaScript (should not be necessary):
 ```javascript
-window.dispatchEvent(new CustomEvent('tetra:newmessage', {
+window.dispatchEvent(new CustomEvent('tetra:new-message', {
   detail: {
     uid: '12345',
     message: 'This is a test notification!',

@@ -1,6 +1,6 @@
 {% load i18n conjunto %}
 <div id="toasts" {% ... attrs %} data-toast-container class="toast-container position-fixed {{ position }} m-5">
-  <div @tetra:newmessage.window="add_message($event.detail)">
+  <div @tetra:new-message.window="add_message($event.detail)">
 
     <template x-for="msg in messages" :key="msg.uid" data-toast-template>
       <div class="toast fade align-items-center border-0 mb-1" :id="'toast-' + msg.uid" :class="msg.dismissible? 'show ' + msg.tags : msg.tags"
