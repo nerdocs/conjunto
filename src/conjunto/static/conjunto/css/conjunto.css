@@ -3,17 +3,18 @@
 /* Don't show underlines on list item action links */
 
 a.list-group-item-actions:hover {
-  text-decoration:none;
+    text-decoration:none;
 }
 
 
-/* HTMX busy indicators */
-.busy-indicator {
-  display: none;
+/* busy indicators */
+.spinner-border {
+    /*display: none;*/
+    opacity: 0;
+    transition: opacity 500ms ease-in;
 }
-.htmx-request .busy-indicator {
-  display: inline;
-}
-.htmx-request.busy-indicator {
-  display: inline;
+.tetra-request .spinner-border,
+.tetra-request.spinner-border {
+    /*display: inline-block;*/
+    opacity: 1;
 }
