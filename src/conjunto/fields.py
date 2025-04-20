@@ -9,7 +9,7 @@ from .files.storage import ProtectedFileSystemStorage
 
 class ProtectedFileField(FileField):
     def __init__(self, **kwargs):
-        # kwargs["storage"] = ProtectedFileSystemStorage()
+        kwargs["storage"] = ProtectedFileSystemStorage()
         super().__init__(**kwargs)
 
     def generate_filename(self, instance, filename):
