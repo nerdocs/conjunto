@@ -21,11 +21,12 @@ class Command(BaseCommand):
 
     """
 
-    tabler_medux_path = "https://raw.githubusercontent.com/nerdoc/tabler/medux/dist"
     unpkg_path = "https://unpkg.com"
     # tabler-icons:
+    ti_version = "v3.31.0"
     ti_path = "https://raw.githubusercontent.com/tabler/tabler-icons"
-    ti_version = "v2.46.0"
+    tabler_version = "1.2.0"
+    tabler_path = f"https://cdn.jsdelivr.net/npm/@tabler/core@{tabler_version}/dist"
 
     libraries: dict[str, list[tuple[str, str, str]]] = {
         "dropzone": [
@@ -124,17 +125,22 @@ class Command(BaseCommand):
         "tabler": [
             (
                 "css/tabler.css",
-                f"{tabler_medux_path}/css/tabler.css",
+                f"{tabler_path}/css/tabler.css",
+                "w",
+            ),
+            (
+                "css/tabler.css",
+                f"{tabler_path}/css/tabler.min.css",
+                "w",
+            ),
+            (
+                "js/tabler.js",
+                f"{tabler_path}/js/tabler.js",
                 "w",
             ),
             (
                 "js/tabler.min.js",
-                f"{tabler_medux_path}/js/tabler.min.js",
-                "w",
-            ),
-            (
-                "js/tabler.min.js",
-                f"{tabler_medux_path}/js/tabler.min.js",
+                f"{tabler_path}/js/tabler.min.js",
                 "w",
             ),
             (
