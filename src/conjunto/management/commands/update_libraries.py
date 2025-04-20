@@ -129,7 +129,7 @@ class Command(BaseCommand):
                 "w",
             ),
             (
-                "css/tabler.css",
+                "css/tabler.min.css",
                 f"{tabler_path}/css/tabler.min.css",
                 "w",
             ),
