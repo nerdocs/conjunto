@@ -13,7 +13,7 @@ a.list-group-item-actions:hover {
     /*opacity: 0;*/
     /*transition: opacity 500ms ease-in;*/
 }
-.tetra-request .spinner-border,
+.tetra-request + .spinner-border,
 .tetra-request.spinner-border {
     display: inline-block;
     /*opacity: 1;*/
