@@ -3,7 +3,7 @@ from django.utils.translation import gettext as _
 
 
 class Colors(TextChoices):
-    BLACK = "black", _("Black")
+    DARK = "dark", _("Dark")
     BLUE = "blue", _("Blue")
     AZURE = "azure", _("Azure")
     INDIGO = "indigo", _("Indigo")
@@ -16,7 +16,7 @@ class Colors(TextChoices):
     GREEN = "green", _("Green")
     TEAL = "teal", _("Teal")
     CYAN = "cyan", _("Cyan")
-    WHITE = "white", _("White")
+    LIGHT = "light", _("Light")
 
     BLUE_LT = "blue-lt", _("Blue Light")
     AZURE_LT = "azure-lt", _("Azure Light")
