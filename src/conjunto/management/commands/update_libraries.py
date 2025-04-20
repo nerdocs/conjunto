@@ -23,8 +23,8 @@ class Command(BaseCommand):
 
     unpkg_path = "https://unpkg.com"
     # tabler-icons:
-    ti_version = "v3.31.0"
-    ti_path = "https://raw.githubusercontent.com/tabler/tabler-icons"
+    ti_version = "3.31.0"
+    ti_path = f"https://unpkg.com/@tabler/icons-webfont@{ti_version}/dist"
     tabler_version = "1.2.0"
     tabler_path = f"https://cdn.jsdelivr.net/npm/@tabler/core@{tabler_version}/dist"
 
@@ -100,8 +100,7 @@ class Command(BaseCommand):
             ),
             (
                 "css/fonts/bootstrap-icons.woff",
-                f"{unpkg_path}/bootstrap-icons@latest/font/fonts/bootstrap-icons"
-                f".woff",
+                f"{unpkg_path}/bootstrap-icons@latest/font/fonts/bootstrap-icons.woff",
                 "wb",
             ),
             (
@@ -145,14 +144,23 @@ class Command(BaseCommand):
             ),
             (
                 "css/fonts/tabler-icons.woff",
-                f"{ti_path}/{ti_version}/packages/icons-webfont/fonts/tabler-icons"
-                f".woff",
+                f"{ti_path}/fonts/tabler-icons.woff",
                 "wb",
             ),
             (
                 "css/fonts/tabler-icons.woff2",
-                f"{ti_path}/{ti_version}/packages/icons-webfont/fonts/tabler-icons.woff2",
+                f"{ti_path}/fonts/tabler-icons.woff2",
                 "wb",
+            ),
+            (
+                "css/tabler-icons.css",
+                f"{ti_path}/tabler-icons.css",
+                "w",
+            ),
+            (
+                "css/tabler-icons.min.css",
+                f"{ti_path}/tabler-icons.min.css",
+                "w",
             ),
         ],
         "litepicker": [
@@ -208,7 +216,7 @@ class Command(BaseCommand):
         for file_name, url, mode in library:
             data = requests.get(url)
             os.makedirs(os.path.dirname(target_path_root / file_name), exist_ok=True)
-            self.stdout.write(file_name)
+            self.stdout.write(f"{file_name}, {url}")
             with open(target_path_root / file_name, mode) as f:
                 if mode == "w":
                     f.write(data.text)
