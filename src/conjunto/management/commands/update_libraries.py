@@ -27,7 +27,7 @@ class Command(BaseCommand):
     ti_path = "https://raw.githubusercontent.com/tabler/tabler-icons"
     ti_version = "v2.46.0"
 
-    libraries: dict[list[tuple[str, str, str]]] = {
+    libraries: dict[str, list[tuple[str, str, str]]] = {
         "dropzone": [
             (
                 "js/dropzone.min.js",
