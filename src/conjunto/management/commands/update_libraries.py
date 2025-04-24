@@ -189,6 +189,13 @@ class Command(BaseCommand):
                 "w",
             ),
         ],
+        "chartjs": [
+            (
+                "js/chart.min.js",
+                f"{unpkg_path}/chart.js@4.4.9/dist/chart.umd.js",
+                "w",
+            )
+        ],
     }
     help = (
         "DEV COMMAND: downloads needed Javascript/CSS libraries and fonts for "
@@ -215,10 +222,15 @@ class Command(BaseCommand):
         library = self.libraries[options["library"]]
         for file_name, url, mode in library:
             data = requests.get(url)
-            os.makedirs(os.path.dirname(target_path_root / file_name), exist_ok=True)
-            self.stdout.write(f"{file_name}, {url}")
-            with open(target_path_root / file_name, mode) as f:
-                if mode == "w":
-                    f.write(data.text)
-                elif mode == "wb":
-                    f.write(data.content)
+            if data.status_code != 200:
+                self.stderr.write(f"Could not read {url}")
+            else:
+                os.makedirs(
+                    os.path.dirname(target_path_root / file_name), exist_ok=True
+                )
+                self.stdout.write(f"{file_name}, {url}")
+                with open(target_path_root / file_name, mode) as f:
+                    if mode == "w":
+                        f.write(data.text)
+                    elif mode == "wb":
+                        f.write(data.content)

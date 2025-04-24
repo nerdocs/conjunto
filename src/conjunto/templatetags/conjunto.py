@@ -48,6 +48,7 @@ def conjunto_js_scripts() -> str:
         "conjunto/js/conjunto.js",
         "conjunto/js/dropzone.min.js",
         "conjunto/js/fslightbox.js",
+        "conjunto/js/chart.min.js",
     ]
     result = ""
     for js_file in js:
