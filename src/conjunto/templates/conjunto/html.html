@@ -35,8 +35,26 @@
         <!-- page header -->
         <div class="page-header d-print-none">
           {% block page-header %} {#  raw page header, without gutter #}
-            <div class="container-{{ tabler.container_breakpoint|default:"xl" }}">
-              {% block page-header-content %}{% endblock %} {#  convenience page header for content, with gutter #}
+            <div class="container-{{ tabler.contcainer_breakpoint|default:"xl" }}">
+              {% block page-header-content %}
+                <div class="row g-2 align-items-center">
+                  <div class="col">
+                    <!-- Page pre-title -->
+                    <div class="page-pretitle">{% block page-pretitle %}{% endblock %}</div>
+                    <h2 class="page-title">{% block page-title %}{% endblock %}</h2>
+                  </div>
+                  <!-- Page title actions -->
+                  <div class="col-auto ms-auto d-print-none">
+                    <div class="btn-list">
+                      {% block page-title-actions %}
+                        {#<a href="#" class="btn btn-primary btn-5 d-none d-sm-inline-block">#}
+                        {#  <i class="ti ti-plus"></i>#}
+                        {#</a>#}
+                      {% endblock %}
+                    </div>
+                  </div>
+                </div>
+              {% endblock %} {#  convenience page header for content, with gutter #}
             </div>
           {% endblock %}
         </div>
