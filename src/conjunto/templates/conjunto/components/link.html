@@ -1,3 +1,4 @@
+{% load tetra %}
 <{{ tag }} {% ... attrs class=default_class %}
   {% if htmx %}
     hx-{{ htmx|lower }}="{{ url }}"{% if dialog %} hx-target="#{{ target }}"{% elif target %} hx-target="{{ target }}"{% endif %}{% if select %} hx-select="{{ select }}"{% endif %}
