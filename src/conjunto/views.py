@@ -370,7 +370,7 @@ class TokenValidationView(TemplateView):
         # Check token precondition in subclasses
         if self.token_user is not None:
             if self.check_token_preconditions():
-                # if user is just a system user, no MedSpeakAccount -> deny it!
+                # if user is just a system user, no MedspeakAccount -> deny it!
                 if self.token_generator.check_token(self.token_user, token):
                     self.token_valid()
                     return self.render_to_response(
