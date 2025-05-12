@@ -327,7 +327,7 @@ class TokenValidationView(TemplateView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.token_user: User = None
+        self.token_user: User | None = None
 
         if not self.token_generator:
             raise ImproperlyConfigured(
