@@ -38,7 +38,7 @@ class Toasts(Component):
                     this.$nextTick(() => {
                         const toastElNodes = document.querySelectorAll(".toast:not(.dismissible)");
                         toastElNodes.forEach((toastEl) => {
-                            const toast = new bootstrap.Toast(toastEl);
+                            const toast = new tabler.bootstrap.Toast(toastEl);
                             toastEl.addEventListener('hidden.bs.toast', (event) => {
                                 this.delete_message(message.uid)
                             })
