@@ -41,12 +41,18 @@
                 <div class="invalid-feedback">{{ error }}</div>
               {% endfor %}
             </div>
-            <span class="form-label-description">
-                <a href="{% url 'password_reset' %}">{% translate 'I forgot my password' %}</a>
+            {% url 'password_reset' as password_reset_url %}
+            {% if password_reset_url %}
+              <span class="form-label-description">
+                <a href="{{ password_reset_url }}">{% translate "I forgot my password" %}</a>
               </span>
+            {% else %}
+              <!-- No password reset URL available -->
+            {% endif %}
           </div>
 
           {% if False %}
+            THIS IS DEACTIVATED!
             <div class="mb-2">
               <label class="form-check">
                 <input type="checkbox" class="form-check-input" >
@@ -81,10 +87,15 @@
       </form>
     </div>
 
-    <div class="text-center text-secondary mt-3">
-      {% translate "Don't have an account yet?" %}
-      <a href="{% url 'medspeak:signup' %}" tabindex="-1">{% translate 'Sign up' %}</a>
-    </div>
+    {% url 'signup' as signup_url %}
+    {% if signup_url %}
+      <div class="text-center text-secondary mt-3">
+        {% translate "Don't have an account yet?" %}
+        <a href="{{ signup_url }}" tabindex="-1">{% translate 'Sign up' %}</a>
+      </div>
+    {% else %}
+      <!-- No signup URL available -->
+    {% endif %}
 
   </div>
 {% endblock %}
