@@ -1,7 +1,4 @@
-import django
 from crispy_forms.exceptions import CrispyError
-from crispy_forms.templatetags.crispy_forms_field import is_file
-from crispy_forms.utils import TEMPLATE_PACK
 from django import template
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -10,7 +7,6 @@ from django.forms import boundfield
 from django.template.defaultfilters import stringfilter
 from django.template.loader import get_template
 from django.templatetags.static import static
-from django.urls import resolve
 from django.utils.safestring import mark_safe
 
 
