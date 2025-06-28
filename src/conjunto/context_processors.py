@@ -11,6 +11,8 @@ __all__ = ["globals", "settings"]
 # elsewhere.
 __version__ = metadata.version(django_settings.PROJECT_NAME)
 
+from conjunto.models import Vendor
+
 
 # FIXME: don't shadow builtin "globals". But change breaks API.
 def globals(request):
@@ -20,6 +22,7 @@ def globals(request):
             "version": __version__,
         },
         "menus": Menu(request),
+        "vendor": Vendor.objects.first(),
     }
 
 
