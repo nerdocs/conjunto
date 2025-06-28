@@ -128,11 +128,12 @@ class Vendor(SingletonModel):
     # maybe in a preferences.toml file?
 
     name = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
-    zip = models.CharField(max_length=10)
-    city = models.CharField(max_length=50)
-    phone = PhoneNumberField()
-    email = models.EmailField(blank=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    zip = models.CharField(max_length=10, blank=True, null=True)
+    city = models.CharField(max_length=50, blank=True, null=True)
+    phone = PhoneNumberField(blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    website = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.name
