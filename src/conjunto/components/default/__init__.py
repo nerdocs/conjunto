@@ -311,22 +311,34 @@ class ModalButton(BasicComponent):
     """
 
     target_id: str = ""
+    link: bool = False
 
-    def load(self, target: str = None, *args, **kwargs):
+    def load(self, target: str, link: bool = False, *args, **kwargs):
         # take target with and without leading "#"
         if target and target.startswith("#"):
             self.target_id = target[1:]
         else:
             self.target_id = target
+        if link:
+            self.link = True
 
     # language=html
     template: django_html = """
-    <!-- ModalButton -->
+    <!-- ModalButton {% if link %}link{% endif %}-->
+    {% if link %}
+    <a {% ... attrs %} href="#"
+    {% else %}
     <button {% ... attrs class="btn" %}
-        data-bs-toggle="modal" 
-        data-bs-target="#{{target_id}}">
-        {% block default %}{% endblock %}
-    </button>
+    {% endif %}
+    data-bs-toggle="modal" 
+    data-bs-target="#{{target_id}}">
+    {% block default %}{% endblock %}
+    
+    {% if link %}
+      </a>
+    {% else %}
+      </button>
+    {% endif %}
     """
 
 
