@@ -27,7 +27,7 @@ dependencies = [
     "django-markdownify",
     "django-web-components",
     "django-statici18n",
-    "gdaps>=0.8.6",
+    "gdaps>=0.10.0",
     "django-extensions>=3.2",
     "Pillow",
     "tetra>=0.2"
