@@ -22,7 +22,7 @@ def globals(request):
             "version": __version__,
         },
         "menus": Menu(request),
-        "vendor": Vendor.objects.first(),
+        "vendor": Vendor.get_instance(),
     }
 
 
