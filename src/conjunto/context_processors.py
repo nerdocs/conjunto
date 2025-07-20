@@ -14,8 +14,7 @@ __version__ = metadata.version(django_settings.PROJECT_NAME)
 from conjunto.models import Vendor
 
 
-# FIXME: don't shadow builtin "globals". But change breaks API.
-def globals(request):
+def globals(request):  # noqa
     return {
         "globals": {
             "project_title": django_settings.PROJECT_TITLE,
