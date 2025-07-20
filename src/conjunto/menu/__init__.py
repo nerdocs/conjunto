@@ -50,7 +50,7 @@ class MenuItemInterfaceMixin:
     visible: bool = True  # FIXME: `check` and `visible` are more or less duplicated.
     check: bool = True
 
-    def init(self, request, *args, **kwargs) -> Self:
+    def initialize(self, request, *args, **kwargs) -> Self:
         """Helper function that needs to be called when the menu item is initialized
         during the request cycle.
         """
@@ -192,8 +192,8 @@ class IMenuItem(MenuItemInterfaceMixin, Interface):
     collapsed: bool = True
     _attrs: dict = {}
 
-    def init(self, request, *args, **kwargs) -> Self:
-        super().init(request, *args, **kwargs)
+    def initialize(self, request, *args, **kwargs) -> Self:
+        super().initialize(request, *args, **kwargs)
         if self.view_name and self.url:
             raise AttributeError("'view_name' and 'url' cannot be used together")
         if self.view_name and not request.resolver_match.view_name == self.view_name:
@@ -284,7 +284,7 @@ class Menu:
         self._cache = []
         for item in IMenuItem:
             # instantiate a MenuItem with current request as param
-            self._cache.append(item.init(request))
+            self._cache.append(item.initialize(request))
 
     def __getitem__(self, name):
         """Returns filtered out menu items with the given '.menu' name."""
