@@ -1,3 +1,5 @@
+from typing import Self
+
 from django.contrib.sites.models import Site
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import models, IntegrityError
@@ -17,8 +19,6 @@ class SingletonModel(models.Model):
     class Meta:
         abstract = True
 
-    # _aggressive = False
-
     def save(self, *args, **kwargs):
         """Save object to the database.
 
@@ -29,14 +29,13 @@ class SingletonModel(models.Model):
         # If '_aggressive' attribute is set, remove all other entries if there are any.
         # if self._aggressive:
         #     self.__class__.objects.exclude(id=self.id).delete()
-        if not self.pk and self.__class__.objects.exists():
-            raise IntegrityError(
-                f"There can be only one {self.__class__.__name__} instance."
-            )
+        if not self.pk:
+            pk = self.get_instance().pk
+            self.pk = self.get_instance().pk
         super().save(*args, **kwargs)
 
     @classmethod
-    def get_instance(cls):
+    def get_instance(cls) -> Self:
         """Load object from the database.
 
         Failing that, create a new empty (default) instance of the object and return it

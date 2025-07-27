@@ -33,7 +33,7 @@ class GroupPermissionsTest(TestCase):
         self.assertTrue(self.group.permissions.filter(codename="add_user").exists())
 
     def test_add_permissions_to_group_with_user_as_dotted_string(self):
-        groups_permissions = {TEST_GROUP_NAME: {"core.User": ["add", "view"]}}
+        groups_permissions = {TEST_GROUP_NAME: {"auth.User": ["add", "view"]}}
         create_groups_permissions(groups_permissions)
         self.assertTrue(self.group.permissions.filter(codename="view_user").exists())
         self.assertTrue(self.group.permissions.filter(codename="add_user").exists())

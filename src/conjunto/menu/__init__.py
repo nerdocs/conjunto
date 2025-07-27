@@ -74,6 +74,8 @@ class MenuItemInterfaceMixin:
             self.visible = False
             return self
 
+        return self
+
     def _prepare_callable_attributes(self):
         """Checks if any of the "callable attributes" are really callable, and sets
         them as static methods"""

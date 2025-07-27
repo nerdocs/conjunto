@@ -47,15 +47,19 @@ dev = [
     "build",
     "twine",
     "pytest",
+    "pytest-mock",
+    "pytest-django",
     "pre-commit",
     "black",
 ]
 doc = [
     "mkdocs",
-    "mkdocstrings[python]",
-    "mkdocs-gen-files",
+    "mkdocstrings-python",
     "mkdocs-literate-nav",
     "mkdocs-section-index",
+    "pymdown-extensions",
+    "pygments",
+    "mkdocs-api-autonav",
 ]
 prod = [
 ]

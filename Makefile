@@ -40,10 +40,10 @@ coverage:
 #check:
 #	ruff check .
 #
-doc:
-	mkdocs build -d build/doc/
+docs-build:
+	mkdocs build
 
-livedocs:
+docs-live:
 	mkdocs serve
 
 clean:
