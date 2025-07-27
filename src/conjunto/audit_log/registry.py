@@ -4,8 +4,8 @@ import uuid
 from django.db import models
 from django.utils.functional import LazyObject
 
-from conjunto.audit_log.context import get_active_log_context
 from gdaps import hooks
+from conjunto.audit_log.context import get_active_log_context
 from conjunto.audit_log.formatter import LogFormatter
 from conjunto.registry import ObjectTypeRegistry, ModelType
 

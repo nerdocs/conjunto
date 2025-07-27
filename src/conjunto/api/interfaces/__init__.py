@@ -3,13 +3,15 @@ import typing
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 
+from gdaps import hooks
 from gdaps.api import Interface
 from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
-if typing.TYPE_CHECKING:
-    from conjunto.audit_log.registry import LogActionRegistry
+from conjunto.audit_log.registry import LogActionRegistry
+
+hooks.define("register_log_actions", (LogActionRegistry,))
 
 
 class HtmxRequestMixin:
