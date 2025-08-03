@@ -17,7 +17,7 @@ class SettingsWidget(Component):
     Usage:
     Simple usage with predefined "active" tab
     ```django
-    {% @ SettingsWidget active="account" %}
+    {% SettingsWidget active="account" %}
     ```
 
     Change tabs using URLs:
@@ -25,7 +25,7 @@ class SettingsWidget(Component):
     specify the URL parameter by the `q` attribute. Per default "tab" is used.
 
     ```django
-    {% @ SettingsWidget sections=ISettingsSection q="tab" %}
+    {% SettingsWidget sections=ISettingsSection q="tab" %}
     ```
     """
 

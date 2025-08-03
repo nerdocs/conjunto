@@ -18,9 +18,9 @@ class Updatable(Component):
 
     Example:
         ```django
-        {% @ Updatable id="my-card" trigger="person:changed" %}
+        {% Updatable id="my-card" trigger="person:changed" %}
 
-        {% @ Updatable elt="ul" id="people-list" trigger="person:changed" %}
+        {% Updatable elt="ul" id="people-list" trigger="person:changed" %}
         ```
     """
 

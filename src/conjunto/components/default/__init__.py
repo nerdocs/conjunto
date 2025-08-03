@@ -198,11 +198,11 @@ class DataGridItem(DataGridItemBase):
             from the field's verbose_name.
     Usage:
     ```django
-    {% @ DataGridItem object=request.user field="last_name" / %}
+    {% DataGridItem object=request.user field="last_name" / %}
 
-    {% @ DataGridItem object=request.user field="last_name" %}
+    {% DataGridItem object=request.user field="last_name" %}
       Mr/Mrs. {{ object.last_name }}
-    {% /@ %}
+    {% /DataGridItem %}
     ```
     """
 
@@ -233,7 +233,7 @@ class DataGridFile(DataGridItemBase):
       <div class="datagrid-content">
         <p>
           {% if content|is_image %}
-            {% @ LightboxImage url=content.url /%}
+            {% LightboxImage url=content.url /%}
           {% elif content %}
             <a href="{{ content.url }}">
               <div class="card card-link">
@@ -352,7 +352,7 @@ class List(Component):
         ```django
         {% list hoverable=True %}
           {% for item in items %}
-            {% @ ListItem title=item.title / %}
+            {% ListItem title=item.title / %}
           {% endfor %}
         {% endlist %}
         ```
@@ -382,7 +382,7 @@ class ListItem(Component):
 
     Example:
         ```django
-        {% @ ListItem
+        {% ListItem
             title=item.title
             active=False
             badge_color="red"

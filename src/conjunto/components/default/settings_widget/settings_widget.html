@@ -30,13 +30,13 @@
       {% for section in sections.plugins %}
         {% if section.name == active_section_name %}
           {% if section.component %}
-            {% @ =section.component key=section.name object=request.user /%}
+            {% component =section.component key=section.name object=request.user /%}
           {% else %}
             {% for subsection_component in section.subsections %}
               {% if not forloop.first %}
                 <hr class="divider"/>
               {% endif %}
-              {% @ =subsection_component key=subsection_component.name object=request.user /%}
+              {% component =subsection_component key=subsection_component.name object=request.user /%}
             {% endfor %}
           {% endif %}
         {% endif %}
