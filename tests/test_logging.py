@@ -12,8 +12,6 @@ from gdaps import hooks
 
 from conjunto.audit_log.registry import LogActionRegistry
 
-# hooks.define("register_log_actions", (LogActionRegistry,))
-
 
 # @hooks.implements("register_log_actions")
 # def log_actions(actions: LogActionRegistry):

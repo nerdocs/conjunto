@@ -1,25 +1,11 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponseRedirect, HttpResponseNotAllowed
 from django.utils.translation import gettext_lazy as _
-from django.views import View
 from django.views.generic import DeleteView, CreateView, UpdateView, DetailView
-from django.views.generic.detail import SingleObjectMixin
 
 from conjunto.api.interfaces import HtmxRequestMixin
 from conjunto.http import HttpResponseEmpty
 from conjunto.views import CrispyFormHelperMixin, DialogType, AutoPermissionsViewMixin
-
-
-class HtmxTemplateMixin:
-    """If called from HTMX, this view renders template names with a "_htmx" suffix."""
-
-    def get_template_names(self):
-        if self.request.htmx:
-            if self.template_name_suffix:
-                self.template_name_suffix += "_htmx"
-            else:
-                self.template_name_suffix = "_htmx"
-        return super().get_template_names()
 
 
 class SuccessEventMixin(HtmxRequestMixin):
@@ -206,33 +192,6 @@ class ModalFormViewMixin(HtmxFormViewMixin, CrispyFormHelperMixin):
             }
         )
         return context
-
-
-class HtmxSetModelAttributeView(SuccessEventMixin, SingleObjectMixin, View):
-    """View mixin that sets an attribute on the given object and returns an empty
-    response.
-
-    This pattern is often needed in HTMX requests, to just set one or more attributes
-    of an object when clicking on a button, and just refresh the widget, or page.
-
-    Override the set_attribute method to set the desired attribute on the object.
-    """
-
-    def get(self, request, *args, **kwargs):
-        return HttpResponseNotAllowed("You can not use a GET request on this URL.")
-
-    def set_attribute(self):
-        """Set an attribute on `self.object`. You don't have to save it, as this
-        will be done automatically."""
-        raise NotImplementedError(
-            f"You must implement the 'set_attribute' method in {self.__class__.__name__}."
-        )
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.set_attribute()
-        self.object.save()
-        return HttpResponseEmpty()
 
 
 class _ModalModelViewMixin(AutoPermissionsViewMixin, ModalFormViewMixin):

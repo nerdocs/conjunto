@@ -1,5 +1,4 @@
 from django.contrib.messages.storage.base import Message
-from sourcetypes import javascript
 
 from tetra import Component, public
 
