@@ -152,9 +152,7 @@ class LogActionRegistry:
         # find the log entry model for the given object type
         log_entry_model = self.get_log_model_for_instance(instance)
         if log_entry_model is None:
-            logger.warning(
-                f"No logger registered for this object type: {type(instance)}"
-            )
+            logger.warning(f"No logger registered for object type {type(instance)}")
             return None
 
         user = user or get_active_log_context().user
