@@ -233,7 +233,7 @@ class DataGridFile(DataGridItemBase):
       <div class="datagrid-content">
         <p>
           {% if content|is_image %}
-            {% LightboxImage url=content.url /%}
+            {% component LightboxImage url=content.url / %}
           {% elif content %}
             <a href="{{ content.url }}">
               <div class="card card-link">
