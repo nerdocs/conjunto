@@ -11,5 +11,5 @@
   {% if icon %}
     <i class="ti ti-{{ icon }} {{ icon_fs }}"></i>
   {% endif %}
-  {% block default %}{% endblock %}
+  {% slot default %}{% endslot %}
 </{{ tag }}>

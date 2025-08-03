@@ -15,21 +15,21 @@
                 aria-label={% translate "Close" %}></button>
       </div>
       <div class="modal-body">
-        {% block default %}{% endblock %}
+        {% slot default %}{% endslot %}
       </div>
 
       <div class="modal-footer">
-        {% block buttons %}
+        {% slot buttons %}
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            {% block cancel_button_title %}{% translate "Cancel" %}{% endblock %}
+            {% slot cancel_button_title %}{% translate "Cancel" %}{% endslot %}
           </button>
           <button type="button" id="{{ id }}_ok_button" class="btn btn-primary" data-bs-toggle="modal"
                   @click="submit()">
-            {% block submit_button_title %}
+            {% slot submit_button_title %}
               {% translate "OK" %}
-            {% endblock %}
+            {% endslot %}
           </button>
-        {% endblock %}
+        {% endslot %}
       </div>
     </div>
   </div>

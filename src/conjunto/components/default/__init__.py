@@ -211,13 +211,13 @@ class DataGridItem(DataGridItemBase):
     <div {% ... attrs %} class="datagrid-item mb-2">
       <div class="datagrid-title">{{ title }}</div>
       <div class="datagrid-content">
-      {% block default %}
+      {% slot default %}
           {% if content and content.file %}
             <img src="{{ content.url }}" alt="{{ content }}"/>
           {% else %}
                 {{ content }}
           {% endif %}
-      {% endblock %}
+      {% endslot %}
       </div>
     </div>
     """
@@ -244,7 +244,7 @@ class DataGridFile(DataGridItemBase):
             </a>
           {% endif %}
         </p>
-        {% block default %}{% endblock %}
+        {% slot default %}{% endslot %}
       </div>
     </div>
     """
@@ -332,7 +332,7 @@ class ModalButton(BasicComponent):
     {% endif %}
     data-bs-toggle="modal" 
     data-bs-target="#{{target_id}}">
-    {% block default %}{% endblock %}
+    {% slot default %}{% endslot %}
     
     {% if link %}
       </a>
@@ -363,8 +363,7 @@ class List(Component):
     # language=html
     template: django_html = """
     <div class="list-group{% if hoverable %} list-group-hoverable{% endif %}">
-      {% block default %}
-      {% endblock %}
+      {% slot default %}{% endslot %}
     </div>
 """
 
@@ -485,7 +484,7 @@ class HtmxLinkElement(BasicComponent):
   {% if icon %}
     <i class="ti ti-{{ icon }} {{ icon_fs }}"></i>
   {% endif %}
-  {% block default %}{% endblock %}
+  {% slot default %}{% endslot %}
 </{{ tag }}>"""
 
     tag: str = "div"

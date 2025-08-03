@@ -3,23 +3,22 @@
     {% if blocks.title or blocks.actions %}
     <div class="card-header">
         <h3 class="card-title">
-            {% block title %}{% endblock %}
+            {% slot title %}{% endslot %}
         </h3>
-        {% block header-between %}{% endblock %}
+        {% slot header-between %}{% endslot %}
         <div class="card-actions">
-            {% block actions %}{% endblock %}
+            {% slot actions %}{% endslot %}
         </div>
     </div>
     {% endif %}
-    {% block card-content %}
+    {% slot card-content %}
     <div class="card-body">
-        {% block default %}
-        {% endblock %}
+        {% slot default %}{% endslot %}
     </div>
-    {% endblock %}
-    {% if blocks.footer %}
+    {% endslot %}
+    {% if slots.footer %}
       <div class="card-footer">
-        {% block footer %}{% endblock %}
+        {% slot footer %}{% endslot %}
       </div>
     {% elif tag == "form" %}
       <div class="button-holder">

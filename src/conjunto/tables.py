@@ -34,7 +34,7 @@ class TActionButton:
     <button 
         {% ... %}
         @click='kwargs'
-    >{% block default%} {% endblock %}</button>
+    >{% slot default %}{% endslot %}</button>
     """
 
 

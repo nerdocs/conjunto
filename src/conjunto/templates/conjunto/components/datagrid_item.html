@@ -1,8 +1,8 @@
 <div class="datagrid-item mb-2">
   <div class="datagrid-title">{{ field.title }}</div>
   <div class="datagrid-content">
-    {% if blocks.default %}
-        {% block default %}{% endblock %}
+    {% if slots.default %}
+        {% slot default %}{% endslot %}
     {% else %}
       {% if field.content.file %}
         <img src="{{ field.content.url }}" alt="{{ field.content }}"/>
