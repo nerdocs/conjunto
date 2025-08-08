@@ -3,6 +3,7 @@ from typing import Type
 from django.utils.translation import gettext_lazy as _
 
 from conjunto.api.interfaces import IElementMixin, IElementGroup
+from conjunto.components.settings.account_section_widget import AccountSectionWidget
 from gdaps.api import Interface
 from tetra.components.base import (
     ComponentMetaClass,
@@ -111,7 +112,7 @@ class IProfileSubSection(IBaseSubSection, Interface):
     pass
 
 
-class ProfileSection(ISettingsSection):
+class AccountSection(ISettingsSection):
     name = "account"
     group = AccountGroup
     title = _("Account")
