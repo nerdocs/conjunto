@@ -24,9 +24,11 @@ class Updatable(Component):
         ```
     """
 
-    elt = "div"
-    trigger = ""
+    elt: str = "div"
+    trigger: str = ""
 
     def load(self, trigger: str, elt: str = "div", *args, **kwargs):
         if not trigger:
             raise ComponentError("'trigger' event must be provided.")
+        self.trigger = trigger
+        self.elt = elt
