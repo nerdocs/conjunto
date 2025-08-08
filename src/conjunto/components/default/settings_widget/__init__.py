@@ -1,4 +1,5 @@
 from conjunto.api.interfaces.settings import ISettingsSection
+from gdaps.api import InterfaceMeta, Interface
 from tetra import Component, public
 
 
@@ -29,19 +30,23 @@ class SettingsWidget(Component):
     ```
     """
 
-    sections: type = ISettingsSection
+    sections = ISettingsSection
     active_section_name: str = ""
     url_param: str = "tab"
 
     def load(
-        self, sections=None, active: str = None, q: str = None, *args, **kwargs
+        self,
+        sections: InterfaceMeta = None,
+        active: str = None,
+        q: str = None,
+        *args,
+        **kwargs,
     ) -> None:
-        self.sections = sections() if sections else ISettingsSection()
+        self.sections = sections if sections is not None else ISettingsSection
         self.url_param = q or "tab"
 
         self.active_section_name = self.request.GET.get(self.url_param, None) or active
-        print(self.active_section_name)
-        if not self.active_section_name or not self.sections.get(
+        if not self.active_section_name or not Interface.get(
             name=self.active_section_name
         ):
             first = self.sections.first()  # default to first section

@@ -5,11 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from conjunto.api.interfaces import IElementMixin, IElementGroup
 from conjunto.components.settings.account_section_widget import AccountSectionWidget
 from gdaps.api import Interface
-from tetra.components.base import (
-    ComponentMetaClass,
-    FormComponentMetaClass,
-    ModelFormComponentMetaClass,
-)
+from tetra.components.base import BasicComponent
 
 
 class IBaseSubSection(IElementMixin):
@@ -37,16 +33,15 @@ class IBaseSection(IElementMixin):
     This is a base class for creating **interfaces**, not implementations.
 
     Attributes:
-        name: a unique identifier for the section.
-        group: the group this section belongs to. Must be an `IElementGroup`.
-        title: the title of the section.
-        subsections: the interface that subsections can implement to be rendered in this section.
-            the `subsections` attribute should be an `IAbstractSubSection` interface.
+        name: A unique identifier for the section.
+        group: The group this section belongs to. Must be an `IElementGroup`.
+        title: The title of the section.
+        components: The Tetra components to be rendered in this section.
     """
 
     __sort_attribute__ = "group"
 
-    subsections: Type[Interface] = None
+    components: [Type[BasicComponent]] = None
     """The interface that subsections can implement to be rendered in this section."""
 
 
@@ -118,7 +113,7 @@ class AccountSection(ISettingsSection):
     title = _("Account")
     icon = "user"
     weight = 0
-    subsections = IProfileSubSection
+    components = [AccountSectionWidget]
 
 
 # multi-tenancy
